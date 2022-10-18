@@ -1,0 +1,52 @@
+{
+    "name": "@microsoft/vscode-azext-azureaccount",
+    "author": "Microsoft Corporation",
+    "version": "0.1.0",
+    "description": "Common Azure account utils for developing Azure extensions for VS Code",
+    "tags": [
+        "azure",
+        "vscode"
+    ],
+    "keywords": [
+        "azure",
+        "vscode"
+    ],
+    "main": "out/src/index.js",
+    "types": "out/src/index.d.ts",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Microsoft/vscode-azuretools"
+    },
+    "bugs": {
+        "url": "https://github.com/Microsoft/vscode-azuretools/issues"
+    },
+    "homepage": "https://github.com/Microsoft/vscode-azuretools/blob/main/azureaccount/README.md",
+    "scripts": {
+        "build": "tsc -p ./",
+        "prepack": "tsc -p ./",
+        "compile": "tsc -watch -p ./",
+        "lint": "eslint --ext .ts .",
+        "lint-fix": "eslint --ext .ts . --fix",
+        "pretest": "npm run build",
+        "test": "node ./out/test/runTest.js"
+    },
+    "devDependencies": {
+        "@azure/core-auth": "^1.4.0",
+        "@microsoft/eslint-config-azuretools": "^0.1.0",
+        "@types/mocha": "^7.0.2",
+        "@types/vscode": "^1.64.0",
+        "@typescript-eslint/eslint-plugin": "^4.28.3",
+        "@vscode/test-electron": "^2.1.5",
+        "eslint": "^7.19.0",
+        "eslint-plugin-import": "^2.22.1",
+        "glob": "^7.1.6",
+        "mocha": "^9.1.3",
+        "mocha-junit-reporter": "^2.0.2",
+        "mocha-multi-reporters": "^1.1.7",
+        "typescript": "^4.8.2"
+    },
+    "dependencies": {
+        "@azure/arm-subscriptions": "^5.0.1"
+    }
+}
