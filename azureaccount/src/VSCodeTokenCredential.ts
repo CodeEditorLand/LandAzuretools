@@ -3,12 +3,24 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
+import type { AccessToken, TokenCredential } from '@azure/core-auth';
+import { Buffer } from 'buffer';
 import * as vscode from 'vscode';
-import type { AccessToken, GetTokenOptions, TokenCredential } from '@azure/core-auth';
-import { defaultScope, msAuthProviderId } from './constants';
 
+export const msAuthProviderId: string = 'microsoft';
+export const defaultScope: string = 'https://management.azure.com/.default';
+
+/**
+ * A credential that implements {@link TokenCredential} and acquires its token through
+ * the VSCode authentication provider API.
+ */
 export class VSCodeTokenCredential implements TokenCredential {
-    public async getToken(scopes: string | string[], _options?: GetTokenOptions): Promise<AccessToken | null> {
+    /**
+     * Gets the token through the VSCode authentication provider API
+     * @param scopes The scopes for which the token will have access
+     * @returns An {@link AccessToken} which contains the token and its expiration
+     */
+    public async getToken(scopes: string | string[]): Promise<AccessToken> {
         let scopesArray: string[];
         if (typeof scopes === 'string') {
             scopesArray = [scopes];
@@ -26,12 +38,26 @@ export class VSCodeTokenCredential implements TokenCredential {
         const session = await vscode.authentication.getSession(msAuthProviderId, scopesArray, { createIfNone: true });
         return {
             token: session.accessToken,
-            expiresOnTimestamp: getExpirationTimestamp(session.accessToken),
+            expiresOnTimestamp: this.getExpirationTimestamp(session.accessToken),
         };
     }
-}
 
-function getExpirationTimestamp(token: string): number {
-    const decoded = decode(token);
-    return decoded.exp * 1000;
+    private getExpirationTimestamp(token: string): number {
+        try {
+            // The token is a JWT. The string is three base64 strings separated by '.'. The second string is the actual token.
+            // 1. Get the second string
+            const tokenBody = token.split('.')[1];
+
+            // 2. Decode from base64
+            const decodedToken = Buffer.from(tokenBody, 'base64').toString('utf8');
+
+            // 3. Parse the JSON
+            const parsedToken = JSON.parse(decodedToken) as { exp: number };
+
+            // 4. Return the expiration timestamp * 1000 (to convert to milliseconds)
+            return parsedToken.exp * 1000;
+        } catch {
+            throw new Error('Unable to parse token expiration');
+        }
+    }
 }
