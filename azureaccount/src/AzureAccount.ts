@@ -1,133 +1,103 @@
-import * as arm from '@azure/arm-subscriptions';
+/*---------------------------------------------------------------------------------------------
+*  Copyright (c) Microsoft Corporation. All rights reserved.
+*  Licensed under the MIT License. See License.txt in the project root for license information.
+*--------------------------------------------------------------------------------------------*/
+
+import { TenantIdDescription, Subscription, SubscriptionClient } from '@azure/arm-subscriptions';
+import type { TokenCredential } from '@azure/core-auth';
+import { Environment } from '@azure/ms-rest-azure-env';
 import * as vscode from 'vscode';
+import { msAuthProviderId, VSCodeTokenCredential } from './VSCodeTokenCredential';
 
-export interface AzureSubscription {
-    readonly displayName: string;
-    readonly id: string;
+/**
+ * An Azure session for a specific tenant in a specific Azure {@link Environment}
+ */
+export interface AzureSession {
+    /**
+     * The Azure {@link Environment} that the tenant is in
+     */
+    environment: Environment;
 
-    getSession(scopes?: string[]): vscode.ProviderResult<vscode.AuthenticationSession>;
+    /**
+     * The {@link TenantIdDescription} for this session
+     */
+    tenant: TenantIdDescription;
+
+    /**
+     * A {@link TokenCredential} that can be used for authentication
+     */
+    credential: TokenCredential;
+
+    /**
+     * A list of all the {@link Subscription}s accessible from this session
+     */
+    subscriptions: Subscription[];
 }
 
-export type AzureSubscriptionsResult = {
-    readonly allSubscriptions: AzureSubscription[];
-    readonly selectedSubscriptions: AzureSubscription[];
-}
+/**
+ * Gets all the {@link AzureSession}s accessible to a user within a specific Azure {@link Environment}. The user will be
+ * prompted to sign in if they are not already signed in.
+ * @param environment (Optional) The Azure {@link Environment} to get sessions for. If not specified, the default
+ * Azure public cloud is used.
+ * @returns A list of all {@link AzureSession}s accessible within the Azure {@link Environment}
+ */
+export async function getAzureSessions(environment: Environment = Environment.AzureCloud): Promise<AzureSession[]> {
+    const allSessions: AzureSession[] = [];
 
-export interface AzureSubscriptionProvider {
-    getSubscriptions(): Promise<AzureSubscriptionsResult>;
-
-    logIn(): Promise<void>;
-    logOut(): Promise<void>;
-    selectSubscriptions(subscriptionIds: string[] | undefined): Promise<void>;
-
-    onSubscriptionsChanged: vscode.Event<void>;
-}
-
-export class VSCodeAzureSubscriptionProvider extends vscode.Disposable implements AzureSubscriptionProvider {
-    private readonly _onSubscriptionsChanged = new vscode.EventEmitter<void>();
-
-    constructor() {
-        super(() => this._onSubscriptionsChanged.dispose());
-    }
-
-    async getSubscriptions(): Promise<AzureSubscriptionsResult> {
-        const allSubscriptions: AzureSubscription[] = [];
-
-        const defaultTenantSubscriptions = await this.getSubscriptionsFromTenant();
-
-        allSubscriptions.push(...defaultTenantSubscriptions.subscriptions);
-
-        // For now, only fetch subscriptions from individual tenants if none were found in the default tenant...
-        if (allSubscriptions.length === 0) {
-            for await (const tenant of defaultTenantSubscriptions.client.tenants.list()) {
-                const tenantSubscriptions = await this.getSubscriptionsFromTenant(tenant.tenantId);
-                allSubscriptions.push(...tenantSubscriptions.subscriptions);
-            }
-        }
-
-        const selectedSubscriptionIds = vscode.workspace.getConfiguration('azure').get<string[] | undefined>('selectedSubscriptions');
-        const selectedSubscriptions = allSubscriptions.filter(s => selectedSubscriptionIds === undefined || selectedSubscriptionIds.includes(s.id));
-
-        return {
-            allSubscriptions,
-            selectedSubscriptions
-        };
-    }
-
-    async selectSubscriptions(subscriptionIds: string[] | undefined): Promise<void> {
-        await this.updateSelectedSubscriptions(subscriptionIds);
-
-        this._onSubscriptionsChanged.fire();
-    }
-
-    readonly onSubscriptionsChanged = this._onSubscriptionsChanged.event;
-
-    private async getSession(options?: { createNew?: boolean, scopes?: string | string[], tenantId?: string }): Promise<vscode.AuthenticationSession> {
-        const scopeSet = new Set<string>(['https://management.azure.com/.default']);
-
-        if (options) {
-            if (typeof options.scopes === 'string') {
-                scopeSet.add(options.scopes);
-            }
-
-            if (Array.isArray(options.scopes)) {
-                for (const scope of options.scopes) {
-                    scopeSet.add(scope);
-                }
-            }
-
-            if (options.tenantId) {
-                scopeSet.add(`VSCODE_TENANT:${options.tenantId}`);
-            }
-        }
-
-        const session = await vscode.authentication.getSession(
-            'microsoft',
-            Array.from(scopeSet),
+    for (const tenantSession of await getTenantSessions(environment)) {
+        allSessions.push(
             {
-                clearSessionPreference: options?.createNew,
-                createIfNone: options?.createNew
-            });
+                ...tenantSession,
+                subscriptions: await getSubscriptionsForTenantSession(environment, tenantSession),
+            }
+        );
+    }
 
-        if (!session) {
-            throw new Error('Unable to obtain Azure authentication session.');
+    return allSessions;
+}
+
+/**
+ * An event that is fired when changes may have occurred to the user's Azure sessions
+ * @param listener A listener that will be called whenever the user's Azure sessions may have changed.
+ * The consumer should call {@link getAzureSessions} again to get the latest sessions.
+ * @returns An event registration that can be disposed to stop listening for changes
+ */
+export const onDidChangeAzureSessions: vscode.Event<void> = (listener: () => void) => {
+    return vscode.authentication.onDidChangeSessions((sessionChangeEvent: vscode.AuthenticationSessionsChangeEvent) => {
+        // Only forward the session change event if it's for the Microsoft auth provider
+        if (sessionChangeEvent.provider.id === msAuthProviderId) {
+            listener();
         }
+    });
+};
 
-        return session;
+type TenantSession = Omit<AzureSession, 'subscriptions'>;
+
+async function getTenantSessions(environment: Environment): Promise<TenantSession[]> {
+    const defaultTenantCredential = new VSCodeTokenCredential(environment);
+    const subscriptionClient = new SubscriptionClient(defaultTenantCredential, { endpoint: environment.resourceManagerEndpointUrl });
+
+    const environmentTenants: TenantIdDescription[] = [];
+    for await (const tenant of subscriptionClient.tenants.list()) {
+        environmentTenants.push(tenant);
     }
 
-    private async updateSelectedSubscriptions(subscriptionsIds: string[] | undefined): Promise<void> {
-        return await vscode.workspace.getConfiguration('azure').update('selectedSubscriptions', subscriptionsIds);
-    }
-
-    private async getSubscriptionsFromTenant(tenantId?: string): Promise<{ client: arm.SubscriptionClient, subscriptions: AzureSubscription[] }> {
-        let session: vscode.AuthenticationSession | undefined;
-
-        const client: arm.SubscriptionClient = new arm.SubscriptionClient(
-            {
-                getToken: async scopes => {
-                    session = await this.getSession({ scopes, tenantId });
-
-                    if (session) {
-                        return {
-                            token: session.accessToken,
-                            expiresOnTimestamp: 0
-                        };
-                    }
-
-                    return null;
-                },
-            });
-
-        const subscriptions: arm.Subscription[] = [];
-
-        for await (const subscription of client.subscriptions.list()) {
-            subscriptions.push(subscription);
+    return environmentTenants.map(tenant => (
+        {
+            environment: environment,
+            tenant: tenant,
+            credential: new VSCodeTokenCredential(environment, tenant.tenantId),
         }
+    ));
+}
 
-        return {
-            client,
-            subscriptions: subscriptions.map(s => ({ displayName: s.displayName ?? 'name', id: s.subscriptionId ?? 'id', getSession: () => session }))
-        };
+async function getSubscriptionsForTenantSession(environment: Environment, tenant: TenantSession): Promise<Subscription[]> {
+    const subscriptionClient = new SubscriptionClient(tenant.credential, { endpoint: environment.resourceManagerEndpointUrl });
+
+    const tenantSubscriptions: Subscription[] = [];
+    for await (const subscription of subscriptionClient.subscriptions.list()) {
+        tenantSubscriptions.push(subscription);
     }
+
+    return tenantSubscriptions;
 }
