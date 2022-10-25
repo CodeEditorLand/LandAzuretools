@@ -43,6 +43,7 @@
         "typescript": "^4.8.2"
     },
     "dependencies": {
-        "@azure/arm-subscriptions": "^5.0.1"
+        "@azure/arm-subscriptions": "^5.0.1",
+        "@azure/ms-rest-azure-env": "^2.0.0"
     }
 }
