@@ -7,7 +7,7 @@
 
 import type { Environment } from '@azure/ms-rest-azure-env';
 import { CancellationToken, CancellationTokenSource, Disposable, Event, ExtensionContext, FileChangeEvent, FileChangeType, FileStat, FileSystemProvider, FileType, InputBoxOptions, MarkdownString, MessageItem, MessageOptions, OpenDialogOptions, OutputChannel, Progress, QuickPickItem, QuickPickOptions, TextDocumentShowOptions, ThemeIcon, TreeDataProvider, TreeItem, TreeItemCollapsibleState, TreeView, Uri } from 'vscode';
-import { TargetPopulation } from 'vscode-tas-client';
+// import { TargetPopulation } from 'vscode-tas-client';
 import { AzureExtensionApi, AzureExtensionApiProvider } from './api';
 import type { Activity, ActivityTreeItemOptions, AppResource, OnErrorActivityData, OnProgressActivityData, OnStartActivityData, OnSuccessActivityData } from './hostapi'; // This must remain `import type` or else a circular reference will result
 
@@ -1261,7 +1261,7 @@ export declare namespace DialogResponses {
 /**
  * Call this to register common variables used throughout the UI package.
  */
-export declare function registerUIExtensionVariables(extVars: UIExtensionVariables): void;
+export declare function registerUIExtensionVariables(extVars: UIExtensionVariables): Promise<void>;
 
 /**
  * Call this to create the experimentation service adapter
@@ -1273,7 +1273,7 @@ export declare function registerUIExtensionVariables(extVars: UIExtensionVariabl
  * Public is everyone
  * NOTE: if unspecified, this will be "Team" if the extension is running in the Development Host, "Insiders" if the extension version contains "alpha", otherwise "Public"
  */
-export declare function createExperimentationService(ctx: ExtensionContext, targetPopulation?: TargetPopulation): Promise<IExperimentationServiceAdapter>;
+// export declare function createExperimentationService(ctx: ExtensionContext, targetPopulation?: TargetPopulation): Promise<IExperimentationServiceAdapter>;
 
 /**
  * Interface for common extension variables used throughout the UI package.

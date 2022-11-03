@@ -4,9 +4,9 @@
  *--------------------------------------------------------------------------------------------*/
 
 import * as path from 'path';
+import { TextDecoder } from 'text-encoding';
 import { FileStat, FileType, Uri, workspace } from 'vscode';
 import { parseError } from '../parseError';
-
 export namespace AzExtFsExtra {
     export async function isDirectory(resource: Uri | string): Promise<boolean> {
         const uri = convertToUri(resource);
@@ -59,7 +59,8 @@ export namespace AzExtFsExtra {
 
     export async function readFile(resource: Uri | string): Promise<string> {
         const uri = convertToUri(resource);
-        return (await workspace.fs.readFile(uri)).toString();
+        const buffer = (await workspace.fs.readFile(uri));
+        return new TextDecoder().decode(buffer);
     }
 
     export async function writeFile(resource: Uri | string, contents: string): Promise<void> {
@@ -121,6 +122,6 @@ export namespace AzExtFsExtra {
     }
 
     function convertToUri(resource: Uri | string): Uri {
-        return typeof resource === 'string' ? Uri.file(resource) : resource;
+        return typeof resource === 'string' ? Uri.parse(resource) : resource;
     }
 }

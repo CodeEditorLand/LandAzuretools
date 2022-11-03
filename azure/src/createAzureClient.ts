@@ -3,13 +3,13 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
+import { ServiceClient } from '@azure/core-client';
 import { createPipelineFromOptions, createPipelineRequest, Pipeline, PipelineOptions, PipelinePolicy, PipelineRequest, PipelineResponse, RetryPolicyOptions, SendRequest } from '@azure/core-rest-pipeline';
+import { appendExtensionUserAgent, AzExtTreeItem, IActionContext, ISubscriptionActionContext, ISubscriptionContext } from '@microsoft/vscode-azext-utils';
 import { randomUUID } from 'crypto';
 import { Agent as HttpsAgent } from 'https';
 import * as vscode from "vscode";
 import * as types from '../index';
-import { appendExtensionUserAgent, AzExtTreeItem, IActionContext, ISubscriptionActionContext, ISubscriptionContext } from '@microsoft/vscode-azext-utils';
-import { ServiceClient } from '@azure/core-client';
 
 export type InternalAzExtClientContext = ISubscriptionActionContext | [IActionContext, ISubscriptionContext | AzExtTreeItem];
 
@@ -35,8 +35,8 @@ export function parseClientContext(clientContext: InternalAzExtClientContext): I
 export function createAzureClient<T extends ServiceClient>(clientContext: InternalAzExtClientContext, clientType: types.AzExtClientType<T>): T {
     const context = parseClientContext(clientContext);
     return new clientType(context.credentials, context.subscriptionId, {
-        endpoint: context.environment.resourceManagerEndpointUrl,
-        pipeline: createAzExtPipeline(context),
+        // endpoint: context.environment.resourceManagerEndpointUrl,
+        // pipeline: createAzExtPipeline(context),
     });
 }
 

@@ -10,14 +10,14 @@ import { callWithTelemetryAndErrorHandlingSync } from './callWithTelemetryAndErr
 import { getPackageInfo } from './getPackageInfo';
 import { localize } from './localize';
 
-export function createApiProvider(azExts: AzureExtensionApi[]): AzureExtensionApiProvider {
+export async function createApiProvider(azExts: AzureExtensionApi[]): Promise<AzureExtensionApiProvider> {
     for (const azExt of azExts) {
         if (!semver.valid(azExt.apiVersion)) {
             throw new Error(localize('invalidVersion', 'Invalid semver "{0}".', azExt.apiVersion));
         }
     }
 
-    const extensionId: string = getPackageInfo().extensionId;
+    const extensionId: string = (await getPackageInfo()).extensionId;
     return {
         getApi: <T extends AzureExtensionApi>(apiVersionRange: string): T => getApiInternal<T>(azExts, extensionId, apiVersionRange)
     };
