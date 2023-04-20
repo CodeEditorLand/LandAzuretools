@@ -4,8 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { AzExtPipelineResponse } from '@microsoft/vscode-azext-azureutils';
-import { IActionContext } from '@microsoft/vscode-azext-utils';
-import * as fse from 'fs-extra';
+import { AzExtFsExtra, IActionContext } from '@microsoft/vscode-azext-utils';
 import * as globby from 'globby';
 import * as path from 'path';
 import * as prettybytes from 'pretty-bytes';
@@ -32,13 +31,14 @@ export async function runWithZipStream(context: IActionContext, options: {
     let zipStream: Readable;
     const { site, pathFileMap, callback } = options;
     let { fsPath } = options;
+    const uri = vscode.Uri.file(fsPath);
 
     if (getFileExtension(fsPath) === 'zip') {
         context.telemetry.properties.alreadyZipped = 'true';
-        zipStream = fse.createReadStream(fsPath);
+        zipStream = Readable.from(await AzExtFsExtra.readFile(fsPath));
 
         // don't wait
-        void fse.lstat(fsPath).then(stats => {
+        void (vscode.workspace.fs.stat(uri)).then(stats => {
             onFileSize(stats.size);
         });
     } else {
@@ -55,7 +55,7 @@ export async function runWithZipStream(context: IActionContext, options: {
 
         zipFile.outputStream.on('finish', () => onFileSize(sizeOfZipFile));
 
-        if ((await fse.lstat(fsPath)).isDirectory()) {
+        if ((await vscode.workspace.fs.stat(uri)).type === vscode.FileType.Directory) {
             if (!fsPath.endsWith(path.sep)) {
                 fsPath += path.sep;
             }
@@ -125,8 +125,8 @@ async function getFilesFromGlob(folderPath: string, site: ParsedSite): Promise<s
 async function getFilesFromGitignore(folderPath: string, gitignoreName: string): Promise<string[]> {
     let ignore: string[] = [];
     const gitignorePath: string = path.join(folderPath, gitignoreName);
-    if (await fse.pathExists(gitignorePath)) {
-        const funcIgnoreContents: string = (await fse.readFile(gitignorePath)).toString();
+    if (await AzExtFsExtra.pathExists(gitignorePath)) {
+        const funcIgnoreContents: string = (await AzExtFsExtra.readFile(gitignorePath)).toString();
         ignore = funcIgnoreContents.split('\n').map(l => l.trim());
     }
 

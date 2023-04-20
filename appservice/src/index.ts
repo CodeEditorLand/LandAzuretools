@@ -33,6 +33,7 @@ export { disconnectRepo } from './disconnectRepo';
 export * from './editScmType';
 export { registerAppServiceExtensionVariables } from './extensionVariables';
 // export { IConnectToGitHubWizardContext } from './github/IConnectToGitHubWizardContext';
+export * from './node/dom';
 export * from './pingFunctionApp';
 export * from './registerSiteCommand';
 export * from './remoteDebug/remoteDebugCommon';

@@ -4,18 +4,18 @@
  *--------------------------------------------------------------------------------------------*/
 
 import type { AppServicePlan, SiteConfigResource } from '@azure/arm-appservice';
-import * as fse from 'fs-extra';
+import { AzExtFsExtra } from '@microsoft/vscode-azext-utils';
 import * as path from 'path';
 import { ProgressLocation, window } from 'vscode';
-import { ext } from '../extensionVariables';
-import { localize } from '../localize';
 import { ScmType } from '../ScmType';
 import { ParsedSite } from '../SiteClient';
+import { ext } from '../extensionVariables';
+import { localize } from '../localize';
 import { randomUtils } from '../utils/randomUtils';
+import { IDeployContext } from './IDeployContext';
 import { deployToStorageAccount } from './deployToStorageAccount';
 import { deployWar } from './deployWar';
 import { deployZip } from './deployZip';
-import { IDeployContext } from './IDeployContext';
 import { localGitDeploy } from './localGitDeploy';
 import { startPostDeployTask } from './runDeployTask';
 import { syncTriggersPostDeploy } from './syncTriggersPostDeploy';
@@ -80,7 +80,7 @@ export async function deploy(site: ParsedSite, fsPath: string, context: IDeployC
             } else if (!context.deployMethod && config.scmType === ScmType.LocalGit) {
                 await localGitDeploy(site, { fsPath: fsPath }, context);
             } else {
-                if (!(await fse.pathExists(fsPath))) {
+                if (!(await AzExtFsExtra.pathExists(fsPath))) {
                     throw new Error(localize('pathNotExist', 'Failed to deploy path that does not exist: {0}', fsPath));
                 }
 

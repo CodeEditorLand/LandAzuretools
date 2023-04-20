@@ -3,8 +3,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { AzExtTreeItem, callWithTelemetryAndErrorHandling, DialogResponses, IActionContext, UserCancelledError } from '@microsoft/vscode-azext-utils';
-import * as fse from 'fs-extra';
+import { AzExtFsExtra, AzExtTreeItem, callWithTelemetryAndErrorHandling, DialogResponses, IActionContext, UserCancelledError } from '@microsoft/vscode-azext-utils';
 import * as path from 'path';
 import * as vscode from 'vscode';
 import { ext } from '../extensionVariables';
@@ -89,7 +88,7 @@ async function addRuntimeFileTelemetry(context: IActionContext, effectiveDeployF
 }
 
 async function checkRuntimeFile(runtimeFiles: string[], effectiveDeployFsPath: string, fileName: string): Promise<void> {
-    if (await fse.pathExists(path.join(effectiveDeployFsPath, fileName))) {
+    if (await AzExtFsExtra.pathExists(path.join(effectiveDeployFsPath, fileName))) {
         runtimeFiles.push(fileName);
     }
 }

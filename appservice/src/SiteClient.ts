@@ -315,7 +315,7 @@ export class SiteClient implements IAppSettingsClient {
     public async zipPushDeploy(context: IActionContext, file: RequestBodyType, queryParameters: KuduModels.PushDeploymentZipPushDeployOptionalParams): Promise<AzExtPipelineResponse> {
         const client: ServiceClient = await createGenericClient(context, this._site.subscription);
         const queryOptions = convertQueryParamsValuesToString(queryParameters);
-        const queryString = Object.keys(queryOptions).map(key => key + '=' + queryOptions[key]).join('&');
+        const queryString = Object.keys(queryOptions).map(key => `${key}=${queryOptions[key]}`).join('&');
         const request = createPipelineRequest({
             method: 'POST',
             url: `${this._site.kuduUrl}/api/zipdeploy?${queryString}`,
@@ -328,7 +328,7 @@ export class SiteClient implements IAppSettingsClient {
     public async warPushDeploy(context: IActionContext, file: RequestBodyType, queryParameters: KuduModels.PushDeploymentWarPushDeployOptionalParams): Promise<AzExtPipelineResponse> {
         const client: ServiceClient = await createGenericClient(context, this._site.subscription);
         const queryOptions = convertQueryParamsValuesToString(queryParameters);
-        const queryString = Object.keys(queryOptions).map(key => key + '=' + queryOptions[key]).join('&');
+        const queryString = Object.keys(queryOptions).map(key => `${key}=${queryOptions[key]}`).join('&');
         const request = createPipelineRequest({
             method: 'POST',
             url: `${this._site.kuduUrl}/api/wardeploy?${queryString}`,
