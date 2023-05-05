@@ -4,19 +4,26 @@
  *--------------------------------------------------------------------------------------------*/
 
 import type { StringDictionary } from '@azure/arm-appservice';
-import { Environment } from '@azure/ms-rest-azure-env';
-import { BlobSASPermissions, BlobServiceClient, BlockBlobClient, ContainerClient, generateBlobSASQueryParameters, StorageSharedKeyCredential } from '@azure/storage-blob';
+<<<<<<< Updated upstream
+import { BlobServiceClient, BlockBlobClient, ContainerClient } from '@azure/storage-blob';
 import { IActionContext, parseError } from '@microsoft/vscode-azext-utils';
+=======
+import type { BlobServiceClient, BlockBlobClient, ContainerClient } from '@azure/storage-blob';
+import { IActionContext, parseError, randomUtils } from '@microsoft/vscode-azext-utils';
+>>>>>>> Stashed changes
 import * as dayjs from 'dayjs';
 // eslint-disable-next-line import/no-internal-modules
 import * as relativeTime from 'dayjs/plugin/relativeTime';
 // eslint-disable-next-line import/no-internal-modules
 import * as utc from 'dayjs/plugin/utc';
 import { URL } from 'url';
+<<<<<<< Updated upstream
 import { ext } from '../extensionVariables';
 import { localize } from '../localize';
+=======
+import * as vscode from 'vscode';
+>>>>>>> Stashed changes
 import { ParsedSite } from '../SiteClient';
-import { randomUtils } from '../utils/randomUtils';
 import { IDeployContext } from './IDeployContext';
 import { runWithZipStream } from './runWithZipStream';
 
@@ -49,6 +56,8 @@ export async function deployToStorageAccount(context: IDeployContext, fsPath: st
 }
 
 async function createBlobServiceClient(context: IActionContext, site: ParsedSite): Promise<BlobServiceClient> {
+    // lazy-load the storage-blob sdk so that it doesn't have to be activated unless this method is called
+    const storageBlobSdk = await import('@azure/storage-blob');
     const client = await site.createClient(context);
     // Use same storage account as AzureWebJobsStorage for deployments
     const azureWebJobsStorageKey: string = 'AzureWebJobsStorage';
@@ -56,7 +65,7 @@ async function createBlobServiceClient(context: IActionContext, site: ParsedSite
     let connectionString: string | undefined = settings.properties && settings.properties[azureWebJobsStorageKey];
     if (connectionString) {
         try {
-            return BlobServiceClient.fromConnectionString(connectionString);
+            return storageBlobSdk.BlobServiceClient.fromConnectionString(connectionString);
         } catch (error) {
             // EndpointSuffix was optional in the old sdk, but is required in the new sdk
             // https://github.com/microsoft/vscode-azurefunctions/issues/2360
@@ -66,8 +75,8 @@ async function createBlobServiceClient(context: IActionContext, site: ParsedSite
                 if (!connectionString.endsWith(separator)) {
                     connectionString += separator;
                 }
-                connectionString += `${endpointSuffix}=${Environment.AzureCloud.storageEndpointSuffix}${separator}`;
-                return BlobServiceClient.fromConnectionString(connectionString);
+                connectionString += `${endpointSuffix}=${AzureCloudStorageEndpointSuffix}${separator}`;
+                return storageBlobSdk.BlobServiceClient.fromConnectionString(connectionString);
             } else {
                 throw error;
             }
@@ -88,8 +97,14 @@ async function createBlobFromZip(context: IActionContext, fsPath: string, site: 
 
     await runWithZipStream(context, {
         fsPath, site, callback: async zipStream => {
+<<<<<<< Updated upstream
             ext.outputChannel.appendLog(localize('creatingBlob', 'Uploading zip package to storage container...'), { resourceName: site.fullName });
             await blobClient.uploadStream(zipStream);
+=======
+            ext.outputChannel.appendLog(vscode.l10n.t('Uploading zip package to storage container...'), { resourceName: site.fullName });
+            // this is Node.js only
+            await blobClient.uploadStream(zipStream as Readable);
+>>>>>>> Stashed changes
         }
     });
 
@@ -98,13 +113,14 @@ async function createBlobFromZip(context: IActionContext, fsPath: string, site: 
         context.telemetry.measurements.blobSize = Number(r.contentLength);
     });
 
-    if (blobService.credential instanceof StorageSharedKeyCredential) {
+    const storageBlobSdk = await import('@azure/storage-blob');
+    if (blobService.credential instanceof storageBlobSdk.StorageSharedKeyCredential) {
         const url: URL = new URL(blobClient.url);
-        url.search = generateBlobSASQueryParameters(
+        url.search = storageBlobSdk.generateBlobSASQueryParameters(
             {
                 containerName,
                 blobName,
-                permissions: BlobSASPermissions.parse('r'),
+                permissions: storageBlobSdk.BlobSASPermissions.parse('r'),
                 startsOn: dayjs().utc().subtract(5, 'minute').toDate(),
                 expiresOn: dayjs().utc().add(10, 'year').toDate()
             },

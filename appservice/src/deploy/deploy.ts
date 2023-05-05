@@ -4,14 +4,12 @@
  *--------------------------------------------------------------------------------------------*/
 
 import type { AppServicePlan, SiteConfigResource } from '@azure/arm-appservice';
-import { AzExtFsExtra } from '@microsoft/vscode-azext-utils';
+import { AzExtFsExtra, randomUtils } from '@microsoft/vscode-azext-utils';
 import * as path from 'path';
-import { ProgressLocation, window } from 'vscode';
+import { ProgressLocation, l10n, window } from 'vscode';
 import { ScmType } from '../ScmType';
 import { ParsedSite } from '../SiteClient';
 import { ext } from '../extensionVariables';
-import { localize } from '../localize';
-import { randomUtils } from '../utils/randomUtils';
 import { IDeployContext } from './IDeployContext';
 import { deployToStorageAccount } from './deployToStorageAccount';
 import { deployWar } from './deployWar';
@@ -29,8 +27,8 @@ export async function deploy(site: ParsedSite, fsPath: string, context: IDeployC
     // We use the AppServicePlan in a few places, but we don't want to delay deployment, so start the promise now and save as a const
     const aspPromise: Promise<AppServicePlan | undefined> = client.getAppServicePlan();
     try {
-        context.telemetry.properties.sourceHash = randomUtils.getPseudononymousStringHash(fsPath);
-        context.telemetry.properties.destHash = randomUtils.getPseudononymousStringHash(site.fullName);
+        context.telemetry.properties.sourceHash = await randomUtils.getPseudononymousStringHash(fsPath);
+        context.telemetry.properties.destHash = await randomUtils.getPseudononymousStringHash(site.fullName);
         context.telemetry.properties.scmType = String(config.scmType);
         context.telemetry.properties.isSlot = site.isSlot ? 'true' : 'false';
         context.telemetry.properties.alwaysOn = config.alwaysOn ? 'true' : 'false';
@@ -66,8 +64,8 @@ export async function deploy(site: ParsedSite, fsPath: string, context: IDeployC
         // Ignore
     }
 
-    const title: string = localize('deploying', 'Deploying to "{0}"... Check [output window](command:{1}) for status.', site.fullName, ext.prefix + '.showOutputChannel');
-    await window.withProgress({ location: ProgressLocation.Notification, title }, async () => {
+    const title: string = l10n.t('Deploying to "{0}"... Check [output window](command:{1}) for status.', site.fullName, ext.prefix + '.showOutputChannel');
+    await window.withProgress({ location: ProgressLocation.Notification, title }, async (progress) => {
         if (context.stopAppBeforeDeploy) {
             ext.outputChannel.appendLog(localize('stoppingApp', 'Stopping app...'), { resourceName: site.fullName });
             await client.stop();
@@ -81,7 +79,7 @@ export async function deploy(site: ParsedSite, fsPath: string, context: IDeployC
                 await localGitDeploy(site, { fsPath: fsPath }, context);
             } else {
                 if (!(await AzExtFsExtra.pathExists(fsPath))) {
-                    throw new Error(localize('pathNotExist', 'Failed to deploy path that does not exist: {0}', fsPath));
+                    throw new Error(l10n.t('Failed to deploy path that does not exist: {0}', fsPath));
                 }
 
                 const javaRuntime = site.isLinux ? config.linuxFxVersion : config.javaContainer;
@@ -91,7 +89,7 @@ export async function deploy(site: ParsedSite, fsPath: string, context: IDeployC
                     const pathFileMap = new Map<string, string>([
                         [path.basename(fsPath), 'app.jar']
                     ]);
-                    await deployZip(context, site, fsPath, aspPromise, pathFileMap);
+                    await deployZip(context, site, fsPath, aspPromise, pathFileMap, progress);
                 } else if (context.deployMethod === 'storage') {
                     await deployToStorageAccount(context, fsPath, site);
                 } else {

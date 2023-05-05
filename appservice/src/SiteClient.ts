@@ -319,8 +319,10 @@ export class SiteClient implements IAppSettingsClient {
         const request = createPipelineRequest({
             method: 'POST',
             url: `${this._site.kuduUrl}/api/zipdeploy?${queryString}`,
-            body: file,
+            body: file
         });
+
+        request.onUploadProgress = (progress => console.log(progress.loadedBytes));
 
         return await client.sendRequest(request);
     }
@@ -365,7 +367,7 @@ export class SiteClient implements IAppSettingsClient {
 
     // the ARM call doesn't give all of the metadata we require so ping the scm directly
     public async getDeployResult(context: IActionContext, deployId: string): Promise<KuduModels.DeployResult> {
-        const client: ServiceClient = await createGenericClient(context, this._site.subscription);
+        const client: ServiceClient = await createGenericClient(context, this._site.subscription, { addStatusCodePolicy: true });
         const response: AzExtPipelineResponse = await client.sendRequest(createPipelineRequest({
             method: 'GET',
             url: `${this._site.kuduUrl}/api/deployments/${deployId}`
@@ -375,10 +377,10 @@ export class SiteClient implements IAppSettingsClient {
 
     // no equivalent ARM call
     public async getLogEntry(context: IActionContext, deployId: string): Promise<KuduModels.LogEntry[]> {
-        const client: ServiceClient = await createGenericClient(context, this._site.subscription);
+        const client: ServiceClient = await createGenericClient(context, this._site.subscription, { addStatusCodePolicy: true });
         const response: AzExtPipelineResponse = await client.sendRequest(createPipelineRequest({
             method: 'GET',
-            url: `${this._site.kuduUrl}/api/deployments/${deployId}/log`
+            url: `${this._site.kuduUrl}/api/deployments/${deployId}/log`,
         }));
 
         const entries = response.parsedBody as (KuduModels.LogEntry & { log_time: string, details_url: string })[];
@@ -393,7 +395,7 @@ export class SiteClient implements IAppSettingsClient {
 
     // no equivalent ARM call
     public async getLogEntryDetails(context: IActionContext, deployId: string, logId: string): Promise<KuduModels.LogEntry[]> {
-        const client: ServiceClient = await createGenericClient(context, this._site.subscription);
+        const client: ServiceClient = await createGenericClient(context, this._site.subscription, { addStatusCodePolicy: true });
         const response: AzExtPipelineResponse = await client.sendRequest(createPipelineRequest({
             method: 'GET',
             url: `${this._site.kuduUrl}/api/deployments/${deployId}/log/${logId}`

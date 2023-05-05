@@ -4,6 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 import type { AppServicePlan } from '@azure/arm-appservice';
+import { Progress } from 'vscode';
 import { ParsedSite } from '../SiteClient';
 import { publisherName } from '../constants';
 import { IDeployContext } from './IDeployContext';
@@ -11,11 +12,11 @@ import { delayFirstWebAppDeploy } from './delayFirstWebAppDeploy';
 import { runWithZipStream } from './runWithZipStream';
 import { waitForDeploymentToComplete } from './waitForDeploymentToComplete';
 
-export async function deployZip(context: IDeployContext, site: ParsedSite, fsPath: string, aspPromise: Promise<AppServicePlan | undefined>, pathFileMap?: Map<string, string>): Promise<void> {
+export async function deployZip(context: IDeployContext, site: ParsedSite, fsPath: string, aspPromise: Promise<AppServicePlan | undefined>, pathFileMap?: Map<string, string>, progress?: Progress<number>): Promise<void> {
     const kuduClient = await site.createClient(context);
 
     const response = await runWithZipStream(context, {
-        fsPath, site, pathFileMap,
+        fsPath, site, pathFileMap, progress,
         callback: async zipStream => {
             return await kuduClient.zipPushDeploy(context, () => zipStream, {
                 author: publisherName,

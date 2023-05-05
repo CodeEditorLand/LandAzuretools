@@ -224,6 +224,7 @@ export function getDefaultWebpackConfig(options: DefaultWebpackOptions): webpack
                     // there are browserify versions of these, but they cause more problems than they solve
                     'net': false,
                     'crypto': false,
+                    'canvas': false,
                     //caller-supplied fallbacks
                     ...(options.resolveFallbackAliases || [])
                 } : undefined,
