@@ -6,7 +6,12 @@
 import type { AppServicePlan, SiteConfigResource } from '@azure/arm-appservice';
 import { AzExtFsExtra, randomUtils } from '@microsoft/vscode-azext-utils';
 import * as path from 'path';
+<<<<<<< HEAD
 import { ProgressLocation, l10n, window } from 'vscode';
+=======
+import { l10n, ProgressLocation, window } from 'vscode';
+import { ext } from '../extensionVariables';
+>>>>>>> 530741f229242ba1049c93b0b3b381715c87b742
 import { ScmType } from '../ScmType';
 import { ParsedSite } from '../SiteClient';
 import { ext } from '../extensionVariables';
@@ -67,14 +72,14 @@ export async function deploy(site: ParsedSite, fsPath: string, context: IDeployC
     const title: string = l10n.t('Deploying to "{0}"... Check [output window](command:{1}) for status.', site.fullName, ext.prefix + '.showOutputChannel');
     await window.withProgress({ location: ProgressLocation.Notification, title }, async (progress) => {
         if (context.stopAppBeforeDeploy) {
-            ext.outputChannel.appendLog(localize('stoppingApp', 'Stopping app...'), { resourceName: site.fullName });
+            ext.outputChannel.appendLog(l10n.t('Stopping app...'), { resourceName: site.fullName });
             await client.stop();
         }
 
-        ext.outputChannel.appendLog(localize('deployStart', 'Starting deployment...'), { resourceName: site.fullName });
+        ext.outputChannel.appendLog(l10n.t('Starting deployment...'), { resourceName: site.fullName });
         try {
             if (!context.deployMethod && config.scmType === ScmType.GitHub) {
-                throw new Error(localize('gitHubConnected', '"{0}" is connected to a GitHub repository. Push to GitHub repository to deploy.', site.fullName));
+                throw new Error(l10n.t('"{0}" is connected to a GitHub repository. Push to GitHub repository to deploy.', site.fullName));
             } else if (!context.deployMethod && config.scmType === ScmType.LocalGit) {
                 await localGitDeploy(site, { fsPath: fsPath }, context);
             } else {
@@ -98,7 +103,7 @@ export async function deploy(site: ParsedSite, fsPath: string, context: IDeployC
             }
         } finally {
             if (context.stopAppBeforeDeploy) {
-                ext.outputChannel.appendLog(localize('startingApp', 'Starting app...'), { resourceName: site.fullName });
+                ext.outputChannel.appendLog(l10n.t('Starting app...'), { resourceName: site.fullName });
                 await client.start();
             }
         }

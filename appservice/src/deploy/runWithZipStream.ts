@@ -5,22 +5,11 @@
 
 import { AzExtPipelineResponse } from '@microsoft/vscode-azext-azureutils';
 import { AzExtFsExtra, IActionContext } from '@microsoft/vscode-azext-utils';
-<<<<<<< Updated upstream
-import * as globby from 'globby';
-=======
->>>>>>> Stashed changes
 import * as path from 'path';
 import * as prettybytes from 'pretty-bytes';
 import * as vscode from 'vscode';
-<<<<<<< Updated upstream
-import * as yazl from 'yazl';
 import { ParsedSite } from '../SiteClient';
 import { ext } from '../extensionVariables';
-import { localize } from '../localize';
-=======
-import { ParsedSite } from '../SiteClient';
-import { ext } from '../extensionVariables';
->>>>>>> Stashed changes
 import { getFileExtension } from '../utils/pathUtils';
 import JSZip = require('jszip');
 
@@ -35,26 +24,14 @@ export async function runWithZipStream(context: IActionContext, options: {
 
     function onFileSize(size: number): void {
         context.telemetry.measurements.zipFileSize = size;
-        ext.outputChannel.appendLog(localize('zipSize', 'Zip package size: {0}', prettybytes(size)), { resourceName: site.fullName });
+        ext.outputChannel.appendLog(vscode.l10n.t('Zip package size: {0}', prettybytes(size)), { resourceName: site.fullName });
     }
 
     const { site, pathFileMap, callback } = options;
     let { fsPath } = options;
-    const uri = vscode.Uri.file(fsPath);
 
     if (getFileExtension(fsPath) === 'zip') {
         context.telemetry.properties.alreadyZipped = 'true';
-<<<<<<< Updated upstream
-        zipStream = Readable.from(await AzExtFsExtra.readFile(fsPath));
-
-        // don't wait
-        void (vscode.workspace.fs.stat(uri)).then(stats => {
-            onFileSize(stats.size);
-        });
-    } else {
-        ext.outputChannel.appendLog(localize('zipCreate', 'Creating zip package...'), { resourceName: site.fullName });
-        const zipFile: yazl.ZipFile = new yazl.ZipFile();
-=======
         // TODO
 
         // don't wait
@@ -64,23 +41,10 @@ export async function runWithZipStream(context: IActionContext, options: {
     } else {
         ext.outputChannel.appendLog(vscode.l10n.t('Creating zip package...'), { resourceName: site.fullName });
         const zipFile: JSZip = new JSZip();
->>>>>>> Stashed changes
         let filesToZip: string[] = [];
         // let sizeOfZipFile: number = 0;
 
-<<<<<<< Updated upstream
-        zipFile.outputStream.on('data', (chunk) => {
-            if (typeof chunk === 'string' || Buffer.isBuffer(chunk)) {
-                sizeOfZipFile += chunk.length;
-            }
-        });
-
-        zipFile.outputStream.on('finish', () => onFileSize(sizeOfZipFile));
-
-        if ((await vscode.workspace.fs.stat(uri)).type === vscode.FileType.Directory) {
-=======
         if (await AzExtFsExtra.isDirectory(fsPath)) {
->>>>>>> Stashed changes
             if (!fsPath.endsWith(path.sep)) {
                 fsPath += path.sep;
             }
@@ -162,7 +126,7 @@ async function getFilesFromGlob(folderPath: string, site: ParsedSite): Promise<s
 
 
         if (ignorePatternList.length > 0) {
-            ext.outputChannel.appendLog(localize('zipIgnoreFileMsg', `Ignoring files from \"{0}.{1}\"`, ext.prefix, zipIgnorePatternStr), { resourceName: site.fullName });
+            ext.outputChannel.appendLog(vscode.l10n.t(`Ignoring files from \"{0}.{1}\"`, ext.prefix, zipIgnorePatternStr), { resourceName: site.fullName });
             for (const pattern of ignorePatternList) {
                 ext.outputChannel.appendLine(`\"${pattern}\"`);
             }
@@ -182,11 +146,7 @@ async function getFilesFromGitignore(folderPath: string, gitignoreName: string):
     let ignore: string[] = [];
     const gitignorePath: string = path.join(folderPath, gitignoreName);
     if (await AzExtFsExtra.pathExists(gitignorePath)) {
-<<<<<<< Updated upstream
-        const funcIgnoreContents: string = (await AzExtFsExtra.readFile(gitignorePath)).toString();
-=======
         const funcIgnoreContents: string = await AzExtFsExtra.readFile(gitignorePath);
->>>>>>> Stashed changes
         ignore = funcIgnoreContents.split('\n').map(l => l.trim());
     }
 

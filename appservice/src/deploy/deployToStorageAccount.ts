@@ -4,31 +4,26 @@
  *--------------------------------------------------------------------------------------------*/
 
 import type { StringDictionary } from '@azure/arm-appservice';
-<<<<<<< Updated upstream
 import { BlobServiceClient, BlockBlobClient, ContainerClient } from '@azure/storage-blob';
-import { IActionContext, parseError } from '@microsoft/vscode-azext-utils';
-=======
-import type { BlobServiceClient, BlockBlobClient, ContainerClient } from '@azure/storage-blob';
-import { IActionContext, parseError, randomUtils } from '@microsoft/vscode-azext-utils';
->>>>>>> Stashed changes
 import * as dayjs from 'dayjs';
 // eslint-disable-next-line import/no-internal-modules
 import * as relativeTime from 'dayjs/plugin/relativeTime';
 // eslint-disable-next-line import/no-internal-modules
+import { IActionContext, parseError, randomUtils } from '@microsoft/vscode-azext-utils';
 import * as utc from 'dayjs/plugin/utc';
+import { Readable } from 'stream';
 import { URL } from 'url';
-<<<<<<< Updated upstream
-import { ext } from '../extensionVariables';
-import { localize } from '../localize';
-=======
 import * as vscode from 'vscode';
->>>>>>> Stashed changes
 import { ParsedSite } from '../SiteClient';
+import { ext } from '../extensionVariables';
 import { IDeployContext } from './IDeployContext';
 import { runWithZipStream } from './runWithZipStream';
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
+
+// From https://github.com/Azure/ms-rest-azure-env/blob/6fa17ce7f36741af6ce64461735e6c7c0125f0ed/lib/azureEnvironment.ts#L280
+const AzureCloudStorageEndpointSuffix = 'core.windows.net';
 
 /**
  * Method of deployment that is only intended to be used for Linux Consumption Function apps because it doesn't support kudu pushDeployment
@@ -50,7 +45,7 @@ export async function deployToStorageAccount(context: IDeployContext, fsPath: st
     delete appSettings.properties.WEBSITE_RUN_FROM_ZIP; // delete old app setting name if it exists
     appSettings.properties.WEBSITE_RUN_FROM_PACKAGE = blobUrl;
     await client.updateApplicationSettings(appSettings);
-    ext.outputChannel.appendLog(localize('deploymentSuccessful', 'Deployment successful.'), { resourceName: site.fullName });
+    ext.outputChannel.appendLog(vscode.l10n.t('Deployment successful.'), { resourceName: site.fullName });
 
     context.syncTriggersPostDeploy = true;
 }
@@ -82,7 +77,7 @@ async function createBlobServiceClient(context: IActionContext, site: ParsedSite
             }
         }
     } else {
-        throw new Error(localize('azureWebJobsStorageKey', '"{0}" app setting is required for Run From Package deployment.', azureWebJobsStorageKey));
+        throw new Error(vscode.l10n.t('"{0}" app setting is required for Run From Package deployment.', azureWebJobsStorageKey));
     }
 }
 
@@ -97,14 +92,10 @@ async function createBlobFromZip(context: IActionContext, fsPath: string, site: 
 
     await runWithZipStream(context, {
         fsPath, site, callback: async zipStream => {
-<<<<<<< Updated upstream
-            ext.outputChannel.appendLog(localize('creatingBlob', 'Uploading zip package to storage container...'), { resourceName: site.fullName });
-            await blobClient.uploadStream(zipStream);
-=======
+
             ext.outputChannel.appendLog(vscode.l10n.t('Uploading zip package to storage container...'), { resourceName: site.fullName });
             // this is Node.js only
             await blobClient.uploadStream(zipStream as Readable);
->>>>>>> Stashed changes
         }
     });
 

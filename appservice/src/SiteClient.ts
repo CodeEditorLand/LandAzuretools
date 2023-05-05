@@ -6,10 +6,14 @@
 import type { AppServicePlan, FunctionEnvelope, FunctionSecrets, HostKeys, HostNameSslState, Site, SiteConfigResource, SiteLogsConfig, SiteSourceControl, SlotConfigNamesResource, SourceControl, StringDictionary, User, WebAppsListFunctionKeysResponse, WebJob, WebSiteInstanceStatus, WebSiteManagementClient } from '@azure/arm-appservice';
 import type { ServiceClient } from '@azure/core-client';
 import { RequestBodyType, createHttpHeaders, createPipelineRequest } from '@azure/core-rest-pipeline';
+<<<<<<< HEAD
 import { AppSettingsClientProvider, IAppSettingsClient } from '@microsoft/vscode-azext-azureappsettings';
+=======
+import type { AppSettingsClientProvider, IAppSettingsClient } from '@microsoft/vscode-azext-azureappsettings';
+>>>>>>> 530741f229242ba1049c93b0b3b381715c87b742
 import { AzExtPipelineResponse, createGenericClient, uiUtils } from '@microsoft/vscode-azext-azureutils';
 import { IActionContext, ISubscriptionContext, nonNullProp, nonNullValue, parseError } from '@microsoft/vscode-azext-utils';
-import { KuduModels } from 'vscode-azurekudu';
+import type * as KuduModels from './KuduModels';
 import { AppKind } from './createAppService/AppKind';
 import { tryGetAppServicePlan, tryGetWebApp, tryGetWebAppSlot } from './tryGetSiteResource';
 import { createWebSiteClient } from './utils/azureClients';
