@@ -16,7 +16,42 @@ import type { AzureSubscriptionProvider } from './AzureSubscriptionProvider';
  * A class for obtaining Azure subscription information using VSCode's built-in authentication
  * provider.
  */
-export class VSCodeAzureSubscriptionProvider implements AzureSubscriptionProvider {
+export class VSCodeAzureSubscriptionProvider extends vscode.Disposable implements AzureSubscriptionProvider {
+    private readonly onDidSignInEmitter = new vscode.EventEmitter<void>();
+    private readonly onDidSignOutEmitter = new vscode.EventEmitter<void>();
+
+    /**
+     * Fired when the user signs in
+     */
+    public readonly onDidSignIn = this.onDidSignInEmitter.event;
+
+    /**
+     * Fired when the user signs out
+     */
+    public readonly onDidSignOut = this.onDidSignOutEmitter.event;
+
+    /**
+     * Constructs a new instance of {@link VSCodeAzureSubscriptionProvider}
+     */
+    public constructor() {
+        const sessionChangedDisposable = vscode.authentication.onDidChangeSessions(async (evt: vscode.AuthenticationSessionsChangeEvent) => {
+            if (evt.provider.id !== getConfiguredAuthProviderId()) {
+                return;
+            }
+
+            // An event is already directly fired for sign in, so we need only check for sign out
+            if (!await this.isSignedIn()) {
+                this.onDidSignOutEmitter.fire();
+            }
+        });
+
+        super(() => {
+            this.onDidSignInEmitter.dispose();
+            this.onDidSignOutEmitter.dispose();
+            sessionChangedDisposable?.dispose();
+        });
+    }
+
     /**
      * Gets a list of Azure subscriptions available to the user.
      *
@@ -79,6 +114,11 @@ export class VSCodeAzureSubscriptionProvider implements AzureSubscriptionProvide
      */
     public async signIn(): Promise<boolean> {
         const session = await vscode.authentication.getSession(getConfiguredAuthProviderId(), this.getDefaultScopes(), { createIfNone: true, clearSessionPreference: true });
+
+        if (session) {
+            this.onDidSignInEmitter.fire();
+        }
+
         return !!session;
     }
 

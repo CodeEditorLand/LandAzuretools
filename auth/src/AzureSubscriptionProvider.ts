@@ -3,6 +3,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
+import * as vscode from 'vscode';
 import type { AzureSubscription } from './AzureSubscription';
 
 /**
@@ -45,4 +46,14 @@ export interface AzureSubscriptionProvider {
      * @throws Throws an {@link Error} every time
      */
     signOut(): Promise<void>;
+
+    /**
+     * Fired when the user signs in
+     */
+    onDidSignIn: vscode.Event<void>;
+
+    /**
+     * Fired when the user signs out
+     */
+    onDidSignOut: vscode.Event<void>;
 }
