@@ -11,6 +11,7 @@ import { AzExtFsExtra } from '../src/utils/AzExtFsExtra';
 import { randomUtils } from '../src/utils/randomUtils';
 import { assertThrowsAsync } from './assertThrowsAsync';
 
+
 suite('AzExtFsExtra', function (this: Mocha.Suite): void {
     let workspacePath: string;
     let testFolderPath: string;
@@ -147,6 +148,20 @@ suite('AzExtFsExtra', function (this: Mocha.Suite): void {
         assert.strictEqual(contents, fsFileContents);
     });
 
+    test('appendFile', async () => {
+        const fsPath = path.join(testFolderPath, randomUtils.getRandomHexString());
+        const filePath = path.join(fsPath, indexHtml);
+        const contents = 'writeFileTest';
+        await AzExtFsExtra.writeFile(filePath, contents);
+
+        const appendContents = 'appendFile';
+        await AzExtFsExtra.appendFile(filePath, appendContents);
+
+        const fsFileContents = fs.readFileSync(filePath).toString();
+        const expectedContent = `writeFileTest\r\n\r\nappendFile`;
+        assert.strictEqual(expectedContent, fsFileContents);
+    });
+
     test('readJSON', async () => {
         const fileContents = await AzExtFsExtra.readJSON<any>(jsonFilePath);
         compareObjects(jsonContents, fileContents);
@@ -158,7 +173,7 @@ suite('AzExtFsExtra', function (this: Mocha.Suite): void {
         const filePath = path.join(fsPath, jsonFile);
 
         fs.writeFileSync(filePath, nonJsonContents);
-        await assertThrowsAsync(async () => await AzExtFsExtra.readJSON(filePath), /Unexpected number in JSON/);
+        await assertThrowsAsync(async () => await AzExtFsExtra.readJSON(filePath), /Unexpected number in JSON|Expected ':' after property/);
     });
 
     test('writeJSON (from string)', async () => {
@@ -184,7 +199,7 @@ suite('AzExtFsExtra', function (this: Mocha.Suite): void {
         ensureDir(fsPath);
         const filePath = path.join(fsPath, jsonFile);
 
-        await assertThrowsAsync(async () => await AzExtFsExtra.writeJSON(filePath, nonJsonContents), /Unexpected number in JSON/);
+        await assertThrowsAsync(async () => await AzExtFsExtra.writeJSON(filePath, nonJsonContents), /Unexpected number in JSON|Expected ':' after property/);
     });
 
     test('emptyDir', async () => {
@@ -283,4 +298,3 @@ function compareObjects(o1, o2): void {
         assert.strictEqual(value, o2[key]);
     }
 }
-

@@ -6,12 +6,7 @@
 import type { AppServicePlan, SiteConfigResource } from '@azure/arm-appservice';
 import { AzExtFsExtra, randomUtils } from '@microsoft/vscode-azext-utils';
 import * as path from 'path';
-<<<<<<< HEAD
 import { ProgressLocation, l10n, window } from 'vscode';
-=======
-import { l10n, ProgressLocation, window } from 'vscode';
-import { ext } from '../extensionVariables';
->>>>>>> 530741f229242ba1049c93b0b3b381715c87b742
 import { ScmType } from '../ScmType';
 import { ParsedSite } from '../SiteClient';
 import { ext } from '../extensionVariables';

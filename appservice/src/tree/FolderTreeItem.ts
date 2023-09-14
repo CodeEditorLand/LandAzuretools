@@ -6,13 +6,13 @@
 import { AzExtParentTreeItem, AzExtTreeItem, createContextValue, GenericTreeItem, IActionContext, TreeItemIconPath } from '@microsoft/vscode-azext-utils';
 import { l10n, ThemeIcon } from 'vscode';
 import { ParsedSite } from '../SiteClient';
-import { ISiteFileMetadata, listFiles } from '../siteFiles';
+import { createSiteFilesUrl, ISiteFileMetadata, listFiles } from '../siteFiles';
 import { FileTreeItem } from './FileTreeItem';
 
 export interface FolderTreeItemOptions {
     site: ParsedSite;
     label: string;
-    path: string;
+    url: string;
     isReadOnly: boolean;
     contextValuesToAdd?: string[];
 }
@@ -21,7 +21,7 @@ export class FolderTreeItem extends AzExtParentTreeItem {
     public static contextValue: string = 'folder';
     public readonly childTypeLabel: string = l10n.t('file or folder');
     public readonly label: string;
-    public readonly path: string;
+    public readonly url: string;
     public readonly isReadOnly: boolean;
 
     public readonly contextValuesToAdd: string[];
@@ -33,7 +33,7 @@ export class FolderTreeItem extends AzExtParentTreeItem {
         super(parent);
         this.site = options.site;
         this.label = options.label;
-        this.path = options.path;
+        this.url = options.url;
         this.isReadOnly = options.isReadOnly;
         this.contextValuesToAdd = options.contextValuesToAdd || [];
     }
@@ -55,24 +55,18 @@ export class FolderTreeItem extends AzExtParentTreeItem {
     }
 
     public async loadMoreChildrenImpl(_clearCache: boolean, context: IActionContext): Promise<AzExtTreeItem[]> {
-        let files: ISiteFileMetadata[] = await listFiles(context, this.site, this.path);
-
+        let files: ISiteFileMetadata[] = await listFiles(context, this.site, this.url);
         // this file is being accessed by Kudu and is not viewable
         files = files.filter(f => f.mime !== 'text/xml' || !f.name.includes('LogFiles-kudu-trace_pending.xml'));
-
         return files.map(file => {
-            const home: string = 'home';
-            // truncate the home of the path
-            // the substring starts at file.path.indexOf(home) because the path sometimes includes site/ or D:\
-            // the home.length + 1 is to account for the trailing slash, Linux uses / and Window uses \
-            const fsPath: string = file.path.substring(file.path.indexOf(home) + home.length + 1);
+            const url = createSiteFilesUrl(this.site, file.path, file.href);
             return file.mime === 'inode/directory' ? new FolderTreeItem(this, {
                 site: this.site,
                 label: file.name,
                 isReadOnly: this.isReadOnly,
-                path: fsPath,
+                url,
                 contextValuesToAdd: this.contextValuesToAdd
-            }) : new FileTreeItem(this, this.site, file.name, fsPath, this.isReadOnly);
+            }) : new FileTreeItem(this, this.site, file.name, url, this.isReadOnly);
         });
     }
 

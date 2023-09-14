@@ -4,6 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 import type { AppServicePlan } from '@azure/arm-appservice';
+import { RequestBodyType } from '@azure/core-rest-pipeline';
 import { Progress } from 'vscode';
 import { ParsedSite } from '../SiteClient';
 import { publisherName } from '../constants';
@@ -12,19 +13,29 @@ import { delayFirstWebAppDeploy } from './delayFirstWebAppDeploy';
 import { runWithZipStream } from './runWithZipStream';
 import { waitForDeploymentToComplete } from './waitForDeploymentToComplete';
 
-export async function deployZip(context: IDeployContext, site: ParsedSite, fsPath: string, aspPromise: Promise<AppServicePlan | undefined>, pathFileMap?: Map<string, string>, progress?: Progress<number>): Promise<void> {
+export async function deployZip(context: IDeployContext, site: ParsedSite, fsPath: string, aspPromise: Promise<AppServicePlan | undefined>, pathFileMap?: Map<string, string>, _progress?: Progress<{
+    message?: string | undefined;
+    increment?: number | undefined;
+}>): Promise<void> {
     const kuduClient = await site.createClient(context);
-
-    const response = await runWithZipStream(context, {
-        fsPath, site, pathFileMap, progress,
-        callback: async zipStream => {
-            return await kuduClient.zipPushDeploy(context, () => zipStream, {
+    const callback = context.deployMethod === 'flexconsumption' ?
+        async zipStream => {
+            return await kuduClient.flexDeploy(context, () => zipStream as RequestBodyType, {
+                remoteBuild: context.flexConsumptionRemoteBuild,
+                Deployer: publisherName
+            });
+        } :
+        async zipStream => {
+            return await kuduClient.zipPushDeploy(context, () => zipStream as RequestBodyType, {
                 author: publisherName,
                 deployer: publisherName,
                 isAsync: true,
                 trackDeploymentId: true
             });
-        }
+        };
+
+    const response = await runWithZipStream(context, {
+        fsPath, site, pathFileMap, callback
     });
     let locationUrl: string | undefined;
     try {

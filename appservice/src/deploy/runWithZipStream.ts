@@ -5,6 +5,7 @@
 
 import { AzExtPipelineResponse } from '@microsoft/vscode-azext-azureutils';
 import { AzExtFsExtra, IActionContext } from '@microsoft/vscode-azext-utils';
+import * as globby from 'globby';
 import * as path from 'path';
 import * as prettybytes from 'pretty-bytes';
 import * as vscode from 'vscode';
@@ -107,24 +108,28 @@ function getPathFromMap(realPath: string, pathfileMap?: Map<string, string>): st
     return realPath;
 }
 
+const commonGlobSettings: Partial<globby.GlobbyOptions> = {
+    dot: true, // Include paths starting with '.'
+    followSymbolicLinks: true, // Follow symlinks to get all sub folders https://github.com/microsoft/vscode-azurefunctions/issues/1289
+};
+
 /**
  * Adds files using glob filtering
  */
 async function getFilesFromGlob(folderPath: string, site: ParsedSite): Promise<string[]> {
     const zipDeployConfig: vscode.WorkspaceConfiguration = vscode.workspace.getConfiguration(ext.prefix, vscode.Uri.file(folderPath));
+    const globOptions = { cwd: folderPath, followSymbolicLinks: true, dot: true };
     const globPattern: string = zipDeployConfig.get<string>('zipGlobPattern') || '**/*';
-    const filesToInclude: string[] = (await vscode.workspace.findFiles(new vscode.RelativePattern(folderPath, globPattern))).map(f => f.path);
+    const filesToInclude: string[] = await globby(globPattern, globOptions);
     const zipIgnorePatternStr = 'zipIgnorePattern';
 
     let ignorePatternList: string | string[] = zipDeployConfig.get<string | string[]>(zipIgnorePatternStr) || '';
+    const filesToIgnore: string[] = await globby(ignorePatternList, globOptions);
 
-    const filesToIgnore = await generateIgnoreFiles(folderPath, ignorePatternList)
     if (ignorePatternList) {
         if (typeof ignorePatternList === 'string') {
             ignorePatternList = [ignorePatternList];
         }
-
-
         if (ignorePatternList.length > 0) {
             ext.outputChannel.appendLog(vscode.l10n.t(`Ignoring files from \"{0}.{1}\"`, ext.prefix, zipIgnorePatternStr), { resourceName: site.fullName });
             for (const pattern of ignorePatternList) {
@@ -133,7 +138,6 @@ async function getFilesFromGlob(folderPath: string, site: ParsedSite): Promise<s
         }
     }
 
-    // this doesn't work due to slash differences
     return filesToInclude.filter(file => {
         return !filesToIgnore.includes(file);
     })
@@ -146,22 +150,18 @@ async function getFilesFromGitignore(folderPath: string, gitignoreName: string):
     let ignore: string[] = [];
     const gitignorePath: string = path.join(folderPath, gitignoreName);
     if (await AzExtFsExtra.pathExists(gitignorePath)) {
-        const funcIgnoreContents: string = await AzExtFsExtra.readFile(gitignorePath);
-        ignore = funcIgnoreContents.split('\n').map(l => l.trim());
+        const funcIgnoreContents: string = (await AzExtFsExtra.readFile(gitignorePath)).toString();
+        ignore = funcIgnoreContents
+            .split('\n')
+            .map(l => l.trim())
+            .filter(s => s !== '');
     }
 
-    return await generateIgnoreFiles(folderPath, ignore);
-}
-
-async function generateIgnoreFiles(folderPath: string, ignorePatternList: string | string[]): Promise<string[]> {
-    ignorePatternList = Array.isArray(ignorePatternList) ? ignorePatternList : [ignorePatternList];
-    const filesToIgnore = new Set<string>();
-    for (const pattern of ignorePatternList) {
-        const files = await vscode.workspace.findFiles(new vscode.RelativePattern(folderPath, pattern));
-        for (const file of files) {
-            filesToIgnore.add(file.fsPath);
-        }
-    }
-
-    return Array.from(filesToIgnore);
+    return await globby('**/*', {
+        // We can replace this option and the above logic with `ignoreFiles` if we upgrade to globby^13 (ESM)
+        // see https://github.com/sindresorhus/globby#ignorefiles
+        ignore,
+        cwd: folderPath,
+        ...commonGlobSettings
+    });
 }
