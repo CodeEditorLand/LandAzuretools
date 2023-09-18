@@ -212,7 +212,6 @@ export function getDefaultWebpackConfig(options: DefaultWebpackOptions): webpack
                     // for the list of Node.js core module polyfills.
                     "path": require.resolve("path-browserify"),
                     "os": require.resolve("os-browserify/browser"),
-                    "url": require.resolve("url/"),
                     "util": require.resolve("util/"),
                     "stream": require.resolve("stream-browserify"),
                     "http": require.resolve("stream-http"),

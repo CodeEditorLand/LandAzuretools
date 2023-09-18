@@ -5,7 +5,6 @@
 
 import { AzExtPipelineResponse } from '@microsoft/vscode-azext-azureutils';
 import { AzExtFsExtra, IActionContext } from '@microsoft/vscode-azext-utils';
-import * as globby from 'globby';
 import * as path from 'path';
 import * as prettybytes from 'pretty-bytes';
 import * as vscode from 'vscode';
@@ -43,6 +42,7 @@ export async function runWithZipStream(context: IActionContext, options: {
         ext.outputChannel.appendLog(vscode.l10n.t('Creating zip package...'), { resourceName: site.fullName });
         const zipFile: JSZip = new JSZip();
         let filesToZip: string[] = [];
+
         // let sizeOfZipFile: number = 0;
 
         if (await AzExtFsExtra.isDirectory(fsPath)) {
@@ -108,23 +108,23 @@ function getPathFromMap(realPath: string, pathfileMap?: Map<string, string>): st
     return realPath;
 }
 
-const commonGlobSettings: Partial<globby.GlobbyOptions> = {
-    dot: true, // Include paths starting with '.'
-    followSymbolicLinks: true, // Follow symlinks to get all sub folders https://github.com/microsoft/vscode-azurefunctions/issues/1289
-};
+// const commonGlobSettings: Partial<vscode.GlobPattern> = {
+//     dot: true, // Include paths starting with '.'
+//     followSymbolicLinks: true, // Follow symlinks to get all sub folders https://github.com/microsoft/vscode-azurefunctions/issues/1289
+// };
 
 /**
  * Adds files using glob filtering
  */
 async function getFilesFromGlob(folderPath: string, site: ParsedSite): Promise<string[]> {
     const zipDeployConfig: vscode.WorkspaceConfiguration = vscode.workspace.getConfiguration(ext.prefix, vscode.Uri.file(folderPath));
-    const globOptions = { cwd: folderPath, followSymbolicLinks: true, dot: true };
+    // const globOptions = { cwd: folderPath, followSymbolicLinks: true, dot: true };
     const globPattern: string = zipDeployConfig.get<string>('zipGlobPattern') || '**/*';
-    const filesToInclude: string[] = await globby(globPattern, globOptions);
     const zipIgnorePatternStr = 'zipIgnorePattern';
-
     let ignorePatternList: string | string[] = zipDeployConfig.get<string | string[]>(zipIgnorePatternStr) || '';
-    const filesToIgnore: string[] = await globby(ignorePatternList, globOptions);
+    // a glob pattern list should be joined like so: {**/*.js,**/*.png}
+    const ignoreGlobPattern = Array.isArray(ignorePatternList) ? `{${ignorePatternList.join(',')}}` : ignorePatternList;
+    const files: vscode.Uri[] = await vscode.workspace.findFiles(globPattern, ignoreGlobPattern);
 
     if (ignorePatternList) {
         if (typeof ignorePatternList === 'string') {
@@ -138,9 +138,7 @@ async function getFilesFromGlob(folderPath: string, site: ParsedSite): Promise<s
         }
     }
 
-    return filesToInclude.filter(file => {
-        return !filesToIgnore.includes(file);
-    })
+    return files.map(f => f.fsPath);
 }
 
 /**
@@ -157,11 +155,5 @@ async function getFilesFromGitignore(folderPath: string, gitignoreName: string):
             .filter(s => s !== '');
     }
 
-    return await globby('**/*', {
-        // We can replace this option and the above logic with `ignoreFiles` if we upgrade to globby^13 (ESM)
-        // see https://github.com/sindresorhus/globby#ignorefiles
-        ignore,
-        cwd: folderPath,
-        ...commonGlobSettings
-    });
+    return (await vscode.workspace.findFiles(`{${ignore.join(',')}}`)).map(f => f.fsPath);
 }

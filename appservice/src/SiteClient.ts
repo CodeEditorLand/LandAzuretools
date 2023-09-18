@@ -10,6 +10,7 @@ import type { AppSettingsClientProvider, IAppSettingsClient } from '@microsoft/v
 import { AzExtPipelineResponse, createGenericClient, uiUtils } from '@microsoft/vscode-azext-azureutils';
 import { IActionContext, ISubscriptionContext, nonNullProp, nonNullValue, parseError } from '@microsoft/vscode-azext-utils';
 import { URLSearchParams } from 'url';
+import 'url-search-params-polyfill';
 import type * as KuduModels from './KuduModels';
 import { AppKind } from './createAppService/AppKind';
 import { tryGetAppServicePlan, tryGetWebApp, tryGetWebAppSlot } from './tryGetSiteResource';
