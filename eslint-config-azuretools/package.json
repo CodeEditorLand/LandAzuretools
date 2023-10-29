@@ -1,22 +1,26 @@
 {
   "name": "@microsoft/eslint-config-azuretools",
-  "version": "0.2.1",
+  "version": "0.0.1",
   "description": "Shared ESLint configuration used by Azure Tools for VS Code",
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Microsoft/vscode-azuretools"
+    "url": "git+https://github.com/CodeEditorLand/CodeEditorLand.git"
   },
   "keywords": [
     "eslint",
     "eslintconfig"
   ],
-  "author": "Microsoft Corporation",
+  "author": {
+    "name": "Nikola Hristov",
+    "email": "nikola@nikolahristov.tech",
+    "url": "https://nikolahristov.tech"
+  },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Microsoft/vscode-azuretools/issues"
+    "url": "https://github.com/CodeEditorLand/CodeEditorLand/issues"
   },
-  "homepage": "https://github.com/Microsoft/vscode-azuretools/blob/main/eslint-config-azuretools/README.md",
+  "homepage": "https://github.com/CodeEditorLand/CodeEditorLand#readme",
   "peerDependencies": {
     "@typescript-eslint/eslint-plugin": ">=6",
     "eslint": ">=8",
@@ -29,6 +33,15 @@
     "lint": "exit 0",
     "build": "exit 0",
     "test": "exit 0",
-    "package": "npm pack"
+    "package": "npm pack",
+    "prepublishOnly": "TypeScriptESBuild Source/**/*.ts"
+  },
+  "type": "module",
+  "private": "false",
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "typescript-esbuild": "0.3.1"
   }
 }
