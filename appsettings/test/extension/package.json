@@ -1,16 +1,8 @@
 {
   "name": "azureappsettings",
-  "description": "Used for unit tests in this package.",
   "version": "0.0.1",
-  "aiKey": "test-ai-key",
-  "publisher": "ms-azuretools",
-  "main": "./extension",
-  "engines": {
-    "vscode": "1.24.0"
-  },
-  "activationEvents": [
-    "*"
-  ],
+  "private": "false",
+  "description": "Used for unit tests in this package.",
   "homepage": "https://github.com/CodeEditorLand/CodeEditorLand#readme",
   "bugs": {
     "url": "https://github.com/CodeEditorLand/CodeEditorLand/issues"
@@ -20,20 +12,28 @@
     "url": "git+https://github.com/CodeEditorLand/CodeEditorLand.git"
   },
   "license": "MIT",
-  "type": "module",
-  "private": "false",
-  "publishConfig": {
-    "access": "public"
-  },
   "author": {
     "name": "Nikola Hristov",
     "email": "nikola@nikolahristov.tech",
     "url": "https://nikolahristov.tech"
   },
+  "publisher": "playform",
+  "type": "module",
+  "main": "./extension",
   "scripts": {
     "prepublishOnly": "TypeScriptESBuild Source/**/*.ts"
   },
+  "activationEvents": [
+    "*"
+  ],
   "devDependencies": {
     "typescript-esbuild": "0.3.1"
-  }
+  },
+  "engines": {
+    "vscode": "1.24.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "aiKey": "test-ai-key"
 }

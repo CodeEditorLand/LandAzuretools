@@ -1,39 +1,38 @@
 {
   "name": "@microsoft/vscode-azext-utils",
+  "version": "0.0.1",
+  "private": "false",
+  "description": "Common UI tools for developing Azure extensions for VS Code",
+  "keywords": [
+    "azure",
+    "vscode"
+  ],
+  "homepage": "https://github.com/CodeEditorLand/CodeEditorLand#readme",
+  "bugs": {
+    "url": "https://github.com/CodeEditorLand/CodeEditorLand/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CodeEditorLand/CodeEditorLand.git"
+  },
+  "license": "MIT",
   "author": {
     "name": "Nikola Hristov",
     "email": "nikola@nikolahristov.tech",
     "url": "https://nikolahristov.tech"
   },
-  "version": "0.0.1",
-  "description": "Common UI tools for developing Azure extensions for VS Code",
-  "tags": [
-    "azure",
-    "vscode"
-  ],
-  "keywords": [
-    "azure",
-    "vscode"
-  ],
+  "publisher": "playform",
+  "type": "module",
   "main": "out/src/index.js",
   "types": "index.d.ts",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/CodeEditorLand/CodeEditorLand.git"
-  },
-  "bugs": {
-    "url": "https://github.com/CodeEditorLand/CodeEditorLand/issues"
-  },
-  "homepage": "https://github.com/CodeEditorLand/CodeEditorLand#readme",
   "scripts": {
     "build": "tsc -p ./",
     "compile": "tsc -watch -p ./",
     "lint": "eslint --ext .ts .",
     "lint-fix": "eslint --ext .ts . --fix",
-    "test": "node ./out/test/runTest.js",
     "package": "npm pack",
-    "prepublishOnly": "TypeScriptESBuild Source/**/*.ts"
+    "prepublishOnly": "TypeScriptESBuild Source/**/*.ts",
+    "test": "node ./out/test/runTest.js"
   },
   "dependencies": {
     "@microsoft/vscode-azureresources-api": "2.1.0",
@@ -45,9 +44,6 @@
     "uuid": "9.0.1",
     "vscode-tas-client": "0.1.63",
     "vscode-uri": "3.0.8"
-  },
-  "peerDependencies": {
-    "@azure/ms-rest-azure-env": "2.0.0"
   },
   "devDependencies": {
     "@microsoft/eslint-config-azuretools": "0.2.1",
@@ -69,9 +65,14 @@
     "typescript": "5.2.2",
     "typescript-esbuild": "0.3.1"
   },
-  "type": "module",
-  "private": "false",
+  "peerDependencies": {
+    "@azure/ms-rest-azure-env": "2.0.0"
+  },
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "tags": [
+    "azure",
+    "vscode"
+  ]
 }
