@@ -3,11 +3,11 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-export * from './AzureAuthentication';
-export * from './AzureSubscription';
-export * from './AzureSubscriptionProvider';
-export * from './NotSignedInError';
-export * from './utils/configuredAzureEnv';
-export * from './utils/getUnauthenticatedTenants';
-export * from './VSCodeAzureSubscriptionProvider';
-export * from './signInToTenant'
+export * from "./AzureAuthentication";
+export * from "./AzureSubscription";
+export * from "./AzureSubscriptionProvider";
+export * from "./NotSignedInError";
+export * from "./utils/configuredAzureEnv";
+export * from "./utils/getUnauthenticatedTenants";
+export * from "./VSCodeAzureSubscriptionProvider";
+export * from "./signInToTenant";

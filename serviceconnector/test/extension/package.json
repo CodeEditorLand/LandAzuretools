@@ -1,39 +1,39 @@
 {
-  "name": "azureserviceconnector",
-  "version": "0.0.1",
-  "private": "false",
-  "description": "Used for unit tests in this package.",
-  "homepage": "https://github.com/CodeEditorLand/CodeEditorLand#readme",
-  "bugs": {
-    "url": "https://github.com/CodeEditorLand/CodeEditorLand/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/CodeEditorLand/CodeEditorLand.git"
-  },
-  "license": "MIT",
-  "author": {
-    "name": "Nikola Hristov",
-    "email": "nikola@nikolahristov.tech",
-    "url": "https://nikolahristov.tech"
-  },
-  "publisher": "playform",
-  "type": "module",
-  "main": "./extension",
-  "scripts": {
-    "prepublishOnly": "TypeScriptESBuild Source/**/*.ts"
-  },
-  "activationEvents": [
-    "*"
-  ],
-  "devDependencies": {
-    "typescript-esbuild": "0.3.1"
-  },
-  "engines": {
-    "vscode": "1.24.0"
-  },
-  "publishConfig": {
-    "access": "public"
-  },
-  "aiKey": "test-ai-key"
+	"name": "azureserviceconnector",
+	"version": "0.0.1",
+	"private": "false",
+	"description": "Used for unit tests in this package.",
+	"homepage": "https://github.com/CodeEditorLand/CodeEditorLand#readme",
+	"bugs": {
+		"url": "https://github.com/CodeEditorLand/CodeEditorLand/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/CodeEditorLand/CodeEditorLand.git"
+	},
+	"license": "MIT",
+	"author": {
+		"name": "Nikola Hristov",
+		"email": "nikola@nikolahristov.tech",
+		"url": "https://nikolahristov.tech"
+	},
+	"publisher": "playform",
+	"type": "module",
+	"main": "./extension",
+	"scripts": {
+		"prepublishOnly": "TypeScriptESBuild 'Source/**/*.ts'"
+	},
+	"activationEvents": [
+		"*"
+	],
+	"devDependencies": {
+		"typescript-esbuild": "0.3.1"
+	},
+	"engines": {
+		"vscode": "1.24.0"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"aiKey": "test-ai-key"
 }

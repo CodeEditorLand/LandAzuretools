@@ -3,298 +3,376 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import assert = require('assert');
-import * as fs from 'fs';
-import * as path from 'path';
-import { Uri, workspace, WorkspaceFolder } from 'vscode';
-import { AzExtFsExtra } from '../src/utils/AzExtFsExtra';
-import { randomUtils } from '../src/utils/randomUtils';
-import { assertThrowsAsync } from './assertThrowsAsync';
+import assert = require("assert");
+import * as fs from "fs";
+import * as path from "path";
+import { Uri, workspace, WorkspaceFolder } from "vscode";
+import { AzExtFsExtra } from "../src/utils/AzExtFsExtra";
+import { randomUtils } from "../src/utils/randomUtils";
+import { assertThrowsAsync } from "./assertThrowsAsync";
 
+suite("AzExtFsExtra", function (this: Mocha.Suite): void {
+	let workspacePath: string;
+	let testFolderPath: string;
+	let workspaceFilePath: string;
+	let jsonFilePath: string;
 
-suite('AzExtFsExtra', function (this: Mocha.Suite): void {
-    let workspacePath: string;
-    let testFolderPath: string;
-    let workspaceFilePath: string;
-    let jsonFilePath: string;
+	const indexHtml: string = "index.html";
+	const jsonFile: string = "test.json";
+	const jsonContents = {
+		foo: 99,
+		foo2: true,
+		lorem: "ipsum",
+		// originally tested NaN, but not a valid JSON value
+		// https://stackoverflow.com/questions/1423081/json-left-out-infinity-and-nan-json-status-in-ecmascript
+		bar: null,
+	};
 
-    const indexHtml: string = 'index.html';
-    const jsonFile: string = 'test.json';
-    const jsonContents = {
-        foo: 99,
-        foo2: true,
-        lorem: 'ipsum',
-        // originally tested NaN, but not a valid JSON value
-        // https://stackoverflow.com/questions/1423081/json-left-out-infinity-and-nan-json-status-in-ecmascript
-        bar: null
-    }
+	const nonJsonContents = `{"foo"-"bar"}`;
 
-    const nonJsonContents = `{"foo"-"bar"}`;
+	const nonExistingPath: string = " ./path/does/not/exist";
+	const nonExistingFilePath = path.join(nonExistingPath, indexHtml);
 
-    const nonExistingPath: string = ' ./path/does/not/exist';
-    const nonExistingFilePath = path.join(nonExistingPath, indexHtml);
+	suiteSetup(async function (this: Mocha.Context): Promise<void> {
+		const workspaceFolders: readonly WorkspaceFolder[] | undefined =
+			workspace.workspaceFolders;
+		if (!workspaceFolders) {
+			throw new Error("No workspace is open");
+		}
 
-    suiteSetup(async function (this: Mocha.Context): Promise<void> {
-        const workspaceFolders: readonly WorkspaceFolder[] | undefined = workspace.workspaceFolders;
-        if (!workspaceFolders) {
-            throw new Error("No workspace is open");
-        }
+		workspacePath = workspaceFolders[0].uri.fsPath;
+		ensureDir(workspacePath);
 
-        workspacePath = workspaceFolders[0].uri.fsPath;
-        ensureDir(workspacePath);
+		workspaceFilePath = path.join(workspacePath, indexHtml);
+		ensureFile(workspaceFilePath);
 
-        workspaceFilePath = path.join(workspacePath, indexHtml);
-        ensureFile(workspaceFilePath);
+		testFolderPath = path.join(
+			workspacePath,
+			`azExtFsExtra${randomUtils.getRandomHexString()}`
+		);
+		ensureDir(testFolderPath);
 
-        testFolderPath = path.join(workspacePath, `azExtFsExtra${randomUtils.getRandomHexString()}`)
-        ensureDir(testFolderPath);
+		jsonFilePath = path.join(workspacePath, jsonFile);
+		ensureFile(jsonFilePath);
+		await workspace.fs.writeFile(
+			Uri.file(jsonFilePath),
+			Buffer.from(JSON.stringify(jsonContents))
+		);
+	});
 
-        jsonFilePath = path.join(workspacePath, jsonFile);
-        ensureFile(jsonFilePath);
-        await workspace.fs.writeFile(Uri.file(jsonFilePath), Buffer.from(JSON.stringify(jsonContents)));
-    });
+	suiteTeardown(async function (this: Mocha.Context): Promise<void> {
+		await workspace.fs.delete(Uri.file(testFolderPath), {
+			recursive: true,
+		});
+		console.log(testFolderPath, "deleted.");
+	});
 
-    suiteTeardown(async function (this: Mocha.Context): Promise<void> {
-        await workspace.fs.delete(Uri.file(testFolderPath), { recursive: true })
-        console.log(testFolderPath, 'deleted.');
-    });
+	test("pathExists for directory", async () => {
+		assert.strictEqual(await AzExtFsExtra.pathExists(workspacePath), true);
+		assert.strictEqual(
+			await AzExtFsExtra.pathExists(nonExistingPath),
+			false
+		);
+	});
 
-    test('pathExists for directory', async () => {
-        assert.strictEqual(await AzExtFsExtra.pathExists(workspacePath), true);
-        assert.strictEqual(await AzExtFsExtra.pathExists(nonExistingPath), false);
-    });
+	test("pathExists for file", async () => {
+		assert.strictEqual(
+			await AzExtFsExtra.pathExists(workspaceFilePath),
+			true
+		);
+		assert.strictEqual(
+			await AzExtFsExtra.pathExists(nonExistingFilePath),
+			false
+		);
+	});
 
-    test('pathExists for file', async () => {
-        assert.strictEqual(await AzExtFsExtra.pathExists(workspaceFilePath), true);
-        assert.strictEqual(await AzExtFsExtra.pathExists(nonExistingFilePath), false);
-    });
+	test("isDirectory properly detects folders", async () => {
+		assert.strictEqual(await AzExtFsExtra.isDirectory(workspacePath), true);
+		assert.strictEqual(
+			await AzExtFsExtra.isDirectory(workspaceFilePath),
+			false
+		);
+	});
 
-    test('isDirectory properly detects folders', async () => {
-        assert.strictEqual(await AzExtFsExtra.isDirectory(workspacePath), true);
-        assert.strictEqual(await AzExtFsExtra.isDirectory(workspaceFilePath), false);
+	test("isFile properly detects files", async () => {
+		assert.strictEqual(await AzExtFsExtra.isFile(workspaceFilePath), true);
+		assert.strictEqual(await AzExtFsExtra.isFile(workspacePath), false);
+	});
 
-    });
+	test("ensureDir that does not exist", async () => {
+		const fsPath = path.join(
+			testFolderPath,
+			randomUtils.getRandomHexString()
+		);
+		assert.strictEqual(fs.existsSync(fsPath), false);
+		await AzExtFsExtra.ensureDir(fsPath);
 
-    test('isFile properly detects files', async () => {
-        assert.strictEqual(await AzExtFsExtra.isFile(workspaceFilePath), true);
-        assert.strictEqual(await AzExtFsExtra.isFile(workspacePath), false);
-    });
+		assert.strictEqual(isDirectoryFs(fsPath), true);
+		assert.strictEqual(fs.existsSync(fsPath), true);
+	});
 
-    test('ensureDir that does not exist', async () => {
-        const fsPath = path.join(testFolderPath, randomUtils.getRandomHexString());
-        assert.strictEqual(fs.existsSync(fsPath), false);
-        await AzExtFsExtra.ensureDir(fsPath);
+	test("ensureDir that exists as a file errors", async () => {
+		const fsPath = path.join(
+			testFolderPath,
+			randomUtils.getRandomHexString()
+		);
+		assert.strictEqual(fs.existsSync(fsPath), false);
+		ensureFile(fsPath);
 
-        assert.strictEqual(isDirectoryFs(fsPath), true);
-        assert.strictEqual(fs.existsSync(fsPath), true);
-    });
+		await assertThrowsAsync(
+			async () => await AzExtFsExtra.ensureDir(fsPath),
+			/FileSystemError/
+		);
+	});
 
-    test('ensureDir that exists as a file errors', async () => {
-        const fsPath = path.join(testFolderPath, randomUtils.getRandomHexString());
-        assert.strictEqual(fs.existsSync(fsPath), false);
-        ensureFile(fsPath);
+	test("ensureFile where directory exists", async () => {
+		const fsPath = path.join(
+			testFolderPath,
+			randomUtils.getRandomHexString()
+		);
 
-        await assertThrowsAsync(async () => await AzExtFsExtra.ensureDir(fsPath), /FileSystemError/);
-    });
+		assert.strictEqual(fs.existsSync(fsPath), false);
+		ensureDir(fsPath);
+		assert.strictEqual(fs.existsSync(fsPath), true);
 
-    test('ensureFile where directory exists', async () => {
-        const fsPath = path.join(testFolderPath, randomUtils.getRandomHexString());
+		const filePath = path.join(fsPath, indexHtml);
+		assert.strictEqual(fs.existsSync(filePath), false);
+		await AzExtFsExtra.ensureFile(filePath);
 
-        assert.strictEqual(fs.existsSync(fsPath), false);
-        ensureDir(fsPath);
-        assert.strictEqual(fs.existsSync(fsPath), true);
+		assert.strictEqual(isFileFs(filePath), true);
+		assert.strictEqual(fs.existsSync(filePath), true);
+	});
 
-        const filePath = path.join(fsPath, indexHtml);
-        assert.strictEqual(fs.existsSync(filePath), false);
-        await AzExtFsExtra.ensureFile(filePath);
+	test("ensureFile where directory does not exist", async () => {
+		const fsPath = path.join(
+			testFolderPath,
+			randomUtils.getRandomHexString()
+		);
+		const filePath = path.join(fsPath, indexHtml);
 
-        assert.strictEqual(isFileFs(filePath), true);
-        assert.strictEqual(fs.existsSync(filePath), true);
-    });
+		assert.strictEqual(fs.existsSync(filePath), false);
+		await AzExtFsExtra.ensureFile(filePath);
 
-    test('ensureFile where directory does not exist', async () => {
-        const fsPath = path.join(testFolderPath, randomUtils.getRandomHexString());
-        const filePath = path.join(fsPath, indexHtml);
+		assert.strictEqual(isFileFs(filePath), true);
+		assert.strictEqual(fs.existsSync(filePath), true);
+	});
 
-        assert.strictEqual(fs.existsSync(filePath), false);
-        await AzExtFsExtra.ensureFile(filePath);
+	test("ensureFile where directory exists with the same name errors", async () => {
+		const fsPath = path.join(
+			testFolderPath,
+			randomUtils.getRandomHexString()
+		);
+		assert.strictEqual(fs.existsSync(fsPath), false);
+		ensureDir(fsPath);
 
-        assert.strictEqual(isFileFs(filePath), true);
-        assert.strictEqual(fs.existsSync(filePath), true);
-    });
+		await assertThrowsAsync(
+			async () => await AzExtFsExtra.ensureFile(fsPath),
+			/FileSystemError/
+		);
+	});
 
-    test('ensureFile where directory exists with the same name errors', async () => {
-        const fsPath = path.join(testFolderPath, randomUtils.getRandomHexString());
-        assert.strictEqual(fs.existsSync(fsPath), false);
-        ensureDir(fsPath);
+	test("readFile", async () => {
+		const fileContents = await AzExtFsExtra.readFile(workspaceFilePath);
+		const fsFileContents = fs.readFileSync(workspaceFilePath).toString();
 
-        await assertThrowsAsync(async () => await AzExtFsExtra.ensureFile(fsPath), /FileSystemError/);
-    });
+		assert.strictEqual(fileContents, fsFileContents);
+	});
 
-    test('readFile', async () => {
-        const fileContents = await AzExtFsExtra.readFile(workspaceFilePath);
-        const fsFileContents = fs.readFileSync(workspaceFilePath).toString();
+	test("writeFile", async () => {
+		const fsPath = path.join(
+			testFolderPath,
+			randomUtils.getRandomHexString()
+		);
+		const filePath = path.join(fsPath, indexHtml);
+		const contents = "writeFileTest";
+		await AzExtFsExtra.writeFile(filePath, contents);
 
-        assert.strictEqual(fileContents, fsFileContents);
-    });
+		const fsFileContents = fs.readFileSync(filePath).toString();
+		assert.strictEqual(contents, fsFileContents);
+	});
 
-    test('writeFile', async () => {
-        const fsPath = path.join(testFolderPath, randomUtils.getRandomHexString());
-        const filePath = path.join(fsPath, indexHtml);
-        const contents = 'writeFileTest';
-        await AzExtFsExtra.writeFile(filePath, contents);
+	test("appendFile", async () => {
+		const fsPath = path.join(
+			testFolderPath,
+			randomUtils.getRandomHexString()
+		);
+		const filePath = path.join(fsPath, indexHtml);
+		const contents = "writeFileTest";
+		await AzExtFsExtra.writeFile(filePath, contents);
 
-        const fsFileContents = fs.readFileSync(filePath).toString();
-        assert.strictEqual(contents, fsFileContents);
-    });
+		const appendContents = "appendFile";
+		await AzExtFsExtra.appendFile(filePath, appendContents);
 
-    test('appendFile', async () => {
-        const fsPath = path.join(testFolderPath, randomUtils.getRandomHexString());
-        const filePath = path.join(fsPath, indexHtml);
-        const contents = 'writeFileTest';
-        await AzExtFsExtra.writeFile(filePath, contents);
+		const fsFileContents = fs.readFileSync(filePath).toString();
+		const expectedContent = `writeFileTest\r\n\r\nappendFile`;
+		assert.strictEqual(expectedContent, fsFileContents);
+	});
 
-        const appendContents = 'appendFile';
-        await AzExtFsExtra.appendFile(filePath, appendContents);
+	test("readJSON", async () => {
+		const fileContents = await AzExtFsExtra.readJSON<any>(jsonFilePath);
+		compareObjects(jsonContents, fileContents);
+	});
 
-        const fsFileContents = fs.readFileSync(filePath).toString();
-        const expectedContent = `writeFileTest\r\n\r\nappendFile`;
-        assert.strictEqual(expectedContent, fsFileContents);
-    });
+	test("readJSON (non-JSON file)", async () => {
+		const fsPath = path.join(
+			testFolderPath,
+			randomUtils.getRandomHexString()
+		);
+		ensureDir(fsPath);
+		const filePath = path.join(fsPath, jsonFile);
 
-    test('readJSON', async () => {
-        const fileContents = await AzExtFsExtra.readJSON<any>(jsonFilePath);
-        compareObjects(jsonContents, fileContents);
-    });
+		fs.writeFileSync(filePath, nonJsonContents);
+		await assertThrowsAsync(
+			async () => await AzExtFsExtra.readJSON(filePath),
+			/Unexpected number in JSON|Expected ':' after property/
+		);
+	});
 
-    test('readJSON (non-JSON file)', async () => {
-        const fsPath = path.join(testFolderPath, randomUtils.getRandomHexString());
-        ensureDir(fsPath);
-        const filePath = path.join(fsPath, jsonFile);
+	test("writeJSON (from string)", async () => {
+		const fsPath = path.join(
+			testFolderPath,
+			randomUtils.getRandomHexString()
+		);
+		const filePath = path.join(fsPath, indexHtml);
+		await AzExtFsExtra.writeJSON(filePath, JSON.stringify(jsonContents));
 
-        fs.writeFileSync(filePath, nonJsonContents);
-        await assertThrowsAsync(async () => await AzExtFsExtra.readJSON(filePath), /Unexpected number in JSON|Expected ':' after property/);
-    });
+		const fsFileContents = JSON.parse(fs.readFileSync(filePath).toString());
+		compareObjects(jsonContents, fsFileContents);
+	});
 
-    test('writeJSON (from string)', async () => {
-        const fsPath = path.join(testFolderPath, randomUtils.getRandomHexString());
-        const filePath = path.join(fsPath, indexHtml);
-        await AzExtFsExtra.writeJSON(filePath, JSON.stringify(jsonContents));
+	test("writeJSON (from object)", async () => {
+		const fsPath = path.join(
+			testFolderPath,
+			randomUtils.getRandomHexString()
+		);
+		const filePath = path.join(fsPath, indexHtml);
+		await AzExtFsExtra.writeJSON(filePath, jsonContents);
 
-        const fsFileContents = JSON.parse(fs.readFileSync(filePath).toString());
-        compareObjects(jsonContents, fsFileContents);
-    });
+		const fsFileContents = JSON.parse(fs.readFileSync(filePath).toString());
+		compareObjects(jsonContents, fsFileContents);
+	});
 
-    test('writeJSON (from object)', async () => {
-        const fsPath = path.join(testFolderPath, randomUtils.getRandomHexString());
-        const filePath = path.join(fsPath, indexHtml);
-        await AzExtFsExtra.writeJSON(filePath, jsonContents);
+	test("writeJSON (non-JSON file)", async () => {
+		const fsPath = path.join(
+			testFolderPath,
+			randomUtils.getRandomHexString()
+		);
+		ensureDir(fsPath);
+		const filePath = path.join(fsPath, jsonFile);
 
-        const fsFileContents = JSON.parse(fs.readFileSync(filePath).toString());
-        compareObjects(jsonContents, fsFileContents);
-    });
+		await assertThrowsAsync(
+			async () => await AzExtFsExtra.writeJSON(filePath, nonJsonContents),
+			/Unexpected number in JSON|Expected ':' after property/
+		);
+	});
 
-    test('writeJSON (non-JSON file)', async () => {
-        const fsPath = path.join(testFolderPath, randomUtils.getRandomHexString());
-        ensureDir(fsPath);
-        const filePath = path.join(fsPath, jsonFile);
+	test("emptyDir", async () => {
+		const fsPath = path.join(
+			testFolderPath,
+			randomUtils.getRandomHexString()
+		);
+		ensureDir(fsPath);
 
-        await assertThrowsAsync(async () => await AzExtFsExtra.writeJSON(filePath, nonJsonContents), /Unexpected number in JSON|Expected ':' after property/);
-    });
+		for (let i = 0; i < 10; i++) {
+			const newFolderPath = path.join(fsPath, `folder-${i.toString()}`);
+			const newFilePath = `file-${i.toString()}`;
+			ensureDir(newFolderPath);
+			ensureFile(path.join(fsPath, newFilePath));
+			ensureFile(path.join(newFolderPath, newFilePath));
+		}
 
-    test('emptyDir', async () => {
-        const fsPath = path.join(testFolderPath, randomUtils.getRandomHexString());
-        ensureDir(fsPath);
+		let files = fs.readdirSync(fsPath);
+		assert.strictEqual(files.length, 20);
 
-        for (let i = 0; i < 10; i++) {
-            const newFolderPath = path.join(fsPath, `folder-${i.toString()}`);
-            const newFilePath = `file-${i.toString()}`
-            ensureDir(newFolderPath);
-            ensureFile(path.join(fsPath, newFilePath));
-            ensureFile(path.join(newFolderPath, newFilePath));
-        }
+		await AzExtFsExtra.emptyDir(fsPath);
+		files = fs.readdirSync(fsPath);
+		assert.strictEqual(files.length, 0);
+	});
 
-        let files = fs.readdirSync(fsPath);
-        assert.strictEqual(files.length, 20);
+	test("readDirectory", async () => {
+		const fsPath = path.join(
+			testFolderPath,
+			randomUtils.getRandomHexString()
+		);
+		ensureDir(fsPath);
 
-        await AzExtFsExtra.emptyDir(fsPath);
-        files = fs.readdirSync(fsPath);
-        assert.strictEqual(files.length, 0);
-    });
+		for (let i = 0; i < 5; i++) {
+			const newFolderPath = path.join(fsPath, `folder-${i.toString()}`);
+			const newFilePath = `file-${i.toString()}`;
+			ensureDir(newFolderPath);
+			ensureFile(path.join(fsPath, newFilePath));
+			ensureFile(path.join(newFolderPath, newFilePath));
+		}
 
-    test('readDirectory', async () => {
-        const fsPath = path.join(testFolderPath, randomUtils.getRandomHexString());
-        ensureDir(fsPath);
+		const expectedFiles = fs.readdirSync(fsPath);
+		const actualFiles = await AzExtFsExtra.readDirectory(fsPath);
 
-        for (let i = 0; i < 5; i++) {
-            const newFolderPath = path.join(fsPath, `folder-${i.toString()}`);
-            const newFilePath = `file-${i.toString()}`
-            ensureDir(newFolderPath);
-            ensureFile(path.join(fsPath, newFilePath));
-            ensureFile(path.join(newFolderPath, newFilePath));
-        }
+		expectedFiles.map((ef, i) => {
+			assert.strictEqual(actualFiles[i].name, ef);
+			assert.strictEqual(
+				isDirectoryFs(actualFiles[i].fsPath),
+				isDirectoryFs(path.join(fsPath, ef))
+			);
+			assert.strictEqual(
+				isFileFs(actualFiles[i].fsPath),
+				isFileFs(path.join(fsPath, ef))
+			);
+		});
+	});
 
-        const expectedFiles = fs.readdirSync(fsPath);
-        const actualFiles = await AzExtFsExtra.readDirectory(fsPath);
+	test("copy", async () => {
+		const fsPath = path.join(
+			testFolderPath,
+			randomUtils.getRandomHexString()
+		);
+		await AzExtFsExtra.copy(workspaceFilePath, fsPath);
+		let fileContents = fs.readFileSync(fsPath).toString();
+		const fsFileContents = fs.readFileSync(workspaceFilePath).toString();
+		assert.strictEqual(fileContents, fsFileContents);
 
-        expectedFiles.map((ef, i) => {
-            assert.strictEqual(actualFiles[i].name, ef);
-            assert.strictEqual(isDirectoryFs(actualFiles[i].fsPath), isDirectoryFs(path.join(fsPath, ef)));
-            assert.strictEqual(isFileFs(actualFiles[i].fsPath), isFileFs(path.join(fsPath, ef)));
-        });
-    });
+		await AzExtFsExtra.copy(jsonFilePath, fsPath, { overwrite: true });
+		fileContents = fs.readFileSync(fsPath).toString();
+		const jsonFileContents = fs.readFileSync(jsonFilePath).toString();
+		assert.strictEqual(fileContents, jsonFileContents);
+	});
 
-    test('copy', async () => {
-        const fsPath = path.join(testFolderPath, randomUtils.getRandomHexString());
-        await AzExtFsExtra.copy(workspaceFilePath, fsPath);
-        let fileContents = fs.readFileSync(fsPath).toString();
-        const fsFileContents = fs.readFileSync(workspaceFilePath).toString();
-        assert.strictEqual(fileContents, fsFileContents);
+	test("deleteFile", async () => {
+		const fsPath = path.join(
+			testFolderPath,
+			randomUtils.getRandomHexString()
+		);
+		ensureFile(fsPath);
 
-        await AzExtFsExtra.copy(jsonFilePath, fsPath, { overwrite: true });
-        fileContents = fs.readFileSync(fsPath).toString();
-        const jsonFileContents = fs.readFileSync(jsonFilePath).toString();
-        assert.strictEqual(fileContents, jsonFileContents);
-    });
+		assert.strictEqual(fs.existsSync(fsPath), true);
 
-    test('deleteFile', async () => {
-        const fsPath = path.join(testFolderPath, randomUtils.getRandomHexString());
-        ensureFile(fsPath);
-
-        assert.strictEqual(fs.existsSync(fsPath), true);
-
-        await AzExtFsExtra.deleteResource(fsPath);
-        assert.strictEqual(fs.existsSync(fsPath), false);
-
-    });
-
-
-
+		await AzExtFsExtra.deleteResource(fsPath);
+		assert.strictEqual(fs.existsSync(fsPath), false);
+	});
 });
 
 function isDirectoryFs(fsPath: string): boolean {
-    return fs.statSync(fsPath).isDirectory();
+	return fs.statSync(fsPath).isDirectory();
 }
 
 function isFileFs(fsPath: string): boolean {
-    return fs.statSync(fsPath).isFile();
+	return fs.statSync(fsPath).isFile();
 }
 
 function ensureFile(fsPath: string): void {
-    if (!fs.existsSync(fsPath)) {
-        fs.writeFileSync(fsPath, '');
-    }
+	if (!fs.existsSync(fsPath)) {
+		fs.writeFileSync(fsPath, "");
+	}
 }
 
 function ensureDir(fsPath: string): void {
-    if (!fs.existsSync(fsPath)) {
-        fs.mkdirSync(fsPath);
-    }
+	if (!fs.existsSync(fsPath)) {
+		fs.mkdirSync(fsPath);
+	}
 }
 
 function compareObjects(o1, o2): void {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    for (const [key, value] of Object.entries(o1)) {
-        assert.strictEqual(value, o2[key]);
-    }
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+	for (const [key, value] of Object.entries(o1)) {
+		assert.strictEqual(value, o2[key]);
+	}
 }

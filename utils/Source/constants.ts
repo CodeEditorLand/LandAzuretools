@@ -11,7 +11,13 @@ export const azToolsPrefix: string = "azureTools";
 export const showContextValueSetting: string = "showContextValues";
 
 export namespace AzExtQuickInputButtons {
-    export const LearnMore: QuickInputButton = { iconPath: new ThemeIcon('question'), tooltip: learnMore }
+	export const LearnMore: QuickInputButton = {
+		iconPath: new ThemeIcon("question"),
+		tooltip: learnMore,
+	};
 }
 
-export const activityFailIcon: ThemeIcon = new ThemeIcon('error', new ThemeColor('testing.iconFailed'));
+export const activityFailIcon: ThemeIcon = new ThemeIcon(
+	"error",
+	new ThemeColor("testing.iconFailed")
+);

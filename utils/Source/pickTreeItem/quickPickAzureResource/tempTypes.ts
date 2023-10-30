@@ -3,7 +3,11 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import type { AzExtResourceType, AzureResource, AzureSubscription } from '@microsoft/vscode-azureresources-api';
+import type {
+	AzExtResourceType,
+	AzureResource,
+	AzureSubscription,
+} from "@microsoft/vscode-azureresources-api";
 
 // TODO: THIS FILE IS TEMPORARY //
 // It needs to be replaced by real Resources extension interfaces //
@@ -11,15 +15,15 @@ import type { AzExtResourceType, AzureResource, AzureSubscription } from '@micro
 // These are assumptions made about the nodes in the tree
 
 export type SubscriptionItem = ResourceGroupsItem & {
-    subscription: AzureSubscription;
-}
+	subscription: AzureSubscription;
+};
 
 export type GroupingItem = ResourceGroupsItem & {
-    resourceType?: AzExtResourceType
-}
+	resourceType?: AzExtResourceType;
+};
 
 export type AzureResourceItem = ResourceGroupsItem & {
-    resource: AzureResource;
+	resource: AzureResource;
 };
 
 export type ResourceGroupsItem = unknown;

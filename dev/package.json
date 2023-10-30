@@ -1,89 +1,89 @@
 {
-  "name": "@microsoft/vscode-azext-dev",
-  "version": "0.0.1",
-  "private": "false",
-  "description": "Common dev dependency tools for developing Azure extensions for VS Code",
-  "keywords": [
-    "azure",
-    "vscode"
-  ],
-  "homepage": "https://github.com/CodeEditorLand/CodeEditorLand#readme",
-  "bugs": {
-    "url": "https://github.com/CodeEditorLand/CodeEditorLand/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/CodeEditorLand/CodeEditorLand.git"
-  },
-  "license": "MIT",
-  "author": {
-    "name": "Nikola Hristov",
-    "email": "nikola@nikolahristov.tech",
-    "url": "https://nikolahristov.tech"
-  },
-  "publisher": "playform",
-  "type": "module",
-  "main": "out/src/index.js",
-  "types": "index.d.ts",
-  "bin": {
-    "vscode-sort-package-json": "scripts/sortPackageJson.mjs"
-  },
-  "scripts": {
-    "build": "tsc -p ./",
-    "compile": "tsc -watch -p ./",
-    "lint": "eslint --ext .ts .",
-    "lint-fix": "eslint --ext .ts . --fix",
-    "package": "npm pack",
-    "prepublishOnly": "TypeScriptESBuild Source/**/*.ts",
-    "test": "node ./out/test/runTest.js"
-  },
-  "dependencies": {
-    "assert": "2.1.0",
-    "browserify-zlib": "0.2.0",
-    "clean-webpack-plugin": "4.0.0",
-    "console-browserify": "1.2.0",
-    "copy-webpack-plugin": "11.0.0",
-    "fs-extra": "11.1.1",
-    "https-browserify": "1.0.0",
-    "mocha": "10.2.0",
-    "mocha-junit-reporter": "2.2.1",
-    "mocha-multi-reporters": "1.5.1",
-    "os-browserify": "0.3.0",
-    "path-browserify": "1.0.1",
-    "process": "0.11.10",
-    "querystring-es3": "0.2.1",
-    "stream-browserify": "3.0.0",
-    "stream-http": "3.2.0",
-    "terser-webpack-plugin": "5.3.9",
-    "ts-loader": "9.5.0",
-    "url": "0.11.3",
-    "util": "0.12.5",
-    "webpack": "5.89.0"
-  },
-  "devDependencies": {
-    "@azure/ms-rest-azure-env": "2.0.0",
-    "@microsoft/eslint-config-azuretools": "0.2.1",
-    "@types/copy-webpack-plugin": "8.0.1",
-    "@types/fs-extra": "11.0.3",
-    "@types/glob": "8.1.0",
-    "@types/mocha": "10.0.3",
-    "@types/node": "20.8.9",
-    "@types/terser-webpack-plugin": "5.0.4",
-    "@types/vscode": "1.83.1",
-    "@typescript-eslint/eslint-plugin": "6.9.0",
-    "@vscode/test-electron": "2.3.6",
-    "eslint": "8.52.0",
-    "eslint-plugin-import": "2.29.0",
-    "glob": "10.3.10",
-    "ts-node": "10.9.1",
-    "typescript": "5.2.2",
-    "typescript-esbuild": "0.3.1"
-  },
-  "publishConfig": {
-    "access": "public"
-  },
-  "tags": [
-    "azure",
-    "vscode"
-  ]
+	"name": "@microsoft/vscode-azext-dev",
+	"version": "0.0.1",
+	"private": "false",
+	"description": "Common dev dependency tools for developing Azure extensions for VS Code",
+	"keywords": [
+		"azure",
+		"vscode"
+	],
+	"homepage": "https://github.com/CodeEditorLand/CodeEditorLand#readme",
+	"bugs": {
+		"url": "https://github.com/CodeEditorLand/CodeEditorLand/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/CodeEditorLand/CodeEditorLand.git"
+	},
+	"license": "MIT",
+	"author": {
+		"name": "Nikola Hristov",
+		"email": "nikola@nikolahristov.tech",
+		"url": "https://nikolahristov.tech"
+	},
+	"publisher": "playform",
+	"type": "module",
+	"main": "out/src/index.js",
+	"types": "index.d.ts",
+	"bin": {
+		"vscode-sort-package-json": "scripts/sortPackageJson.mjs"
+	},
+	"scripts": {
+		"build": "tsc -p ./",
+		"compile": "tsc -watch -p ./",
+		"lint": "eslint --ext .ts .",
+		"lint-fix": "eslint --ext .ts . --fix",
+		"package": "npm pack",
+		"prepublishOnly": "TypeScriptESBuild 'Source/**/*.ts'",
+		"test": "node ./out/test/runTest.js"
+	},
+	"dependencies": {
+		"assert": "2.1.0",
+		"browserify-zlib": "0.2.0",
+		"clean-webpack-plugin": "4.0.0",
+		"console-browserify": "1.2.0",
+		"copy-webpack-plugin": "11.0.0",
+		"fs-extra": "11.1.1",
+		"https-browserify": "1.0.0",
+		"mocha": "10.2.0",
+		"mocha-junit-reporter": "2.2.1",
+		"mocha-multi-reporters": "1.5.1",
+		"os-browserify": "0.3.0",
+		"path-browserify": "1.0.1",
+		"process": "0.11.10",
+		"querystring-es3": "0.2.1",
+		"stream-browserify": "3.0.0",
+		"stream-http": "3.2.0",
+		"terser-webpack-plugin": "5.3.9",
+		"ts-loader": "9.5.0",
+		"url": "0.11.3",
+		"util": "0.12.5",
+		"webpack": "5.89.0"
+	},
+	"devDependencies": {
+		"@azure/ms-rest-azure-env": "2.0.0",
+		"@microsoft/eslint-config-azuretools": "0.2.1",
+		"@types/copy-webpack-plugin": "8.0.1",
+		"@types/fs-extra": "11.0.3",
+		"@types/glob": "8.1.0",
+		"@types/mocha": "10.0.3",
+		"@types/node": "20.8.9",
+		"@types/terser-webpack-plugin": "5.0.4",
+		"@types/vscode": "1.83.1",
+		"@typescript-eslint/eslint-plugin": "6.9.0",
+		"@vscode/test-electron": "2.3.6",
+		"eslint": "8.52.0",
+		"eslint-plugin-import": "2.29.0",
+		"glob": "10.3.10",
+		"ts-node": "10.9.1",
+		"typescript": "5.2.2",
+		"typescript-esbuild": "0.3.1"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"tags": [
+		"azure",
+		"vscode"
+	]
 }

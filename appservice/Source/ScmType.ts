@@ -5,7 +5,7 @@
 
 // Deployment sources supported by Web Apps
 export enum ScmType {
-    None = 'None', // default scmType
-    LocalGit = 'LocalGit',
-    GitHub = 'GitHub'
+	None = "None", // default scmType
+	LocalGit = "LocalGit",
+	GitHub = "GitHub",
 }

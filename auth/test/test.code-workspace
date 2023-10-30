@@ -1,8 +1,8 @@
 {
-    "folders": [
-        {
-            "path": "./testWorkspace"
-        }
-    ],
-    "settings": {}
+	"folders": [
+		{
+			"path": "./testWorkspace"
+		}
+	],
+	"settings": {}
 }

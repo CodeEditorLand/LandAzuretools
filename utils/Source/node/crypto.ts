@@ -4,5 +4,5 @@
  *--------------------------------------------------------------------------------------------*/
 
 /* eslint-disable */
-import * as nodeCrypto from 'crypto';
+import * as nodeCrypto from "crypto";
 export const crypto = nodeCrypto.webcrypto as any;

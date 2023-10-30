@@ -7,53 +7,82 @@ import { isArray } from "util";
 import { IAzureNamingRules, IRelatedNameWizardContext } from "../../index";
 import { AzureWizardPromptStep } from "./AzureWizardPromptStep";
 
-export abstract class AzureNameStep<T extends IRelatedNameWizardContext> extends AzureWizardPromptStep<T> {
-    protected abstract isRelatedNameAvailable(wizardContext: T, name: string): Promise<boolean>;
+export abstract class AzureNameStep<
+	T extends IRelatedNameWizardContext,
+> extends AzureWizardPromptStep<T> {
+	protected abstract isRelatedNameAvailable(
+		wizardContext: T,
+		name: string
+	): Promise<boolean>;
 
-    protected async generateRelatedName(wizardContext: T, name: string, namingRules: IAzureNamingRules | IAzureNamingRules[]): Promise<string | undefined> {
-        if (!isArray(namingRules)) {
-            namingRules = [namingRules];
-        }
+	protected async generateRelatedName(
+		wizardContext: T,
+		name: string,
+		namingRules: IAzureNamingRules | IAzureNamingRules[]
+	): Promise<string | undefined> {
+		if (!isArray(namingRules)) {
+			namingRules = [namingRules];
+		}
 
-        let preferredName: string = namingRules.some((n: IAzureNamingRules) => !!n.lowercaseOnly) ? name.toLowerCase() : name;
+		let preferredName: string = namingRules.some(
+			(n: IAzureNamingRules) => !!n.lowercaseOnly
+		)
+			? name.toLowerCase()
+			: name;
 
-        for (let invalidCharsRegExp of namingRules.map((n: IAzureNamingRules) => n.invalidCharsRegExp)) {
-            // Ensure the regExp uses the 'g' flag to replace _all_ invalid characters
-            invalidCharsRegExp = new RegExp(invalidCharsRegExp, 'g');
-            preferredName = preferredName.replace(invalidCharsRegExp, '');
-        }
+		for (let invalidCharsRegExp of namingRules.map(
+			(n: IAzureNamingRules) => n.invalidCharsRegExp
+		)) {
+			// Ensure the regExp uses the 'g' flag to replace _all_ invalid characters
+			invalidCharsRegExp = new RegExp(invalidCharsRegExp, "g");
+			preferredName = preferredName.replace(invalidCharsRegExp, "");
+		}
 
-        const minLength: number = Math.max(...namingRules.map((n: IAzureNamingRules) => n.minLength));
-        const maxLength: number = Math.min(...namingRules.map((n: IAzureNamingRules) => n.maxLength));
+		const minLength: number = Math.max(
+			...namingRules.map((n: IAzureNamingRules) => n.minLength)
+		);
+		const maxLength: number = Math.min(
+			...namingRules.map((n: IAzureNamingRules) => n.maxLength)
+		);
 
-        const maxTries: number = 100;
-        let count: number = 1;
-        let newName: string;
-        while (count < maxTries) {
-            newName = this.generateSuffixedName(preferredName, count, minLength, maxLength);
-            if (await this.isRelatedNameAvailable(wizardContext, newName)) {
-                return newName;
-            }
-            count += 1;
-        }
+		const maxTries: number = 100;
+		let count: number = 1;
+		let newName: string;
+		while (count < maxTries) {
+			newName = this.generateSuffixedName(
+				preferredName,
+				count,
+				minLength,
+				maxLength
+			);
+			if (await this.isRelatedNameAvailable(wizardContext, newName)) {
+				return newName;
+			}
+			count += 1;
+		}
 
-        return undefined;
-    }
+		return undefined;
+	}
 
-    private generateSuffixedName(preferredName: string, i: number, minLength: number, maxLength: number): string {
-        const suffix: string = i === 1 ? '' : i.toString();
-        const minUnsuffixedLength: number = minLength - suffix.length;
-        const maxUnsuffixedLength: number = maxLength - suffix.length;
+	private generateSuffixedName(
+		preferredName: string,
+		i: number,
+		minLength: number,
+		maxLength: number
+	): string {
+		const suffix: string = i === 1 ? "" : i.toString();
+		const minUnsuffixedLength: number = minLength - suffix.length;
+		const maxUnsuffixedLength: number = maxLength - suffix.length;
 
-        let unsuffixedName: string = preferredName;
-        if (unsuffixedName.length > maxUnsuffixedLength) {
-            unsuffixedName = preferredName.slice(0, maxUnsuffixedLength);
-        } else {
-            while (unsuffixedName.length < minUnsuffixedLength) {
-                unsuffixedName += preferredName;
-            }
-        }
+		let unsuffixedName: string = preferredName;
+		if (unsuffixedName.length > maxUnsuffixedLength) {
+			unsuffixedName = preferredName.slice(0, maxUnsuffixedLength);
+		} else {
+			while (unsuffixedName.length < minUnsuffixedLength) {
+				unsuffixedName += preferredName;
+			}
+		}
 
-        return unsuffixedName + suffix;
-    }
+		return unsuffixedName + suffix;
+	}
 }
