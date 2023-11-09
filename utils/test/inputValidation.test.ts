@@ -3,55 +3,43 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import * as assert from "assert";
-import { InputBoxValidationResult } from "../src/userInput/showInputBox";
-import { validOnTimeoutOrException } from "../src/utils/inputValidation";
+import * as assert from 'assert';
+import { InputBoxValidationResult } from '../src/userInput/showInputBox';
+import { validOnTimeoutOrException } from '../src/utils/inputValidation';
 
 suite("inputValidation Tests", () => {
-	suite("validOnTimeoutOrException", () => {
-		test("executed", async () => {
-			const value: InputBoxValidationResult =
-				await validOnTimeoutOrException(async () => {
-					return await new Promise<string | undefined>(
-						(resolve, _reject) => {
-							setTimeout(() => {
-								resolve("invalid input");
-							}, 1);
-						}
-					);
-				});
+    suite("validOnTimeoutOrException", () => {
+        test("executed", async () => {
+            const value: InputBoxValidationResult = await validOnTimeoutOrException(async () => {
+                return await new Promise<string | undefined>((resolve, _reject) => {
+                    setTimeout(() => { resolve("invalid input"); }, 1);
+                });
+            });
 
-			assert.equal(value, "invalid input");
-		});
+            assert.equal(value, "invalid input");
+        });
 
-		test("timed out", async () => {
-			const value: InputBoxValidationResult =
-				await validOnTimeoutOrException(async () => {
-					return await new Promise<string | undefined>(
-						(resolve, _reject) => {
-							setTimeout(() => {
-								resolve("invalid input");
-							}, 1000);
-						}
-					);
-				}, 1);
+        test("timed out", async () => {
+            const value: InputBoxValidationResult = await validOnTimeoutOrException(
+                async () => {
+                    return await new Promise<string | undefined>((resolve, _reject) => {
+                        setTimeout(() => { resolve("invalid input"); }, 1000);
+                    });
+                },
+                1
+            );
 
-			assert.equal(value, undefined);
-		});
+            assert.equal(value, undefined);
+        });
 
-		test("exception", async () => {
-			const value: InputBoxValidationResult =
-				await validOnTimeoutOrException(async () => {
-					return await new Promise<string | undefined>(
-						(_resolve, reject) => {
-							setTimeout(() => {
-								reject(new Error("Oh, boy"));
-							}, 1);
-						}
-					);
-				});
+        test("exception", async () => {
+            const value: InputBoxValidationResult = await validOnTimeoutOrException(async () => {
+                return await new Promise<string | undefined>((_resolve, reject) => {
+                    setTimeout(() => { reject(new Error("Oh, boy")); }, 1);
+                });
+            });
 
-			assert.equal(value, undefined);
-		});
-	});
+            assert.equal(value, undefined);
+        });
+    });
 });

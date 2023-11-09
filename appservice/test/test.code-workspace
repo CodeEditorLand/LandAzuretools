@@ -1,20 +1,28 @@
 {
-	"folders": [
-		{
-			"path": "../testWorkspace/deploy"
-		},
-		{
-			"path": "../testWorkspace/deploy1"
-		},
-		{
-			"path": "../testWorkspace/deploy1/sub1"
-		},
-		{
-			"path": "../testWorkspace/deploy2/sub2"
-		},
-		{
-			"path": "../testWorkspace/deploy2"
-		}
-	],
-	"settings": {}
+    "folders": [
+        {
+            "path": "../testWorkspace/deploy"
+        },
+        {
+            "path": "../testWorkspace/deploy1"
+        },
+        {
+            "path": "../testWorkspace/deploy1/sub1"
+        },
+        {
+            "path": "../testWorkspace/deploy2/sub2"
+        },
+        {
+            "path": "../testWorkspace/deploy2"
+        },
+        {
+            "path": "../testWorkspace/getFilesFromTestFolder"
+        }
+    ],
+    "settings": {
+        "appService.zipIgnorePattern": [
+            "dir2{,/**}",
+            "dir3/sub1{,/**}"
+        ]
+    }
 }

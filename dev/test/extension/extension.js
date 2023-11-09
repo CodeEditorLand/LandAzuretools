@@ -3,8 +3,10 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-function activate() {}
+function activate() {
+}
 exports.activate = activate;
 
-function deactivate() {}
+function deactivate() {
+}
 exports.deactivate = deactivate;

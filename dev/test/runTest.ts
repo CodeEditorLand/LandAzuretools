@@ -3,29 +3,25 @@
  *  Licensed under the MIT License. See LICENSE.md in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import * as path from "path";
-import { runTests } from "@vscode/test-electron";
+import * as path from 'path';
+import { runTests } from '@vscode/test-electron';
 
 async function main(): Promise<void> {
-	try {
-		await runTests({
-			extensionDevelopmentPath: path.resolve(
-				__dirname,
-				"..",
-				"..",
-				"test",
-				"extension"
-			),
-			launchArgs: ["--disable-workspace-trust"],
-			extensionTestsPath: path.resolve(__dirname, "./index"),
-			extensionTestsEnv: {
-				DEBUGTELEMETRY: "v",
-			},
-		});
-	} catch (err) {
-		console.error("Failed to run tests");
-		process.exit(1);
-	}
+    try {
+        await runTests({
+            extensionDevelopmentPath: path.resolve(__dirname, '..', '..', 'test', 'extension'),
+            launchArgs: [
+                '--disable-workspace-trust'
+            ],
+            extensionTestsPath: path.resolve(__dirname, './index'),
+            extensionTestsEnv: {
+                DEBUGTELEMETRY: 'v'
+            }
+        });
+    } catch (err) {
+        console.error('Failed to run tests');
+        process.exit(1);
+    }
 }
 
 void main();
