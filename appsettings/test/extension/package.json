@@ -1,14 +1,35 @@
 {
-    "name": "azureappsettings",
-    "description": "Used for unit tests in this package.",
-    "version": "0.0.1",
-    "aiKey": "test-ai-key",
-    "publisher": "ms-azuretools",
-    "main": "./extension",
-    "engines": {
-        "vscode": "^1.24.0"
-    },
-    "activationEvents": [
-        "*"
-    ]
+	"name": "azureappsettings",
+	"version": "0.0.1",
+	"private": false,
+	"description": "Used for unit tests in this package.",
+	"homepage": "https://github.com/CodeEditorLand/Foundation#readme",
+	"bugs": {
+		"url": "https://github.com/CodeEditorLand/Foundation/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/CodeEditorLand/Foundation.git"
+	},
+	"license": "SEE LICENSE IN LICENSE",
+	"author": {
+		"name": "Playform",
+		"email": "Hello@Playform.Cloud",
+		"url": "https://playform.cloud"
+	},
+	"type": "module",
+	"main": "./extension",
+	"scripts": {
+		"prepublishOnly": "TypeScriptESBuild 'Source/**/*.ts'"
+	},
+	"activationEvents": [
+		"*"
+	],
+	"devDependencies": {
+		"typescript-esbuild": "latest"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"aiKey": "test-ai-key"
 }
