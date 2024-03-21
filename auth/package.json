@@ -1,35 +1,17 @@
 {
-	"name": "@microsoft/vscode-azext-azureauth",
-	"version": "0.0.1",
-	"private": false,
-	"description": "Azure authentication helpers for Visual Studio Code",
-	"homepage": "https://github.com/CodeEditorLand/Foundation#readme",
-	"bugs": {
-		"url": "https://github.com/CodeEditorLand/Foundation/issues"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/CodeEditorLand/Foundation.git"
-	},
-	"license": "SEE LICENSE IN LICENSE",
 	"author": {
-		"name": "Playform",
 		"email": "Hello@Playform.Cloud",
+		"name": "Playform",
 		"url": "https://playform.cloud"
 	},
-	"type": "module",
-	"main": "out/src/index.js",
-	"types": "out/src/index.d.ts",
-	"scripts": {
-		"build": "tsc -p ./",
-		"compile": "tsc -watch -p ./",
-		"package": "npm pack",
-		"prepublishOnly": "TypeScriptESBuild 'Source/**/*.ts'"
+	"bugs": {
+		"url": "https://github.com/CodeEditorLand/Foundation/issues"
 	},
 	"dependencies": {
 		"@azure/arm-resources-subscriptions": "^2.1.0",
 		"@azure/ms-rest-azure-env": "^2.0.0"
 	},
+	"description": "Azure authentication helpers for Visual Studio Code",
 	"devDependencies": {
 		"@azure/core-auth": "^1.4.0",
 		"@types/glob": "^8.1.0",
@@ -46,9 +28,27 @@
 		"mocha-junit-reporter": "^2.0.2",
 		"mocha-multi-reporters": "^1.1.7",
 		"typescript": "^4.9.4",
-		"typescript-esbuild": "0.4.5"
+		"typescript-esbuild": ""
 	},
+	"homepage": "https://github.com/CodeEditorLand/Foundation#readme",
+	"license": "SEE LICENSE IN LICENSE",
+	"main": "out/src/index.js",
+	"name": "@microsoft/vscode-azext-azureauth",
+	"private": false,
 	"publishConfig": {
 		"access": "public"
-	}
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/CodeEditorLand/Foundation.git"
+	},
+	"scripts": {
+		"build": "tsc -p ./",
+		"compile": "tsc -watch -p ./",
+		"package": "npm pack",
+		"prepublishOnly": "TypeScriptESBuild 'Source/**/*.ts'"
+	},
+	"type": "module",
+	"types": "out/src/index.d.ts",
+	"version": "0.0.1"
 }

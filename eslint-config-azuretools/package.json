@@ -1,34 +1,34 @@
 {
-	"name": "@microsoft/eslint-config-azuretools",
-	"version": "0.0.1",
-	"private": false,
-	"description": "Shared ESLint configuration used by Azure Tools for VS Code",
-	"homepage": "https://github.com/CodeEditorLand/Foundation#readme",
+	"author": {
+		"email": "Hello@Playform.Cloud",
+		"name": "Playform",
+		"url": "https://playform.cloud"
+	},
 	"bugs": {
 		"url": "https://github.com/CodeEditorLand/Foundation/issues"
+	},
+	"dependencies": {},
+	"description": "Shared ESLint configuration used by Azure Tools for VS Code",
+	"devDependencies": {
+		"typescript-esbuild": ""
+	},
+	"homepage": "https://github.com/CodeEditorLand/Foundation#readme",
+	"license": "SEE LICENSE IN LICENSE",
+	"main": "index.js",
+	"name": "@microsoft/eslint-config-azuretools",
+	"private": false,
+	"publishConfig": {
+		"access": "public"
 	},
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/CodeEditorLand/Foundation.git"
 	},
-	"license": "SEE LICENSE IN LICENSE",
-	"author": {
-		"name": "Playform",
-		"email": "Hello@Playform.Cloud",
-		"url": "https://playform.cloud"
-	},
-	"type": "module",
-	"main": "index.js",
 	"scripts": {
 		"build": "exit 0",
 		"package": "npm pack",
 		"prepublishOnly": "TypeScriptESBuild 'Source/**/*.ts'"
 	},
-	"dependencies": {},
-	"devDependencies": {
-		"typescript-esbuild": "0.4.5"
-	},
-	"publishConfig": {
-		"access": "public"
-	}
+	"type": "module",
+	"version": "0.0.1"
 }
