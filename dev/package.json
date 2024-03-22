@@ -1,14 +1,33 @@
 {
+	"name": "@microsoft/vscode-azext-dev",
+	"version": "0.0.1",
+	"private": false,
+	"description": "Common dev dependency tools for developing Azure extensions for VS Code",
+	"homepage": "https://github.com/CodeEditorLand/Foundation#readme",
+	"bugs": {
+		"url": "https://github.com/CodeEditorLand/Foundation/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/CodeEditorLand/Foundation.git"
+	},
+	"license": "SEE LICENSE IN LICENSE",
 	"author": {
-		"email": "Hello@Playform.Cloud",
 		"name": "Playform",
+		"email": "Hello@Playform.Cloud",
 		"url": "https://playform.cloud"
 	},
+	"type": "module",
+	"main": "out/src/index.js",
+	"types": "index.d.ts",
 	"bin": {
 		"vscode-sort-package-json": "scripts/sortPackageJson.mjs"
 	},
-	"bugs": {
-		"url": "https://github.com/CodeEditorLand/Foundation/issues"
+	"scripts": {
+		"build": "tsc -p ./",
+		"compile": "tsc -watch -p ./",
+		"package": "npm pack",
+		"prepublishOnly": "TypeScriptESBuild 'Source/**/*.ts'"
 	},
 	"dependencies": {
 		"assert": "^2.0.0",
@@ -33,7 +52,6 @@
 		"util": "^0.12.5",
 		"webpack": "^5.74.0"
 	},
-	"description": "Common dev dependency tools for developing Azure extensions for VS Code",
 	"devDependencies": {
 		"@azure/ms-rest-azure-env": "^2.0.0",
 		"@types/copy-webpack-plugin": "^6.0.0",
@@ -47,27 +65,9 @@
 		"glob": "^7.1.6",
 		"ts-node": "^10.9.1",
 		"typescript": "^4.9.4",
-		"typescript-esbuild": ""
+		"typescript-esbuild": "0.4.5"
 	},
-	"homepage": "https://github.com/CodeEditorLand/Foundation#readme",
-	"license": "SEE LICENSE IN LICENSE",
-	"main": "out/src/index.js",
-	"name": "@microsoft/vscode-azext-dev",
-	"private": false,
 	"publishConfig": {
 		"access": "public"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/CodeEditorLand/Foundation.git"
-	},
-	"scripts": {
-		"build": "tsc -p ./",
-		"compile": "tsc -watch -p ./",
-		"package": "npm pack",
-		"prepublishOnly": "TypeScriptESBuild 'Source/**/*.ts'"
-	},
-	"type": "module",
-	"types": "index.d.ts",
-	"version": "0.0.1"
+	}
 }
