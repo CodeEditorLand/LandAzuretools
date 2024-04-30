@@ -1,34 +1,38 @@
 {
-  "name": "@microsoft/eslint-config-azuretools",
-  "version": "0.2.4",
-  "description": "Shared ESLint configuration used by Azure Tools for VS Code",
-  "main": "index.js",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Microsoft/vscode-azuretools"
-  },
-  "keywords": [
-    "eslint",
-    "eslintconfig"
-  ],
-  "author": "Microsoft Corporation",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/Microsoft/vscode-azuretools/issues"
-  },
-  "homepage": "https://github.com/Microsoft/vscode-azuretools/blob/main/eslint-config-azuretools/README.md",
-  "peerDependencies": {
-    "@typescript-eslint/eslint-plugin": ">=5",
-    "eslint": ">=8",
-    "eslint-plugin-import": ">=2"
-  },
-  "dependencies": {
-    "@typescript-eslint/parser": "^5.51.0"
-  },
-  "scripts": {
-    "lint": "exit 0",
-    "build": "exit 0",
-    "test": "exit 0",
-    "package": "npm pack"
-  }
+	"name": "@microsoft/eslint-config-azuretools",
+	"version": "0.0.1",
+	"private": false,
+	"description": "Shared ESLint configuration used by Azure Tools for VS Code",
+	"keywords": [
+		"land"
+	],
+	"homepage": "HTTPS://GitHub.Com/CodeEditorLand/LandAzureTools#readme",
+	"bugs": {
+		"url": "HTTPS://GitHub.Com/CodeEditorLand/LandAzureTools/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+HTTPS://github.com/CodeEditorLand/LandAzureTools.git"
+	},
+	"license": "SEE LICENSE IN LICENSE",
+	"author": {
+		"name": "🌆 — Land —",
+		"email": "Land@PlayForm.Cloud",
+		"url": "HTTPS://Land.PlayForm.Cloud"
+	},
+	"type": "module",
+	"main": "index.js",
+	"scripts": {
+		"Document": "Document 'Source/**/*.ts'",
+		"build": "exit 0",
+		"prepublishOnly": "Build 'Source/**/*.ts'"
+	},
+	"dependencies": {},
+	"devDependencies": {
+		"@playform/build": "0.0.7",
+		"@playform/document": "0.0.6"
+	},
+	"publishConfig": {
+		"access": "public"
+	}
 }
