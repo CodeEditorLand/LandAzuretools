@@ -33,13 +33,13 @@
 	"devDependencies": {
 		"@playform/build": "0.0.7",
 		"@playform/document": "0.0.6",
-		"@types/glob": "^8.1.0",
-		"@types/html-to-text": "^8.1.0",
-		"@types/node": "^18.18.7",
-		"@types/node-fetch": "2.6.7",
-		"@types/semver": "^7.3.9",
-		"@types/uuid": "^9.0.1",
-		"glob": "^7.1.6"
+		"@types/glob": "8.1.0",
+		"@types/html-to-text": "9.0.4",
+		"@types/node": "20.12.7",
+		"@types/node-fetch": "2.6.11",
+		"@types/semver": "7.5.8",
+		"@types/uuid": "9.0.8",
+		"glob": "10.3.12"
 	},
 	"publishConfig": {
 		"access": "public"
