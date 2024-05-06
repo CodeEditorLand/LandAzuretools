@@ -42,7 +42,7 @@
 		"@playform/build": "0.0.7",
 		"@playform/document": "0.0.6",
 		"@types/fs-extra": "11.0.4",
-		"@types/node": "20.12.7",
+		"@types/node": "20.12.10",
 		"@types/p-retry": "3.0.0",
 		"@types/ws": "8.5.10",
 		"@types/yazl": "2.4.5",
