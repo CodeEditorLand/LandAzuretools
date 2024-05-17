@@ -1,26 +1,6 @@
 {
 	"name": "@microsoft/vscode-azext-azureauth",
-	"version": "0.0.1",
-	"private": false,
 	"description": "Azure authentication helpers for Visual Studio Code",
-	"keywords": [
-		"land"
-	],
-	"homepage": "HTTPS://GitHub.Com/CodeEditorLand/LandAzureTools#readme",
-	"bugs": {
-		"url": "HTTPS://GitHub.Com/CodeEditorLand/LandAzureTools/issues"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+HTTPS://github.com/CodeEditorLand/LandAzureTools.git"
-	},
-	"license": "SEE LICENSE IN LICENSE",
-	"author": {
-		"name": "🛬 Land —",
-		"email": "Land@PlayForm.Cloud",
-		"url": "HTTPS://Land.PlayForm.Cloud"
-	},
-	"type": "module",
 	"main": "out/src/index.js",
 	"types": "out/src/index.d.ts",
 	"scripts": {
@@ -32,7 +12,6 @@
 	"dependencies": {},
 	"devDependencies": {
 		"@playform/build": "0.0.7",
-		"@playform/document": "0.0.6",
 		"@types/glob": "8.1.0",
 		"@types/html-to-text": "9.0.4",
 		"@types/node": "20.12.10",
@@ -40,8 +19,5 @@
 		"@types/semver": "7.5.8",
 		"@types/uuid": "9.0.8",
 		"glob": "10.3.12"
-	},
-	"publishConfig": {
-		"access": "public"
 	}
 }
