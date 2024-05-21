@@ -8,13 +8,13 @@
 		"compile": "tsc -watch -p ./"
 	},
 	"dependencies": {
-		"semver": "7.3.7",
-		"uuid": "9.0.0"
+		"semver": "7.6.2",
+		"uuid": "9.0.1"
 	},
 	"devDependencies": {
-		"@types/node": "16.0.0",
-		"@types/semver": "7.3.9",
-		"@types/uuid": "9.0.1",
-		"glob": "7.1.6"
+		"@types/node": "20.12.12",
+		"@types/semver": "7.5.8",
+		"@types/uuid": "9.0.8",
+		"glob": "10.3.15"
 	}
 }
