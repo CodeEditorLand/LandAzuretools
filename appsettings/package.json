@@ -2,10 +2,10 @@
 	"dependencies": {},
 	"description": "Common features and tools surrounding App Settings for the Azure VS Code extensions",
 	"devDependencies": {
-		"@types/fs-extra": "^11.0.4",
-		"@types/node": "^20.14.2",
-		"fs-extra": "^11.2.0",
-		"globby": "^14.0.1"
+		"@types/fs-extra": "11.0.4",
+		"@types/node": "20.14.2",
+		"fs-extra": "11.2.0",
+		"globby": "14.0.1"
 	},
 	"main": "out/src/index.js",
 	"name": "@microsoft/vscode-azext-azureappsettings",

@@ -1,14 +1,14 @@
 {
 	"dependencies": {
-		"semver": "^7.6.2",
-		"uuid": "^10.0.0"
+		"semver": "7.6.2",
+		"uuid": "10.0.0"
 	},
 	"description": "Common Azure utils for developing Azure extensions for VS Code",
 	"devDependencies": {
-		"@types/node": "^20.14.2",
-		"@types/semver": "^7.5.8",
-		"@types/uuid": "^9.0.8",
-		"glob": "^10.4.1"
+		"@types/node": "20.14.2",
+		"@types/semver": "7.5.8",
+		"@types/uuid": "9.0.8",
+		"glob": "10.4.1"
 	},
 	"main": "out/src/index.js",
 	"name": "@microsoft/vscode-azext-azureutils",
