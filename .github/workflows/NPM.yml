@@ -1,0 +1,106 @@
+name: NPM
+
+concurrency:
+    group: NPM-${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: true
+
+permissions:
+    security-events: write
+    contents: write
+    pull-requests: write
+
+on:
+    workflow_dispatch:
+    release:
+        types: [created]
+    workflow_call:
+
+jobs:
+    Publish:
+        runs-on: ubuntu-latest
+
+        permissions:
+            contents: read
+            id-token: write
+
+        steps:
+            - uses: actions/checkout@v4.1.6
+
+            - uses: actions/setup-node@v4.0.2
+              with:
+                  node-version: "18"
+                  registry-url: "https://registry.npmjs.org"
+
+            - run: npm install -g npm
+
+            - name: Publish ./appservice
+              continue-on-error: true
+              working-directory: ./appservice
+              run: |
+                  npm publish --legacy-peer-deps --provenance --ignore-scripts
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+            - name: Publish ./appsettings
+              continue-on-error: true
+              working-directory: ./appsettings
+              run: |
+                  npm publish --legacy-peer-deps --provenance --ignore-scripts
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+            - name: Publish ./auth
+              continue-on-error: true
+              working-directory: ./auth
+              run: |
+                  npm publish --legacy-peer-deps --provenance --ignore-scripts
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+            - name: Publish ./azure
+              continue-on-error: true
+              working-directory: ./azure
+              run: |
+                  npm publish --legacy-peer-deps --provenance --ignore-scripts
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+            - name: Publish ./dev
+              continue-on-error: true
+              working-directory: ./dev
+              run: |
+                  npm publish --legacy-peer-deps --provenance --ignore-scripts
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+            - name: Publish ./eslint-config-azuretools
+              continue-on-error: true
+              working-directory: ./eslint-config-azuretools
+              run: |
+                  npm publish --legacy-peer-deps --provenance --ignore-scripts
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+            - name: Publish ./github
+              continue-on-error: true
+              working-directory: ./github
+              run: |
+                  npm publish --legacy-peer-deps --provenance --ignore-scripts
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+            - name: Publish ./serviceconnector
+              continue-on-error: true
+              working-directory: ./serviceconnector
+              run: |
+                  npm publish --legacy-peer-deps --provenance --ignore-scripts
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+            - name: Publish ./utils
+              continue-on-error: true
+              working-directory: ./utils
+              run: |
+                  npm publish --legacy-peer-deps --provenance --ignore-scripts
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
