@@ -23,7 +23,7 @@
     "eslint-plugin-import": ">=2"
   },
   "dependencies": {
-    "@typescript-eslint/parser": "^7.13.1"
+    "@typescript-eslint/parser": "7.13.1"
   },
   "scripts": {
     "lint": "exit 0",

@@ -31,22 +31,22 @@
         "package": "npm pack"
     },
     "dependencies": {
-        "@azure/arm-servicelinker": "^2.1.0",
-        "@microsoft/vscode-azext-azureutils": "^3.0.1",
-        "@microsoft/vscode-azext-utils": "^2.5.1"
+        "@azure/arm-servicelinker": "2.1.0",
+        "@microsoft/vscode-azext-azureutils": "3.0.1",
+        "@microsoft/vscode-azext-utils": "2.5.1"
     },
     "devDependencies": {
-        "@microsoft/eslint-config-azuretools": "^0.2.4",
-        "@types/mocha": "^10.0.6",
-        "@types/node": "^20.14.5",
+        "@microsoft/eslint-config-azuretools": "0.2.4",
+        "@types/mocha": "10.0.6",
+        "@types/node": "20.14.5",
         "@types/vscode": "1.90.0",
-        "@typescript-eslint/eslint-plugin": "^7.13.1",
-        "@vscode/test-electron": "^2.4.0",
-        "eslint": "^9.5.0",
-        "eslint-plugin-import": "^2.29.1",
-        "mocha": "^10.4.0",
-        "mocha-junit-reporter": "^2.2.1",
-        "mocha-multi-reporters": "^1.5.1",
-        "typescript": "^5.4.5"
+        "@typescript-eslint/eslint-plugin": "7.13.1",
+        "@vscode/test-electron": "2.4.0",
+        "eslint": "9.5.0",
+        "eslint-plugin-import": "2.29.1",
+        "mocha": "10.4.0",
+        "mocha-junit-reporter": "2.2.1",
+        "mocha-multi-reporters": "1.5.1",
+        "typescript": "5.4.5"
     }
 }
