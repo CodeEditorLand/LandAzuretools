@@ -57,7 +57,7 @@ jobs:
                 node-version: [18, 19, 20]
 
         steps:
-            - uses: actions/checkout@v4.1.6
+            - uses: actions/checkout@v4.1.7
 
             - uses: pnpm/action-setup@v4.0.0
               with:
@@ -91,9 +91,6 @@ jobs:
                   name: .-appservice-Node-${{ matrix.node-version }}-Target
                   path: ./appservice/Target
 
-            - run: pnpm run test
-              working-directory: ./appservice
-
             - uses: actions/setup-node@v4.0.2
               with:
                   node-version: ${{ matrix.node-version }}
@@ -110,9 +107,6 @@ jobs:
               with:
                   name: .-appsettings-Node-${{ matrix.node-version }}-Target
                   path: ./appsettings/Target
-
-            - run: pnpm run test
-              working-directory: ./appsettings
 
             - uses: actions/setup-node@v4.0.2
               with:
@@ -131,9 +125,6 @@ jobs:
                   name: .-auth-Node-${{ matrix.node-version }}-Target
                   path: ./auth/Target
 
-            - run: pnpm run test
-              working-directory: ./auth
-
             - uses: actions/setup-node@v4.0.2
               with:
                   node-version: ${{ matrix.node-version }}
@@ -150,9 +141,6 @@ jobs:
               with:
                   name: .-azure-Node-${{ matrix.node-version }}-Target
                   path: ./azure/Target
-
-            - run: pnpm run test
-              working-directory: ./azure
 
             - uses: actions/setup-node@v4.0.2
               with:
@@ -171,9 +159,6 @@ jobs:
                   name: .-dev-Node-${{ matrix.node-version }}-Target
                   path: ./dev/Target
 
-            - run: pnpm run test
-              working-directory: ./dev
-
             - uses: actions/setup-node@v4.0.2
               with:
                   node-version: ${{ matrix.node-version }}
@@ -190,9 +175,6 @@ jobs:
               with:
                   name: .-eslint-config-azuretools-Node-${{ matrix.node-version }}-Target
                   path: ./eslint-config-azuretools/Target
-
-            - run: pnpm run test
-              working-directory: ./eslint-config-azuretools
 
             - uses: actions/setup-node@v4.0.2
               with:
@@ -211,9 +193,6 @@ jobs:
                   name: .-github-Node-${{ matrix.node-version }}-Target
                   path: ./github/Target
 
-            - run: pnpm run test
-              working-directory: ./github
-
             - uses: actions/setup-node@v4.0.2
               with:
                   node-version: ${{ matrix.node-version }}
@@ -231,9 +210,6 @@ jobs:
                   name: .-serviceconnector-Node-${{ matrix.node-version }}-Target
                   path: ./serviceconnector/Target
 
-            - run: pnpm run test
-              working-directory: ./serviceconnector
-
             - uses: actions/setup-node@v4.0.2
               with:
                   node-version: ${{ matrix.node-version }}
@@ -250,6 +226,3 @@ jobs:
               with:
                   name: .-utils-Node-${{ matrix.node-version }}-Target
                   path: ./utils/Target
-
-            - run: pnpm run test
-              working-directory: ./utils

@@ -14,19 +14,7 @@ updates:
       versioning-strategy: increase
 
     - package-ecosystem: "npm"
-      directory: "/appservice/test/extension"
-      schedule:
-          interval: "daily"
-      versioning-strategy: increase
-
-    - package-ecosystem: "npm"
       directory: "/appsettings"
-      schedule:
-          interval: "daily"
-      versioning-strategy: increase
-
-    - package-ecosystem: "npm"
-      directory: "/appsettings/test/extension"
       schedule:
           interval: "daily"
       versioning-strategy: increase
@@ -38,31 +26,13 @@ updates:
       versioning-strategy: increase
 
     - package-ecosystem: "npm"
-      directory: "/auth/test/extension"
-      schedule:
-          interval: "daily"
-      versioning-strategy: increase
-
-    - package-ecosystem: "npm"
       directory: "/azure"
       schedule:
           interval: "daily"
       versioning-strategy: increase
 
     - package-ecosystem: "npm"
-      directory: "/azure/test/extension"
-      schedule:
-          interval: "daily"
-      versioning-strategy: increase
-
-    - package-ecosystem: "npm"
       directory: "/dev"
-      schedule:
-          interval: "daily"
-      versioning-strategy: increase
-
-    - package-ecosystem: "npm"
-      directory: "/dev/test/extension"
       schedule:
           interval: "daily"
       versioning-strategy: increase
@@ -80,31 +50,13 @@ updates:
       versioning-strategy: increase
 
     - package-ecosystem: "npm"
-      directory: "/github/test/extension"
-      schedule:
-          interval: "daily"
-      versioning-strategy: increase
-
-    - package-ecosystem: "npm"
       directory: "/serviceconnector"
       schedule:
           interval: "daily"
       versioning-strategy: increase
 
     - package-ecosystem: "npm"
-      directory: "/serviceconnector/test/extension"
-      schedule:
-          interval: "daily"
-      versioning-strategy: increase
-
-    - package-ecosystem: "npm"
       directory: "/utils"
-      schedule:
-          interval: "daily"
-      versioning-strategy: increase
-
-    - package-ecosystem: "npm"
-      directory: "/utils/test/extension"
       schedule:
           interval: "daily"
       versioning-strategy: increase
