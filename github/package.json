@@ -8,11 +8,11 @@
 		"compile": "tsc -watch -p ./"
 	},
 	"dependencies": {
-		"@octokit/rest": "18.5.2"
+		"@octokit/rest": "21.0.0"
 	},
 	"devDependencies": {
 		"@types/glob": "8.1.0",
-		"@types/node": "16.0.0",
-		"glob": "7.1.6"
+		"@types/node": "20.14.9",
+		"glob": "10.4.2"
 	}
 }
