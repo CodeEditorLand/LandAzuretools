@@ -1,17 +1,17 @@
 {
-	"name": "@microsoft/vscode-azext-azureappsettings",
-	"description": "Common features and tools surrounding App Settings for the Azure VS Code extensions",
-	"main": "out/src/index.js",
-	"types": "out/src/index.d.ts",
-	"scripts": {
-		"build": "tsc -p ./",
-		"compile": "tsc -watch -p ./"
-	},
 	"dependencies": {},
+	"description": "Common features and tools surrounding App Settings for the Azure VS Code extensions",
 	"devDependencies": {
 		"@types/fs-extra": "11.0.4",
 		"@types/node": "20.14.9",
 		"fs-extra": "11.2.0",
 		"globby": "14.0.1"
-	}
+	},
+	"main": "out/src/index.js",
+	"name": "@microsoft/vscode-azext-azureappsettings",
+	"scripts": {
+		"build": "tsc -p ./",
+		"compile": "tsc -watch -p ./"
+	},
+	"types": "out/src/index.d.ts"
 }

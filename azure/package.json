@@ -1,20 +1,20 @@
 {
-	"name": "@microsoft/vscode-azext-azureutils",
-	"description": "Common Azure utils for developing Azure extensions for VS Code",
-	"main": "out/src/index.js",
-	"types": "index.d.ts",
-	"scripts": {
-		"build": "tsc -p ./",
-		"compile": "tsc -watch -p ./"
-	},
 	"dependencies": {
 		"semver": "7.6.2",
 		"uuid": "10.0.0"
 	},
+	"description": "Common Azure utils for developing Azure extensions for VS Code",
 	"devDependencies": {
 		"@types/node": "20.14.9",
 		"@types/semver": "7.5.8",
 		"@types/uuid": "10.0.0",
 		"glob": "10.4.2"
-	}
+	},
+	"main": "out/src/index.js",
+	"name": "@microsoft/vscode-azext-azureutils",
+	"scripts": {
+		"build": "tsc -p ./",
+		"compile": "tsc -watch -p ./"
+	},
+	"types": "index.d.ts"
 }
