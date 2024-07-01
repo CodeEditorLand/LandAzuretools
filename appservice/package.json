@@ -8,11 +8,11 @@
 		"compile": "tsc -watch -p ./"
 	},
 	"dependencies": {
-		"dayjs": "1.11.2",
-		"fs-extra": "10.0.0",
-		"p-retry": "3.0.1",
-		"pretty-bytes": "5.3.0",
-		"simple-git": "3.5.0",
+		"dayjs": "1.11.11",
+		"fs-extra": "11.2.0",
+		"p-retry": "6.2.0",
+		"pretty-bytes": "6.1.1",
+		"simple-git": "3.25.0",
 		"ws": "8.17.1",
 		"yazl": "2.5.1"
 	},
@@ -22,6 +22,6 @@
 		"@types/p-retry": "3.0.0",
 		"@types/ws": "8.5.10",
 		"@types/yazl": "2.4.5",
-		"globby": "14.0.1"
+		"globby": "14.0.2"
 	}
 }
