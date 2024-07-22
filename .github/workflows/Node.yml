@@ -75,7 +75,7 @@ jobs:
                           --unsafe-perm=true
                         ]
 
-            - uses: actions/setup-node@v4.0.2
+            - uses: actions/setup-node@v4.0.3
               with:
                   node-version: ${{ matrix.node-version }}
                   cache: "pnpm"
@@ -92,7 +92,7 @@ jobs:
                   name: .-appservice-Node-${{ matrix.node-version }}-Target
                   path: ./appservice/Target
 
-            - uses: actions/setup-node@v4.0.2
+            - uses: actions/setup-node@v4.0.3
               with:
                   node-version: ${{ matrix.node-version }}
                   cache: "pnpm"
@@ -109,7 +109,7 @@ jobs:
                   name: .-appsettings-Node-${{ matrix.node-version }}-Target
                   path: ./appsettings/Target
 
-            - uses: actions/setup-node@v4.0.2
+            - uses: actions/setup-node@v4.0.3
               with:
                   node-version: ${{ matrix.node-version }}
                   cache: "pnpm"
@@ -126,7 +126,7 @@ jobs:
                   name: .-auth-Node-${{ matrix.node-version }}-Target
                   path: ./auth/Target
 
-            - uses: actions/setup-node@v4.0.2
+            - uses: actions/setup-node@v4.0.3
               with:
                   node-version: ${{ matrix.node-version }}
                   cache: "pnpm"
@@ -143,7 +143,7 @@ jobs:
                   name: .-azure-Node-${{ matrix.node-version }}-Target
                   path: ./azure/Target
 
-            - uses: actions/setup-node@v4.0.2
+            - uses: actions/setup-node@v4.0.3
               with:
                   node-version: ${{ matrix.node-version }}
                   cache: "pnpm"
@@ -160,7 +160,7 @@ jobs:
                   name: .-dev-Node-${{ matrix.node-version }}-Target
                   path: ./dev/Target
 
-            - uses: actions/setup-node@v4.0.2
+            - uses: actions/setup-node@v4.0.3
               with:
                   node-version: ${{ matrix.node-version }}
                   cache: "pnpm"
@@ -177,7 +177,7 @@ jobs:
                   name: .-eslint-config-azuretools-Node-${{ matrix.node-version }}-Target
                   path: ./eslint-config-azuretools/Target
 
-            - uses: actions/setup-node@v4.0.2
+            - uses: actions/setup-node@v4.0.3
               with:
                   node-version: ${{ matrix.node-version }}
                   cache: "pnpm"
@@ -194,7 +194,7 @@ jobs:
                   name: .-github-Node-${{ matrix.node-version }}-Target
                   path: ./github/Target
 
-            - uses: actions/setup-node@v4.0.2
+            - uses: actions/setup-node@v4.0.3
               with:
                   node-version: ${{ matrix.node-version }}
                   cache: "pnpm"
@@ -211,7 +211,7 @@ jobs:
                   name: .-serviceconnector-Node-${{ matrix.node-version }}-Target
                   path: ./serviceconnector/Target
 
-            - uses: actions/setup-node@v4.0.2
+            - uses: actions/setup-node@v4.0.3
               with:
                   node-version: ${{ matrix.node-version }}
                   cache: "pnpm"
