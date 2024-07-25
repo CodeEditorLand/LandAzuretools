@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
 	"dependencies": {},
 	"description": "Shared ESLint configuration used by Azure Tools for VS Code",
 	"main": "index.js",
@@ -6,4 +7,13 @@
 	"scripts": {
 		"build": "exit 0"
 	}
+=======
+	"name": "@microsoft/eslint-config-azuretools",
+	"description": "Shared ESLint configuration used by Azure Tools for VS Code",
+	"main": "index.js",
+	"scripts": {
+		"build": "exit 0"
+	},
+	"dependencies": {}
+>>>>>>> 1b79a1ed85bb446e36351e804e343f61ec1bbadb
 }
