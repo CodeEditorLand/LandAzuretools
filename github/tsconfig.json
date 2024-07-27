@@ -1,13 +1,9 @@
 {
-    "extends": "../tsconfig.base.json",
-    "compilerOptions": {
-        "outDir": "out",
-        "rootDir": ".",
-        "declaration": true
-    },
-    "exclude": [
-        "node_modules",
-        "lib",
-        "out",
-    ]
+	"extends": "../tsconfig.base.json",
+	"compilerOptions": {
+		"outDir": "out",
+		"rootDir": ".",
+		"declaration": true
+	},
+	"exclude": ["node_modules", "lib", "out"]
 }
