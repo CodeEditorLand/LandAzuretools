@@ -1,13 +1,6 @@
 {
-	"name": "@microsoft/vscode-azext-azureauth",
-	"description": "Azure authentication helpers for Visual Studio Code",
-	"main": "out/src/index.js",
-	"types": "out/src/index.d.ts",
-	"scripts": {
-		"build": "tsc -p ./",
-		"compile": "tsc -watch -p ./"
-	},
 	"dependencies": {},
+	"description": "Azure authentication helpers for Visual Studio Code",
 	"devDependencies": {
 		"@types/glob": "8.1.0",
 		"@types/html-to-text": "8.1.0",
@@ -16,5 +9,12 @@
 		"@types/semver": "7.3.9",
 		"@types/uuid": "9.0.1",
 		"glob": "7.1.6"
-	}
+	},
+	"main": "out/src/index.js",
+	"name": "@microsoft/vscode-azext-azureauth",
+	"scripts": {
+		"build": "tsc -p ./",
+		"compile": "tsc -watch -p ./"
+	},
+	"types": "out/src/index.d.ts"
 }
