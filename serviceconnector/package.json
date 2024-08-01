@@ -2,7 +2,7 @@
 	"dependencies": {},
 	"description": "Tools surrounding Service Connector for the Azure VS Code extensions",
 	"devDependencies": {
-		"@types/node": "16.0.0"
+		"@types/node": "22.0.2"
 	},
 	"main": "out/src/index.js",
 	"name": "@microsoft/vscode-azext-serviceconnector",
