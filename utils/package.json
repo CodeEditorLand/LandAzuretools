@@ -1,18 +1,18 @@
 {
 	"dependencies": {
-		"dayjs": "^1.11.2",
-		"escape-string-regexp": "^2.0.0",
-		"html-to-text": "^8.2.0",
-		"semver": "^7.3.7",
-		"uuid": "^9.0.0"
+		"dayjs": "^2.0.0-alpha.4",
+		"escape-string-regexp": "^5.0.0",
+		"html-to-text": "^9.0.5",
+		"semver": "^7.6.3",
+		"uuid": "^10.0.0"
 	},
 	"description": "Common UI tools for developing Azure extensions for VS Code",
 	"devDependencies": {
-		"@types/html-to-text": "^8.1.0",
-		"@types/node": "^16.0.0",
-		"@types/semver": "^7.3.9",
-		"@types/uuid": "^9.0.1",
-		"glob": "^7.1.6"
+		"@types/html-to-text": "^9.0.4",
+		"@types/node": "^22.1.0",
+		"@types/semver": "^7.5.8",
+		"@types/uuid": "^10.0.0",
+		"glob": "^11.0.0"
 	},
 	"main": "out/src/index.js",
 	"name": "@microsoft/vscode-azext-utils",
