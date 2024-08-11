@@ -242,12 +242,12 @@ export declare class LocationListStep<
 		wizardContext: T,
 	): Promise<IAzureQuickPickItem<AzExtLocation>[]>;
 
-	/**
-	 * Implement this to set descriptions on location quick pick items.
-	 */
-	public static getQuickPickDescription?: (
-		location: AzExtLocation,
-	) => string | undefined;
+    public static generalizeLocationName(name: string | undefined): string;
+
+    /**
+     * Implement this to set descriptions on location quick pick items.
+     */
+    public static getQuickPickDescription?: (location: AzExtLocation) => string | undefined;
 }
 
 /**

@@ -248,14 +248,15 @@ export interface AzExtServiceClientCredentialsT2 {
  * Information specific to the Subscription
  */
 export interface ISubscriptionContext {
-	credentials: AzExtServiceClientCredentials;
-	subscriptionDisplayName: string;
-	subscriptionId: string;
-	subscriptionPath: string;
-	tenantId: string;
-	userId: string;
-	environment: Environment;
-	isCustomCloud: boolean;
+    credentials: AzExtServiceClientCredentials;
+    createCredentialsForScopes: (scopes: string[]) => Promise<AzExtServiceClientCredentials>;
+    subscriptionDisplayName: string;
+    subscriptionId: string;
+    subscriptionPath: string;
+    tenantId: string;
+    userId: string;
+    environment: Environment;
+    isCustomCloud: boolean;
 }
 
 export type TreeItemIconPath =
