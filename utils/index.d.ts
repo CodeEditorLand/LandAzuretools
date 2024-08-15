@@ -1833,6 +1833,14 @@ export declare function stashReadOnlyContent(
 ): Promise<ReadOnlyContent>;
 
 /**
+ * Stash a read-only editor so it can be opened by its uri later.
+ * @param node Typically (but not strictly) an `AzExtTreeItem`. `label` is used for the file name displayed in VS Code and a random id will be generated to uniquely identify this file
+ * @param content The content to display
+ * @param fileExtension The file extension
+ */
+export declare function stashReadOnlyContentSync(node: { label: string }, content: string, fileExtension: string): ReadOnlyContent;
+
+/**
  * Disposes all the read-only contents stashed in memory.
  */
 export declare function disposeReadOnlyContents(): Promise<void>;
