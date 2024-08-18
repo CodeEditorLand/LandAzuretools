@@ -1,14 +1,14 @@
 {
 	"dependencies": {
 		"@azure/arm-authorization": "30.0.0-beta.1",
-		"@azure/arm-authorization-profile-2020-09-01-hybrid": "2.1.1-alpha.20240806.1",
-		"@azure/arm-msi": "2.1.1-alpha.20240807.1",
+		"@azure/arm-authorization-profile-2020-09-01-hybrid": "2.1.1-alpha.20240816.1",
+		"@azure/arm-msi": "2.1.1-alpha.20240816.1",
 		"semver": "7.6.3",
 		"uuid": "10.0.0"
 	},
 	"description": "Common Azure utils for developing Azure extensions for VS Code",
 	"devDependencies": {
-		"@types/node": "22.1.0",
+		"@types/node": "22.4.0",
 		"@types/semver": "7.5.8",
 		"@types/uuid": "10.0.0",
 		"glob": "11.0.0"

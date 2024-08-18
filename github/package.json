@@ -1,11 +1,11 @@
 {
 	"dependencies": {
-		"@octokit/rest": "21.0.1"
+		"@octokit/rest": "21.0.2"
 	},
 	"description": "Common GitHub tools for VS Code",
 	"devDependencies": {
 		"@types/glob": "8.1.0",
-		"@types/node": "22.1.0",
+		"@types/node": "22.4.0",
 		"glob": "11.0.0"
 	},
 	"main": "out/src/index.js",
