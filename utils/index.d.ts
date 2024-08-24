@@ -1377,9 +1377,11 @@ export interface IWizardOptions<T extends IActionContext> {
 
 export const activitySuccessContext: string;
 export const activityFailContext: string;
+export const activityProgressContext: string;
 
 export const activityInfoIcon: ThemeIcon;
 export const activitySuccessIcon: ThemeIcon;
+export const activityProgressIcon: ThemeIcon;
 export const activityFailIcon: ThemeIcon;
 
 export type ActivityTask<R> = (
@@ -1397,9 +1399,10 @@ export declare abstract class ActivityBase<R> implements Activity {
 	public readonly id: string;
 	public readonly cancellationTokenSource: CancellationTokenSource;
 
-	abstract initialState(): ActivityTreeItemOptions;
-	abstract successState(): ActivityTreeItemOptions;
-	abstract errorState(error: IParsedError): ActivityTreeItemOptions;
+    abstract initialState(): ActivityTreeItemOptions;
+    abstract successState(): ActivityTreeItemOptions;
+    abstract progressState(): ActivityTreeItemOptions;
+    abstract errorState(error: IParsedError): ActivityTreeItemOptions;
 
 	public constructor(task: ActivityTask<R>);
 	public report(progress: { message?: string; increment?: number }): void;
@@ -1422,15 +1425,14 @@ export declare class AzureWizard<
 	public execute(): Promise<void>;
 }
 
-export class ExecuteActivity<
-	C extends ExecuteActivityContext = ExecuteActivityContext,
-> extends ActivityBase<void> {
-	protected readonly context: C;
-	public constructor(context: C, task: ActivityTask<void>);
-	public initialState(): ActivityTreeItemOptions;
-	public successState(): ActivityTreeItemOptions;
-	public errorState(error: IParsedError): ActivityTreeItemOptions;
-	protected get label(): string;
+export class ExecuteActivity<C extends ExecuteActivityContext = ExecuteActivityContext> extends ActivityBase<void> {
+    protected readonly context: C;
+    public constructor(context: C, task: ActivityTask<void>);
+    public initialState(): ActivityTreeItemOptions;
+    public successState(): ActivityTreeItemOptions;
+    public progressState(): ActivityTreeItemOptions;
+    public errorState(error: IParsedError): ActivityTreeItemOptions;
+    protected get label(): string;
 }
 
 export declare interface ExecuteActivityContext {
@@ -1530,6 +1532,11 @@ export declare abstract class AzureWizardExecuteStep<T extends IActionContext & 
      * Defines the output for display after successful execution of the step
      */
     public createSuccessOutput?(context: T): ExecuteActivityOutput;
+
+    /**
+     * Defines the output for display during execution of the step
+     */
+    public createProgressOutput?(context: T): ExecuteActivityOutput;
 
     /**
      * Defines the output for display after unsuccessful execution of the step
