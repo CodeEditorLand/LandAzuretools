@@ -11,7 +11,7 @@
 	"description": "Common tools for developing Azure App Service extensions for VS Code",
 	"devDependencies": {
 		"@types/fs-extra": "11.0.4",
-		"@types/node": "22.4.0",
+		"@types/node": "22.5.0",
 		"@types/p-retry": "3.0.1",
 		"@types/ws": "8.5.12",
 		"@types/yazl": "2.4.5",
