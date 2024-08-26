@@ -1,6 +1,6 @@
 {
 	"dependencies": {
-		"dayjs": "2.0.0-alpha.4",
+		"dayjs": "1.11.13",
 		"escape-string-regexp": "5.0.0",
 		"html-to-text": "9.0.5",
 		"semver": "7.6.3",

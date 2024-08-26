@@ -1,8 +1,8 @@
 {
 	"dependencies": {
-		"@azure/arm-authorization": "30.0.0-beta.1",
-		"@azure/arm-authorization-profile-2020-09-01-hybrid": "2.1.1-alpha.20240823.1",
-		"@azure/arm-msi": "2.1.1-alpha.20240823.1",
+		"@azure/arm-authorization": "9.0.0",
+		"@azure/arm-authorization-profile-2020-09-01-hybrid": "2.1.0",
+		"@azure/arm-msi": "2.1.0",
 		"semver": "7.6.3",
 		"uuid": "10.0.0"
 	},

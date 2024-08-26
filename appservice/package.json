@@ -1,6 +1,6 @@
 {
 	"dependencies": {
-		"dayjs": "2.0.0-alpha.4",
+		"dayjs": "1.11.13",
 		"fs-extra": "11.2.0",
 		"p-retry": "6.2.0",
 		"pretty-bytes": "6.1.1",
