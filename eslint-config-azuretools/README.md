@@ -6,7 +6,7 @@ Code Team.
 -   `@microsoft/eslint-config-azuretools` (for production code)
 -   `@microsoft/eslint-config-azuretools/test` (for test code)
 
-## Usage
+## 🛠️ Usage
 
 1. Install this package and its peer dependencies. Peer dependencies can be
    listed with the following command:

@@ -5,7 +5,7 @@
 This package provides common Azure utilities for Azure VS Code extensions, and
 is intented to be used alongside @microsoft/vscode-azext-utils.
 
-## Usage
+## 🛠️ Usage
 
 You must call `registerAzureUtilsExtensionVariables` first in your extension's
 `activate()` method. The first parameter of the function passed in will always
