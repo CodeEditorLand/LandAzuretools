@@ -1,5 +1,29 @@
 # Change Log
 
+## 3.0.0 - 2024-09-19
+* [#1789](https://github.com/microsoft/vscode-azuretools/pull/1789) Change `getTenants` to be compatible with the new Azure Resources tenants view. This also includes a possible breaking change where an optional parameter `account` which when passed in `getTenants` will return the tenants associated with that single account. Otherwise `getTenants` will return the tenants for all authenticated accounts.
+
+## 2.5.0 - 2024-08-06
+
+* Add `getSessionWithScopes` to get a session that has the proper scoping instead of always the default management plane
+
+## 2.4.1 - 2024-05-15
+
+* [#1729](https://github.com/microsoft/vscode-azuretools/pull/1729) Change AzureDevOpsSubscriptionProvider so that it accepts values as arguments
+
+## 2.4.0 - 2024-05-07
+
+* [#1723](https://github.com/microsoft/vscode-azuretools/pull/1723) Implementation fo AzureSub provider that leverages federated credentials
+
+## 2.1.0 - 2023-12-13
+
+* Use management endpoint for scope by default to fix deploying app service projects with sovereign clouds
+
+## 2.0.0 - 2023-11-20
+
+* Switches to use `@azure/arm-resources-subscriptions` instead of `@azure/arm-subscriptions`. Potentially a breaking change so I revved the major version.
+* Fixes an issue where the `endpoint` wasn't set for the subscription client, breaking sovereign clouds
+
 ## 1.4.0 - 2023-11-03
 * [#1619](https://github.com/microsoft/vscode-azuretools/pull/1619) Make `getSession` synchronous to fix an issue that broke app service deployments
 
