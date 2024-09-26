@@ -1,15 +1,15 @@
 {
-	"dependencies": {},
-	"description": "Tools surrounding Service Connector for the Azure VS Code extensions",
-	"devDependencies": {
-		"@types/node": "16.0.0"
-	},
-	"main": "out/src/index.js",
 	"name": "@microsoft/vscode-azext-serviceconnector",
+	"description": "Tools surrounding Service Connector for the Azure VS Code extensions",
+	"main": "out/src/index.js",
+	"types": "out/src/index.d.ts",
 	"scripts": {
 		"build": "tsc -p ./",
 		"compile": "tsc -watch -p ./",
 		"prepack": "tsc -p ./"
 	},
-	"types": "out/src/index.d.ts"
+	"dependencies": {},
+	"devDependencies": {
+		"@types/node": "16.0.0"
+	}
 }
