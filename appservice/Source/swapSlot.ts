@@ -3,52 +3,95 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import type { WebSiteManagementClient } from '@azure/arm-appservice';
-import { IActionContext, IAzureQuickPickItem } from '@microsoft/vscode-azext-utils';
-import { l10n, ProgressLocation, window } from 'vscode';
-import { ext } from './extensionVariables';
-import { ParsedSite } from './SiteClient';
-import { createWebSiteClient } from './utils/azureClients';
+import type { WebSiteManagementClient } from "@azure/arm-appservice";
+import {
+	IActionContext,
+	IAzureQuickPickItem,
+} from "@microsoft/vscode-azext-utils";
+import { l10n, ProgressLocation, window } from "vscode";
 
-export async function swapSlot(context: IActionContext, sourceSlot: ParsedSite, existingSlots: ParsedSite[]): Promise<void> {
-    const productionSlotLabel: string = 'production';
-    const otherSlots: IAzureQuickPickItem<ParsedSite | undefined>[] = [{
-        label: productionSlotLabel,
-        data: undefined
-    }];
+import { ext } from "./extensionVariables";
+import { ParsedSite } from "./SiteClient";
+import { createWebSiteClient } from "./utils/azureClients";
 
-    for (const slot of existingSlots) {
-        if (sourceSlot.slotName !== slot.slotName) {
-            // Deployment slots must have an unique name
-            const otherSlot: IAzureQuickPickItem<ParsedSite | undefined> = {
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                label: slot.slotName!,
-                data: slot
-            };
+export async function swapSlot(
+	context: IActionContext,
+	sourceSlot: ParsedSite,
+	existingSlots: ParsedSite[],
+): Promise<void> {
+	const productionSlotLabel: string = "production";
+	const otherSlots: IAzureQuickPickItem<ParsedSite | undefined>[] = [
+		{
+			label: productionSlotLabel,
+			data: undefined,
+		},
+	];
 
-            otherSlots.push(otherSlot);
-        }
-    }
+	for (const slot of existingSlots) {
+		if (sourceSlot.slotName !== slot.slotName) {
+			// Deployment slots must have an unique name
+			const otherSlot: IAzureQuickPickItem<ParsedSite | undefined> = {
+				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+				label: slot.slotName!,
+				data: slot,
+			};
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const placeHolder: string = l10n.t('Select which slot to swap with "{0}".', sourceSlot.slotName!);
-    const targetSlot = (await context.ui.showQuickPick(otherSlots, { placeHolder, stepName: 'swapSlot' })).data;
+			otherSlots.push(otherSlot);
+		}
+	}
 
-    const targetSlotLabel: string = targetSlot ? targetSlot.fullName : `${sourceSlot.siteName}-${productionSlotLabel}`;
-    const swappingSlots: string = l10n.t('Swapping "{0}" with "{1}"...', targetSlotLabel, sourceSlot.fullName);
-    const successfullySwapped: string = l10n.t('Successfully swapped "{0}" with "{1}".', targetSlotLabel, sourceSlot.fullName);
-    ext.outputChannel.appendLog(swappingSlots);
-    const client: WebSiteManagementClient = await createWebSiteClient([context, sourceSlot.subscription]);
-    await window.withProgress({ location: ProgressLocation.Notification, title: swappingSlots }, async () => {
-        // if targetSlot was assigned undefined, the user selected 'production'
-        if (!targetSlot) {
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            await client.webApps.beginSwapSlotWithProductionAndWait(sourceSlot.resourceGroup, sourceSlot.siteName, { targetSlot: sourceSlot.slotName!, preserveVnet: true });
-        } else {
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            await client.webApps.beginSwapSlotAndWait(sourceSlot.resourceGroup, sourceSlot.siteName, sourceSlot.slotName!, { targetSlot: targetSlot.slotName!, preserveVnet: true });
-        }
-        void window.showInformationMessage(successfullySwapped);
-        ext.outputChannel.appendLog(successfullySwapped);
-    });
+	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+	const placeHolder: string = l10n.t(
+		'Select which slot to swap with "{0}".',
+		sourceSlot.slotName!,
+	);
+	const targetSlot = (
+		await context.ui.showQuickPick(otherSlots, {
+			placeHolder,
+			stepName: "swapSlot",
+		})
+	).data;
+
+	const targetSlotLabel: string = targetSlot
+		? targetSlot.fullName
+		: `${sourceSlot.siteName}-${productionSlotLabel}`;
+	const swappingSlots: string = l10n.t(
+		'Swapping "{0}" with "{1}"...',
+		targetSlotLabel,
+		sourceSlot.fullName,
+	);
+	const successfullySwapped: string = l10n.t(
+		'Successfully swapped "{0}" with "{1}".',
+		targetSlotLabel,
+		sourceSlot.fullName,
+	);
+	ext.outputChannel.appendLog(swappingSlots);
+	const client: WebSiteManagementClient = await createWebSiteClient([
+		context,
+		sourceSlot.subscription,
+	]);
+	await window.withProgress(
+		{ location: ProgressLocation.Notification, title: swappingSlots },
+		async () => {
+			// if targetSlot was assigned undefined, the user selected 'production'
+			if (!targetSlot) {
+				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+				await client.webApps.beginSwapSlotWithProductionAndWait(
+					sourceSlot.resourceGroup,
+					sourceSlot.siteName,
+					{ targetSlot: sourceSlot.slotName!, preserveVnet: true },
+				);
+			} else {
+				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+				await client.webApps.beginSwapSlotAndWait(
+					sourceSlot.resourceGroup,
+					sourceSlot.siteName,
+					sourceSlot.slotName!,
+					{ targetSlot: targetSlot.slotName!, preserveVnet: true },
+				);
+			}
+			void window.showInformationMessage(successfullySwapped);
+			ext.outputChannel.appendLog(successfullySwapped);
+		},
+	);
 }

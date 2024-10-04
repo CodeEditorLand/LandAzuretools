@@ -5,22 +5,28 @@
 
 import { ext } from "@microsoft/vscode-azext-github";
 import { AzureWizardExecuteStep } from "@microsoft/vscode-azext-utils";
-import { Progress, l10n } from "vscode";
+import { l10n, Progress } from "vscode";
+
 import { InnerDeployContext } from "../IDeployContext";
 
 export class StopAppBeforeDeployExecuteStep extends AzureWizardExecuteStep<InnerDeployContext> {
-    public priority: number = 100;
-    public async execute(context: InnerDeployContext, progress: Progress<{ message?: string; increment?: number }>): Promise<void> {
-        const site = context.site;
-        const client = await site.createClient(context);
+	public priority: number = 100;
+	public async execute(
+		context: InnerDeployContext,
+		progress: Progress<{ message?: string; increment?: number }>,
+	): Promise<void> {
+		const site = context.site;
+		const client = await site.createClient(context);
 
-        const stoppingApp = l10n.t('Stopping app...');
-        progress.report({ message: stoppingApp });
-        ext.outputChannel.appendLog(stoppingApp, { resourceName: site.fullName });
-        await client.stop();
-    }
+		const stoppingApp = l10n.t("Stopping app...");
+		progress.report({ message: stoppingApp });
+		ext.outputChannel.appendLog(stoppingApp, {
+			resourceName: site.fullName,
+		});
+		await client.stop();
+	}
 
-    public shouldExecute(_context: InnerDeployContext): boolean {
-        return true;
-    }
+	public shouldExecute(_context: InnerDeployContext): boolean {
+		return true;
+	}
 }

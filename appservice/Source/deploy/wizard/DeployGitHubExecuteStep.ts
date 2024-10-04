@@ -4,11 +4,17 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { l10n } from "vscode";
+
 import { InnerDeployContext } from "../IDeployContext";
 import { DeployExecuteStepBase } from "./DeployExecuteStepBase";
 
 export class DeployGitHubExecuteStep extends DeployExecuteStepBase {
-    public async deployCore(context: InnerDeployContext): Promise<void> {
-        throw new Error(l10n.t('"{0}" is connected to a GitHub repository. Push to GitHub repository to deploy.', context.site.fullName));
-    }
+	public async deployCore(context: InnerDeployContext): Promise<void> {
+		throw new Error(
+			l10n.t(
+				'"{0}" is connected to a GitHub repository. Push to GitHub repository to deploy.',
+				context.site.fullName,
+			),
+		);
+	}
 }

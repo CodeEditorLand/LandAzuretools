@@ -4,23 +4,23 @@
  *--------------------------------------------------------------------------------------------*/
 
 export enum WebsiteOS {
-    linux = 'linux',
-    windows = 'windows'
+	linux = "linux",
+	windows = "windows",
 }
 
 export enum AppKind {
-    app = 'app',
-    functionapp = 'functionapp',
-    workflowapp = 'workflowapp'
+	app = "app",
+	functionapp = "functionapp",
+	workflowapp = "workflowapp",
 }
 
 export function getWebsiteOSDisplayName(kind: WebsiteOS): string {
-    switch (kind) {
-        case WebsiteOS.windows:
-            return 'Windows';
-        case WebsiteOS.linux:
-            return 'Linux';
-        default:
-            throw new RangeError();
-    }
+	switch (kind) {
+		case WebsiteOS.windows:
+			return "Windows";
+		case WebsiteOS.linux:
+			return "Linux";
+		default:
+			throw new RangeError();
+	}
 }

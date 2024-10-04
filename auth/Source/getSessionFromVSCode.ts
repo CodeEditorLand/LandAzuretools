@@ -1,42 +1,52 @@
 /*---------------------------------------------------------------------------------------------
-*  Copyright (c) Microsoft Corporation. All rights reserved.
-*  Licensed under the MIT License. See License.txt in the project root for license information.
-*--------------------------------------------------------------------------------------------*/
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 
 import * as vscode from "vscode";
-import { getConfiguredAuthProviderId, getConfiguredAzureEnv } from "./utils/configuredAzureEnv";
+
+import {
+	getConfiguredAuthProviderId,
+	getConfiguredAzureEnv,
+} from "./utils/configuredAzureEnv";
 
 function ensureEndingSlash(value: string): string {
-    return value.endsWith('/') ? value : `${value}/`;
+	return value.endsWith("/") ? value : `${value}/`;
 }
 
 function getResourceScopes(scopes?: string | string[]): string[] {
-    if (scopes === undefined || scopes === "" || scopes.length === 0) {
-        scopes = ensureEndingSlash(getConfiguredAzureEnv().managementEndpointUrl);
-    }
-    const arrScopes = (Array.isArray(scopes) ? scopes : [scopes])
-        .map((scope) => {
-            if (scope.endsWith('.default')) {
-                return scope;
-            } else {
-                return `${scope}.default`;
-            }
-        });
-    return Array.from(new Set<string>(arrScopes));
+	if (scopes === undefined || scopes === "" || scopes.length === 0) {
+		scopes = ensureEndingSlash(
+			getConfiguredAzureEnv().managementEndpointUrl,
+		);
+	}
+	const arrScopes = (Array.isArray(scopes) ? scopes : [scopes]).map(
+		(scope) => {
+			if (scope.endsWith(".default")) {
+				return scope;
+			} else {
+				return `${scope}.default`;
+			}
+		},
+	);
+	return Array.from(new Set<string>(arrScopes));
 }
 
 function addTenantIdScope(scopes: string[], tenantId: string): string[] {
-    const scopeSet = new Set<string>(scopes);
-    scopeSet.add(`VSCODE_TENANT:${tenantId}`);
-    return Array.from(scopeSet);
+	const scopeSet = new Set<string>(scopes);
+	scopeSet.add(`VSCODE_TENANT:${tenantId}`);
+	return Array.from(scopeSet);
 }
 
-function getScopes(scopes: string | string[] | undefined, tenantId?: string): string[] {
-    let scopeArr = getResourceScopes(scopes);
-    if (tenantId) {
-        scopeArr = addTenantIdScope(scopeArr, tenantId);
-    }
-    return scopeArr;
+function getScopes(
+	scopes: string | string[] | undefined,
+	tenantId?: string,
+): string[] {
+	let scopeArr = getResourceScopes(scopes);
+	if (tenantId) {
+		scopeArr = addTenantIdScope(scopeArr, tenantId);
+	}
+	return scopeArr;
 }
 
 /**
@@ -49,6 +59,14 @@ function getScopes(scopes: string | string[] | undefined, tenantId?: string): st
  * @param options - see {@link vscode.AuthenticationGetSessionOptions}
  * @returns An authentication session if available, or undefined if there are no sessions
  */
-export async function getSessionFromVSCode(scopes?: string | string[], tenantId?: string, options?: vscode.AuthenticationGetSessionOptions): Promise<vscode.AuthenticationSession | undefined> {
-    return await vscode.authentication.getSession(getConfiguredAuthProviderId(), getScopes(scopes, tenantId), options);
+export async function getSessionFromVSCode(
+	scopes?: string | string[],
+	tenantId?: string,
+	options?: vscode.AuthenticationGetSessionOptions,
+): Promise<vscode.AuthenticationSession | undefined> {
+	return await vscode.authentication.getSession(
+		getConfiguredAuthProviderId(),
+		getScopes(scopes, tenantId),
+		options,
+	);
 }

@@ -4,15 +4,19 @@
  *--------------------------------------------------------------------------------------------*/
 
 import type { Octokit, RestEndpointMethodTypes } from "@octokit/rest";
-import type { GitHubContext } from "../GitHubContext";
-import { createOctokitClient } from "../createOctokitClient";
 
-export type AuthenticatedUser = RestEndpointMethodTypes["users"]["getAuthenticated"]["response"]["data"];
+import { createOctokitClient } from "../createOctokitClient";
+import type { GitHubContext } from "../GitHubContext";
+
+export type AuthenticatedUser =
+	RestEndpointMethodTypes["users"]["getAuthenticated"]["response"]["data"];
 
 /**
  * A wrapper for Octokit's: `client.users.getAuthenticated`
  */
-export async function getAuthenticatedUser(context: GitHubContext): Promise<AuthenticatedUser> {
-    const client: Octokit = await createOctokitClient(context);
-    return (await client.users.getAuthenticated()).data;
+export async function getAuthenticatedUser(
+	context: GitHubContext,
+): Promise<AuthenticatedUser> {
+	const client: Octokit = await createOctokitClient(context);
+	return (await client.users.getAuthenticated()).data;
 }

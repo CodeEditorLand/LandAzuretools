@@ -4,21 +4,22 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { AzureWizardExecuteStep } from "@microsoft/vscode-azext-utils";
+
 import { InnerDeployContext } from "../IDeployContext";
 import { syncTriggersPostDeploy } from "../syncTriggersPostDeploy";
 
 export class PostDeploySyncTriggersExecuteStep extends AzureWizardExecuteStep<InnerDeployContext> {
-    public priority: number = 310;
-    public async execute(context: InnerDeployContext): Promise<void> {
-        // Don't sync triggers if app is stopped https://github.com/microsoft/vscode-azurefunctions/issues/1608
-        const state: string | undefined = await context.client.getState();
-        if (state?.toLowerCase() === 'running') {
-            await syncTriggersPostDeploy(context, context.site);
-        }
-    }
+	public priority: number = 310;
+	public async execute(context: InnerDeployContext): Promise<void> {
+		// Don't sync triggers if app is stopped https://github.com/microsoft/vscode-azurefunctions/issues/1608
+		const state: string | undefined = await context.client.getState();
+		if (state?.toLowerCase() === "running") {
+			await syncTriggersPostDeploy(context, context.site);
+		}
+	}
 
-    public shouldExecute(context: InnerDeployContext): boolean {
-        // this gets set in `waitForDeploymentToComplete` for consumption plans or storage account deployments
-        return !!context.syncTriggersPostDeploy;
-    }
+	public shouldExecute(context: InnerDeployContext): boolean {
+		// this gets set in `waitForDeploymentToComplete` for consumption plans or storage account deployments
+		return !!context.syncTriggersPostDeploy;
+	}
 }
