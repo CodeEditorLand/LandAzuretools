@@ -1,12 +1,12 @@
 {
 	"dependencies": {
-		"@octokit/rest": "^18.5.2"
+		"@octokit/rest": "^21.0.2"
 	},
 	"description": "Common GitHub tools for VS Code",
 	"devDependencies": {
 		"@types/glob": "^8.1.0",
-		"@types/node": "^16.0.0",
-		"glob": "^7.1.6"
+		"@types/node": "^22.7.5",
+		"glob": "^11.0.0"
 	},
 	"main": "out/src/index.js",
 	"name": "@microsoft/vscode-azext-github",
