@@ -1,21 +1,21 @@
 {
 	"dependencies": {
-		"dayjs": "^1.11.13",
-		"fs-extra": "^11.2.0",
-		"p-retry": "^6.2.0",
-		"pretty-bytes": "^6.1.1",
-		"simple-git": "^3.27.0",
-		"ws": "^8.18.0",
-		"yazl": "^2.5.1"
+		"dayjs": "1.11.13",
+		"fs-extra": "11.2.0",
+		"p-retry": "6.2.0",
+		"pretty-bytes": "6.1.1",
+		"simple-git": "3.27.0",
+		"ws": "8.18.0",
+		"yazl": "2.5.1"
 	},
 	"description": "Common tools for developing Azure App Service extensions for VS Code",
 	"devDependencies": {
-		"@types/fs-extra": "^11.0.4",
-		"@types/node": "^22.7.5",
-		"@types/p-retry": "^3.0.1",
-		"@types/ws": "^8.5.12",
-		"@types/yazl": "^2.4.5",
-		"globby": "^14.0.2"
+		"@types/fs-extra": "11.0.4",
+		"@types/node": "22.7.5",
+		"@types/p-retry": "3.0.1",
+		"@types/ws": "8.5.12",
+		"@types/yazl": "2.4.5",
+		"globby": "14.0.2"
 	},
 	"main": "out/src/index.js",
 	"name": "@microsoft/vscode-azext-azureappservice",
