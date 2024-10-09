@@ -6,9 +6,18 @@
 import type { IAzureQuickPickItem } from "@microsoft/vscode-azext-utils";
 import { l10n } from "vscode";
 
-export const gitHubAuthProviderId: string = 'github';
+export const gitHubAuthProviderId: string = "github";
 
 // Provide same scopes as the GitHub extension so we don't have to prompt for auth again
-export const gitHubScopes: string[] = ['repo', 'workflow', 'user:email', 'read:user'];
+export const gitHubScopes: string[] = [
+	"repo",
+	"workflow",
+	"user:email",
+	"read:user",
+];
 
-export const loadMoreQp: IAzureQuickPickItem = { label: l10n.t('$(sync) Load More'), data: undefined, suppressPersistence: true };
+export const loadMoreQp: IAzureQuickPickItem = {
+	label: l10n.t("$(sync) Load More"),
+	data: undefined,
+	suppressPersistence: true,
+};

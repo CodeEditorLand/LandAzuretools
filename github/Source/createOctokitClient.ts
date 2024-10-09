@@ -5,6 +5,7 @@
 
 import { appendExtensionUserAgent } from "@microsoft/vscode-azext-utils";
 import { Octokit } from "@octokit/rest";
+
 import type { GitHubContext } from "./GitHubContext";
 import { getGitHubAccessToken } from "./utils/getGitHubAccessToken";
 
@@ -14,10 +15,12 @@ import { getGitHubAccessToken } from "./utils/getGitHubAccessToken";
  * Note: Typically does not need to be called directly by client extensions
  * unless implementing a custom behavior.
  */
-export async function createOctokitClient(context: GitHubContext): Promise<Octokit> {
-    context.gitHubAccessToken ||= await getGitHubAccessToken();
-    return new Octokit({
-        userAgent: appendExtensionUserAgent(),
-        auth: context.gitHubAccessToken
-    });
+export async function createOctokitClient(
+	context: GitHubContext,
+): Promise<Octokit> {
+	context.gitHubAccessToken ||= await getGitHubAccessToken();
+	return new Octokit({
+		userAgent: appendExtensionUserAgent(),
+		auth: context.gitHubAccessToken,
+	});
 }

@@ -10,21 +10,21 @@ import { getPackageInfo } from "./getPackageInfo";
  * Adds a user agent specific to the VS Code extension, of the form `${extensionName}/${extensionVersion}`
  */
 export function addExtensionUserAgent(client: IAddUserAgent): void {
-    client.addUserAgentInfo(getExtensionUserAgent());
+	client.addUserAgentInfo(getExtensionUserAgent());
 }
 
 function getExtensionUserAgent(): string {
-    const { extensionName, extensionVersion } = getPackageInfo();
-    return `${extensionName}/${extensionVersion}`;
+	const { extensionName, extensionVersion } = getPackageInfo();
+	return `${extensionName}/${extensionVersion}`;
 }
 
 export function appendExtensionUserAgent(existingUserAgent?: string): string {
-    const extensionUserAgent: string = getExtensionUserAgent();
+	const extensionUserAgent: string = getExtensionUserAgent();
 
-    existingUserAgent ||= extensionUserAgent;
-    if (existingUserAgent.includes(extensionUserAgent)) {
-        return existingUserAgent;
-    } else {
-        return `${existingUserAgent} ${extensionUserAgent}`;
-    }
+	existingUserAgent ||= extensionUserAgent;
+	if (existingUserAgent.includes(extensionUserAgent)) {
+		return existingUserAgent;
+	} else {
+		return `${existingUserAgent} ${extensionUserAgent}`;
+	}
 }

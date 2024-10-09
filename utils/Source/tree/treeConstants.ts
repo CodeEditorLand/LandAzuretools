@@ -3,6 +3,6 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import * as vscode from 'vscode';
+import * as vscode from "vscode";
 
-export const loadMoreLabel: string = vscode.l10n.t('Load More...');
+export const loadMoreLabel: string = vscode.l10n.t("Load More...");
