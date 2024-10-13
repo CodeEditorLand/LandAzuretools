@@ -6,7 +6,8 @@
 import type {
 	SubscriptionClient,
 	TenantIdDescription,
-} from "@azure/arm-resources-subscriptions"; // Keep this as `import type` to avoid actually loading the package before necessary
+} from "@azure/arm-resources-subscriptions";
+// Keep this as `import type` to avoid actually loading the package before necessary
 import type { TokenCredential } from "@azure/core-auth"; // Keep this as `import type` to avoid actually loading the package (at all, this one is dev-only)
 import * as vscode from "vscode";
 

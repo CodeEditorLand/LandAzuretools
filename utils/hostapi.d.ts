@@ -18,7 +18,9 @@ import type {
 	ISubscriptionContext,
 	ITreeItemPickerContext,
 	SealedAzExtTreeItem,
-} from "./index"; // This must remain `import type` or else a circular reference will result
+} from "./index";
+
+// This must remain `import type` or else a circular reference will result
 
 /**
  * The API implemented by the Azure Resource Groups host extension
