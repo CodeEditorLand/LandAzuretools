@@ -1,14 +1,6 @@
 {
-	"name": "@microsoft/vscode-azext-dev",
-	"description": "Common dev dependency tools for developing Azure extensions for VS Code",
-	"main": "out/src/index.js",
-	"types": "index.d.ts",
 	"bin": {
 		"vscode-sort-package-json": "scripts/sortPackageJson.mjs"
-	},
-	"scripts": {
-		"build": "tsc -p ./",
-		"compile": "tsc -watch -p ./"
 	},
 	"dependencies": {
 		"assert": "2.1.0",
@@ -26,10 +18,18 @@
 		"url": "0.11.4",
 		"util": "0.12.5"
 	},
+	"description": "Common dev dependency tools for developing Azure extensions for VS Code",
 	"devDependencies": {
 		"@types/fs-extra": "11.0.4",
 		"@types/glob": "8.1.0",
 		"@types/node": "22.7.5",
 		"glob": "11.0.0"
-	}
+	},
+	"main": "out/src/index.js",
+	"name": "@microsoft/vscode-azext-dev",
+	"scripts": {
+		"build": "tsc -p ./",
+		"compile": "tsc -watch -p ./"
+	},
+	"types": "index.d.ts"
 }
