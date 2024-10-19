@@ -6,7 +6,7 @@
 		"pretty-bytes": "6.1.1",
 		"simple-git": "3.27.0",
 		"ws": "8.18.0",
-		"yazl": "2.5.1"
+		"yazl": "3.0.0"
 	},
 	"description": "Common tools for developing Azure App Service extensions for VS Code",
 	"devDependencies": {
