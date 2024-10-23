@@ -22,7 +22,7 @@
 	"devDependencies": {
 		"@types/fs-extra": "11.0.4",
 		"@types/glob": "8.1.0",
-		"@types/node": "22.7.7",
+		"@types/node": "22.7.9",
 		"glob": "11.0.0"
 	},
 	"main": "out/src/index.js",
