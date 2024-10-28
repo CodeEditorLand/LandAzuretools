@@ -5,7 +5,7 @@
 	"description": "Common GitHub tools for VS Code",
 	"devDependencies": {
 		"@types/glob": "8.1.0",
-		"@types/node": "22.7.9",
+		"@types/node": "22.8.1",
 		"glob": "11.0.0"
 	},
 	"main": "out/src/index.js",
