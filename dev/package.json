@@ -1,77 +1,35 @@
 {
-    "name": "@microsoft/vscode-azext-dev",
-    "author": "Microsoft Corporation",
-    "version": "2.0.5",
-    "description": "Common dev dependency tools for developing Azure extensions for VS Code",
-    "tags": [
-        "azure",
-        "vscode"
-    ],
-    "keywords": [
-        "azure",
-        "vscode"
-    ],
-    "bin": {
-        "vscode-sort-package-json": "scripts/sortPackageJson.mjs"
-    },
-    "main": "out/src/index.js",
-    "types": "index.d.ts",
-    "license": "MIT",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/Microsoft/vscode-azuretools"
-    },
-    "bugs": {
-        "url": "https://github.com/Microsoft/vscode-azuretools/issues"
-    },
-    "homepage": "https://github.com/Microsoft/vscode-azuretools/blob/main/dev/README.md",
-    "scripts": {
-        "build": "tsc -p ./",
-        "compile": "tsc -watch -p ./",
-        "lint": "eslint --ext .ts .",
-        "lint-fix": "eslint --ext .ts . --fix",
-        "test": "node ./out/test/runTest.js",
-        "package": "npm pack"
-    },
-    "devDependencies": {
-        "@azure/ms-rest-azure-env": "^2.0.0",
-        "@microsoft/eslint-config-azuretools": "^0.2.4",
-        "@types/copy-webpack-plugin": "^10.1.3",
-        "@types/fs-extra": "^11.0.4",
-        "@types/glob": "^8.1.0",
-        "@types/mocha": "^10.0.9",
-        "@types/node": "^22.8.6",
-        "@types/terser-webpack-plugin": "^5.2.0",
-        "@types/vscode": "^1.95.0",
-        "@typescript-eslint/eslint-plugin": "^8.12.2",
-        "@vscode/test-electron": "^2.4.1",
-        "eslint": "^9.13.0",
-        "eslint-plugin-import": "^2.31.0",
-        "glob": "^11.0.0",
-        "ts-node": "^10.9.2",
-        "typescript": "^5.6.3"
-    },
-    "dependencies": {
-        "assert": "^2.1.0",
-        "browserify-zlib": "^0.2.0",
-        "clean-webpack-plugin": "^4.0.0",
-        "console-browserify": "^1.2.0",
-        "copy-webpack-plugin": "12.0.2",
-        "fs-extra": "^11.2.0",
-        "https-browserify": "^1.0.0",
-        "mocha": "^10.8.2",
-        "mocha-junit-reporter": "^2.2.1",
-        "mocha-multi-reporters": "^1.5.1",
-        "os-browserify": "^0.3.0",
-        "path-browserify": "^1.0.1",
-        "process": "^0.11.10",
-        "querystring-es3": "^0.2.1",
-        "stream-browserify": "^3.0.0",
-        "stream-http": "^3.2.0",
-        "terser-webpack-plugin": "^5.3.10",
-        "ts-loader": "^9.5.1",
-        "url": "^0.11.4",
-        "util": "^0.12.5",
-        "webpack": "^5.96.1"
-    }
+	"bin": {
+		"vscode-sort-package-json": "scripts/sortPackageJson.mjs"
+	},
+	"dependencies": {
+		"assert": "^2.1.0",
+		"browserify-zlib": "^0.2.0",
+		"console-browserify": "^1.2.0",
+		"fs-extra": "^11.2.0",
+		"https-browserify": "^1.0.0",
+		"os-browserify": "^0.3.0",
+		"path-browserify": "^1.0.1",
+		"process": "^0.11.10",
+		"querystring-es3": "^0.2.1",
+		"stream-browserify": "^3.0.0",
+		"stream-http": "^3.2.0",
+		"ts-loader": "^9.5.1",
+		"url": "^0.11.4",
+		"util": "^0.12.5"
+	},
+	"description": "Common dev dependency tools for developing Azure extensions for VS Code",
+	"devDependencies": {
+		"@types/fs-extra": "^11.0.4",
+		"@types/glob": "^8.1.0",
+		"@types/node": "^22.8.6",
+		"glob": "^11.0.0"
+	},
+	"main": "out/src/index.js",
+	"name": "@microsoft/vscode-azext-dev",
+	"scripts": {
+		"build": "tsc -p ./",
+		"compile": "tsc -watch -p ./"
+	},
+	"types": "index.d.ts"
 }
