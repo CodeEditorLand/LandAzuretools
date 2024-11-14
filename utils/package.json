@@ -4,7 +4,7 @@
 		"escape-string-regexp": "5.0.0",
 		"html-to-text": "9.0.5",
 		"semver": "7.6.3",
-		"uuid": "11.0.2"
+		"uuid": "11.0.3"
 	},
 	"description": "Common UI tools for developing Azure extensions for VS Code",
 	"devDependencies": {
