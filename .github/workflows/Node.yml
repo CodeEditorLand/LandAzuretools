@@ -1,0 +1,230 @@
+name: Node
+
+concurrency:
+    group: Node-${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: true
+
+permissions:
+    security-events: write
+    contents: write
+    pull-requests: write
+
+on:
+    workflow_dispatch:
+    push:
+        branches: [Current]
+    pull_request:
+        branches: [Current]
+    workflow_call:
+
+jobs:
+    Pre-Publish:
+        runs-on: ubuntu-latest
+
+        env:
+            ADBLOCK: true
+            ASTRO_TELEMETRY_DISABLED: 1
+            AUTOMATEDLAB_TELEMETRY_OPTOUT: 1
+            AZURE_CORE_COLLECT_TELEMETRY: 0
+            CHOOSENIM_NO_ANALYTICS: 1
+            DIEZ_DO_NOT_TRACK: 1
+            DOTNET_CLI_TELEMETRY_OPTOUT: 1
+            DOTNET_INTERACTIVE_CLI_TELEMETRY_OPTOUT: 1
+            DO_NOT_TRACK: 1
+            ET_NO_TELEMETRY: 1
+            GATSBY_TELEMETRY_DISABLED: 1
+            GATSBY_TELEMETRY_OPTOUT: 1
+            GATSBY_TELEMETRY_OPT_OUT: 1
+            GRIT_TELEMETRY_DISABLED: 1
+            HASURA_GRAPHQL_ENABLE_TELEMETRY: false
+            HINT_TELEMETRY: off
+            HOMEBREW_NO_ANALYTICS: 1
+            INFLUXD_REPORTING_DISABLED: true
+            ITERATIVE_DO_NOT_TRACK: 1
+            NEXT_TELEMETRY_DEBUG: 1
+            NEXT_TELEMETRY_DISABLED: 1
+            NG_CLI_ANALYTICS: false
+            NUXT_TELEMETRY_DISABLED: 1
+            PIN_DO_NOT_TRACK: 1
+            POWERSHELL_TELEMETRY_OPTOUT: 1
+            SAM_CLI_TELEMETRY: 0
+            STNOUPGRADE: 1
+            STRIPE_CLI_TELEMETRY_OPTOUT: 1
+            TELEMETRY_DISABLED: 1
+            TERRAFORM_TELEMETRY: 0
+            VCPKG_DISABLE_METRICS: 1
+
+        strategy:
+            matrix:
+                node-version: [18, 19, 20]
+
+        steps:
+            - uses: actions/checkout@v4.2.2
+
+            - uses: pnpm/action-setup@v4.0.0
+              with:
+                  version: 9.3.0
+                  run_install: |
+                      - recursive: true
+                        args: [
+                          --link-workspace-packages=true,
+                          --lockfile-only,
+                          --prefer-frozen-lockfile=false,
+                          --shamefully-hoist=false,
+                          --shared-workspace-lockfile=true,
+                          --strict-peer-dependencies=false,
+                          --unsafe-perm=true
+                        ]
+
+            - uses: actions/setup-node@v4.1.0
+              with:
+                  node-version: ${{ matrix.node-version }}
+                  cache: "pnpm"
+                  cache-dependency-path: ./appservice/pnpm-lock.yaml
+
+            - run: pnpm install
+              working-directory: ./appservice
+
+            - run: pnpm run build
+              working-directory: .
+
+            - uses: actions/upload-artifact@v4.4.3
+              with:
+                  name: .-appservice-Node-${{ matrix.node-version }}-Target
+                  path: ./appservice/Target
+
+            - uses: actions/setup-node@v4.1.0
+              with:
+                  node-version: ${{ matrix.node-version }}
+                  cache: "pnpm"
+                  cache-dependency-path: ./appsettings/pnpm-lock.yaml
+
+            - run: pnpm install
+              working-directory: ./appsettings
+
+            - run: pnpm run build
+              working-directory: .
+
+            - uses: actions/upload-artifact@v4.4.3
+              with:
+                  name: .-appsettings-Node-${{ matrix.node-version }}-Target
+                  path: ./appsettings/Target
+
+            - uses: actions/setup-node@v4.1.0
+              with:
+                  node-version: ${{ matrix.node-version }}
+                  cache: "pnpm"
+                  cache-dependency-path: ./auth/pnpm-lock.yaml
+
+            - run: pnpm install
+              working-directory: ./auth
+
+            - run: pnpm run build
+              working-directory: .
+
+            - uses: actions/upload-artifact@v4.4.3
+              with:
+                  name: .-auth-Node-${{ matrix.node-version }}-Target
+                  path: ./auth/Target
+
+            - uses: actions/setup-node@v4.1.0
+              with:
+                  node-version: ${{ matrix.node-version }}
+                  cache: "pnpm"
+                  cache-dependency-path: ./azure/pnpm-lock.yaml
+
+            - run: pnpm install
+              working-directory: ./azure
+
+            - run: pnpm run build
+              working-directory: .
+
+            - uses: actions/upload-artifact@v4.4.3
+              with:
+                  name: .-azure-Node-${{ matrix.node-version }}-Target
+                  path: ./azure/Target
+
+            - uses: actions/setup-node@v4.1.0
+              with:
+                  node-version: ${{ matrix.node-version }}
+                  cache: "pnpm"
+                  cache-dependency-path: ./dev/pnpm-lock.yaml
+
+            - run: pnpm install
+              working-directory: ./dev
+
+            - run: pnpm run build
+              working-directory: .
+
+            - uses: actions/upload-artifact@v4.4.3
+              with:
+                  name: .-dev-Node-${{ matrix.node-version }}-Target
+                  path: ./dev/Target
+
+            - uses: actions/setup-node@v4.1.0
+              with:
+                  node-version: ${{ matrix.node-version }}
+                  cache: "pnpm"
+                  cache-dependency-path: ./eslint-config-azuretools/pnpm-lock.yaml
+
+            - run: pnpm install
+              working-directory: ./eslint-config-azuretools
+
+            - run: pnpm run build
+              working-directory: .
+
+            - uses: actions/upload-artifact@v4.4.3
+              with:
+                  name: .-eslint-config-azuretools-Node-${{ matrix.node-version }}-Target
+                  path: ./eslint-config-azuretools/Target
+
+            - uses: actions/setup-node@v4.1.0
+              with:
+                  node-version: ${{ matrix.node-version }}
+                  cache: "pnpm"
+                  cache-dependency-path: ./github/pnpm-lock.yaml
+
+            - run: pnpm install
+              working-directory: ./github
+
+            - run: pnpm run build
+              working-directory: .
+
+            - uses: actions/upload-artifact@v4.4.3
+              with:
+                  name: .-github-Node-${{ matrix.node-version }}-Target
+                  path: ./github/Target
+
+            - uses: actions/setup-node@v4.1.0
+              with:
+                  node-version: ${{ matrix.node-version }}
+                  cache: "pnpm"
+                  cache-dependency-path: ./serviceconnector/pnpm-lock.yaml
+
+            - run: pnpm install
+              working-directory: ./serviceconnector
+
+            - run: pnpm run build
+              working-directory: .
+
+            - uses: actions/upload-artifact@v4.4.3
+              with:
+                  name: .-serviceconnector-Node-${{ matrix.node-version }}-Target
+                  path: ./serviceconnector/Target
+
+            - uses: actions/setup-node@v4.1.0
+              with:
+                  node-version: ${{ matrix.node-version }}
+                  cache: "pnpm"
+                  cache-dependency-path: ./utils/pnpm-lock.yaml
+
+            - run: pnpm install
+              working-directory: ./utils
+
+            - run: pnpm run build
+              working-directory: .
+
+            - uses: actions/upload-artifact@v4.4.3
+              with:
+                  name: .-utils-Node-${{ matrix.node-version }}-Target
+                  path: ./utils/Target
