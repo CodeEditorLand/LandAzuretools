@@ -1,9 +1,9 @@
 {
-	"name": "@microsoft/eslint-config-azuretools",
+	"dependencies": {},
 	"description": "Shared ESLint configuration used by Azure Tools for VS Code",
 	"main": "index.js",
+	"name": "@microsoft/eslint-config-azuretools",
 	"scripts": {
 		"build": "exit 0"
-	},
-	"dependencies": {}
+	}
 }
