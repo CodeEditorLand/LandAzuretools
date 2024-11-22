@@ -79,12 +79,14 @@ Language: ${vscode.env.language}`;
 	}
 
 	const simpleLink: string = createNewIssueLinkFromBody(body);
+
 	if (simpleLink.length <= maxUrlLength) {
 		return simpleLink;
 	}
 
 	// If it's too long, paste it to the clipboard
 	await vscode.env.clipboard.writeText(body);
+
 	return createNewIssueLinkFromBody(
 		vscode.l10n.t(
 			"The issue text was copied to the clipboard.  Please paste it into this window.",
@@ -94,8 +96,10 @@ Language: ${vscode.env.language}`;
 
 function createNewIssueLinkFromBody(issueBody: string): string {
 	const { extensionName, bugsUrl } = getPackageInfo();
+
 	const baseUrl: string =
 		bugsUrl || `https://github.com/Microsoft/${extensionName}/issues`;
+
 	return `${baseUrl}/new?body=${encodeURIComponent(issueBody)}`;
 }
 

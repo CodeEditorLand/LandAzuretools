@@ -51,8 +51,10 @@ export function createServiceConnectorItem(
 
 export function connectionIconPath(linker: LinkerResource): string {
 	const targetResource = nonNullProp(linker, "targetService");
+
 	if (isAzureResource(targetResource)) {
 		const id: string = nonNullProp(targetResource, "id");
+
 		if (id.includes("Microsoft.Storage")) {
 			return "AzureStorageAccount";
 		} else if (id.includes("Microsoft.DBforPostgreSQL")) {

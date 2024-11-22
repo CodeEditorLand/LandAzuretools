@@ -15,6 +15,7 @@ export function addExtensionUserAgent(client: IAddUserAgent): void {
 
 function getExtensionUserAgent(): string {
 	const { extensionName, extensionVersion } = getPackageInfo();
+
 	return `${extensionName}/${extensionVersion}`;
 }
 
@@ -22,6 +23,7 @@ export function appendExtensionUserAgent(existingUserAgent?: string): string {
 	const extensionUserAgent: string = getExtensionUserAgent();
 
 	existingUserAgent ||= extensionUserAgent;
+
 	if (existingUserAgent.includes(extensionUserAgent)) {
 		return existingUserAgent;
 	} else {

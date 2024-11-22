@@ -26,11 +26,13 @@ export class ContextValuePickFilter implements PickFilter {
 
 	isFinalPick(node: TreeItem): boolean {
 		const includeOption = this.pickOptions.contextValueFilter.include;
+
 		const excludeOption = this.pickOptions.contextValueFilter.exclude;
 
 		const includeArray: (string | RegExp)[] = Array.isArray(includeOption)
 			? includeOption
 			: [includeOption];
+
 		const excludeArray: (string | RegExp)[] = excludeOption
 			? Array.isArray(excludeOption)
 				? excludeOption

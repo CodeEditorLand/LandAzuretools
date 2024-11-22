@@ -23,6 +23,7 @@ export class AppServicePlanRedundancyStep extends AzureWizardPromptStep<IAppServ
 		const placeHolder: string = vscode.l10n.t(
 			"Select zone redundancy availability",
 		);
+
 		const picks: IAzureQuickPickItem<boolean>[] = [
 			{ label: vscode.l10n.t("Enabled"), data: true },
 			{ label: vscode.l10n.t("Disabled"), data: false },
@@ -64,6 +65,7 @@ export class AppServicePlanRedundancyStep extends AzureWizardPromptStep<IAppServ
 		const allowedServicePlans: string[] = ["Pv2", "Pv3", "WS"];
 
 		let family: string;
+
 		if ((newPlanSkuOrFamily as SkuDescription)?.family) {
 			// Nullish coallescing operator should be logically unnecessary, but helps TS compiler understand that this value won't be undefined
 			family = (newPlanSkuOrFamily as SkuDescription).family ?? "";
@@ -86,7 +88,9 @@ export class AppServicePlanRedundancyStep extends AzureWizardPromptStep<IAppServ
 
 	public shouldPrompt(context: AppServiceWizardContext): boolean {
 		const { customLocation, _location, plan, newPlanSku } = context;
+
 		const { name } = _location || {};
+
 		if (
 			plan === undefined &&
 			customLocation === undefined &&

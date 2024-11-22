@@ -27,8 +27,10 @@ export async function editScmType(
 	showToast: boolean = true,
 ): Promise<ScmType | undefined> {
 	const client = await site.createClient(context);
+
 	if (site.isLinux && (await client.getIsConsumption(context))) {
 		context.errorHandling.suppressReportIssue = true;
+
 		throw new Error(
 			l10n.t(
 				"Linux consumption plans only support zip deploy. See [here](https://aka.ms/AA7avjx) for more information.",
@@ -40,6 +42,7 @@ export async function editScmType(
 	newScmType = newScmType
 		? newScmType
 		: await showScmPrompt(context, nonNullProp(config, "scmType"));
+
 	if (newScmType === ScmType.GitHub) {
 		if (config.scmType !== ScmType.None) {
 			// GitHub cannot be configured if there is an existing configuration source-- a limitation of Azure
@@ -69,6 +72,7 @@ export async function editScmType(
 
 	if (newScmType === ScmType.LocalGit) {
 		const user: User = await client.getPublishingUser();
+
 		if (user.publishingUserName) {
 			// first time users must set up deployment credentials via the Portal or they will not have a UserName
 			const gitCloneUri: string = `https://${user.publishingUserName}@${site.gitUrl}`;
@@ -90,10 +94,12 @@ async function showScmPrompt(
 	currentScmType: string,
 ): Promise<ScmType> {
 	const currentSource: string = l10n.t("(Current source)");
+
 	const scmQuickPicks: IAzureQuickPickItem<ScmType | undefined>[] = [];
 	// generate quickPicks to not include current type
 	for (const key of Object.keys(ScmType)) {
 		const scmType: ScmType = <ScmType>ScmType[key];
+
 		if (scmType === currentScmType) {
 			// put the current source at the top of the list
 			scmQuickPicks.unshift({
@@ -115,9 +121,11 @@ async function showScmPrompt(
 		suppressPersistence: true,
 		stepName: "editScmType",
 	};
+
 	const newScmType: ScmType | undefined = (
 		await context.ui.showQuickPick(scmQuickPicks, options)
 	).data;
+
 	if (newScmType === undefined) {
 		// if the user clicks the current source, treat it as a cancel
 		throw new UserCancelledError("scmTypeAlreadyMatches");

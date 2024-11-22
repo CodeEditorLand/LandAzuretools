@@ -25,6 +25,7 @@ export namespace PickTreeItemWithCompatibility {
 		options: types.CompatibilityPickResourceExperienceOptions,
 	): Promise<TPick> {
 		const { resourceTypes, childItemFilter } = options;
+
 		return azureResourceExperience(
 			{ ...context, v1Compatibility: true },
 			tdp,

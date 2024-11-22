@@ -23,6 +23,7 @@ export async function syncTriggersPostDeploy(
 	// This can often fail with error "ServiceUnavailable", so we will retry with exponential backoff
 	// Retry at most 5 times, with initial spacing of 5 seconds and total max time of about 3 minutes
 	const retries: number = 5;
+
 	const client = await site.createClient(context);
 	await retry(
 		async (currentAttempt: number) => {

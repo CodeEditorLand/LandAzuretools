@@ -82,8 +82,10 @@ export class FolderTreeItem extends AzExtParentTreeItem {
 				f.mime !== "text/xml" ||
 				!f.name.includes("LogFiles-kudu-trace_pending.xml"),
 		);
+
 		return files.map((file) => {
 			const url = createSiteFilesUrl(this.site, file.path, file.href);
+
 			return file.mime === "inode/directory"
 				? new FolderTreeItem(this, {
 						site: this.site,

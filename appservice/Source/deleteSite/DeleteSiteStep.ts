@@ -25,6 +25,7 @@ export class DeleteSiteStep extends AzureWizardExecuteStep<IDeleteSiteWizardCont
 		const site = nonNullProp(context, "site");
 
 		let deleting: string;
+
 		let deleteSucceeded: string;
 
 		if (site.isSlot) {
@@ -49,6 +50,7 @@ export class DeleteSiteStep extends AzureWizardExecuteStep<IDeleteSiteWizardCont
 
 		ext.outputChannel.appendLog(deleting);
 		progress.report({ message: deleting });
+
 		const client = await site.createClient(context);
 		await client.deleteMethod({
 			deleteEmptyServerFarm: context.deletePlan,

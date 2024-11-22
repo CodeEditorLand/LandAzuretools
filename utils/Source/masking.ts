@@ -53,6 +53,7 @@ export function addExtensionValueToMask(
 	...values: (string | undefined)[]
 ): void {
 	const extValuesToMask: string[] = getExtValuesToMask();
+
 	for (const v of values) {
 		if (v && !extValuesToMask.includes(v)) {
 			extValuesToMask.push(v);
@@ -68,6 +69,7 @@ export function addValuesToMaskFromAzureId(
 	id: string | undefined,
 ): void {
 	const parts: string[] = (id || "").toLowerCase().split("/");
+
 	if (parts[1] === "subscriptions" && parts[3] === "resourcegroups") {
 		context.valuesToMask.push(parts[2]);
 		context.valuesToMask.push(parts[4]);
@@ -116,6 +118,7 @@ export function maskUserInfo(
 	const valuesToMask = actionValuesToMask
 		.concat(getExtValuesToMask())
 		.sort((a, b) => b.length - a.length);
+
 	for (const value of valuesToMask) {
 		data = maskValue(data, value);
 	}
@@ -143,6 +146,7 @@ export function maskUserInfo(
 	);
 
 	const usernameMask = getUsernameMask(getUsername);
+
 	if (usernameMask) {
 		data = data.replace(usernameMask, getRedactedLabel("username"));
 	}
@@ -162,6 +166,7 @@ export function maskValue(
 			valueToMask,
 			encodeURIComponent(valueToMask),
 		];
+
 		for (const v of formsOfValue) {
 			data = data.replace(new RegExp(escape(v), "gi"), "---");
 		}

@@ -14,8 +14,11 @@ import { parseJson } from "./utils/parseJson";
 
 export function parseError(error: any): IParsedError {
 	let errorType: string = "";
+
 	let message: string = "";
+
 	let stack: string | undefined;
+
 	let stepName: string | undefined;
 
 	if (typeof error === "object" && error !== null) {
@@ -31,6 +34,7 @@ export function parseError(error: any): IParsedError {
 		error = unpackErrorFromField(error, "_value");
 		error = unpackErrorFromField(error, "error");
 		error = unpackErrorFromField(error, "error");
+
 		if (Array.isArray(error.errors) && error.errors.length) {
 			error = error.errors[0];
 		}
@@ -108,6 +112,7 @@ export function parseError(error: any): IParsedError {
 function convertCodeToError(errorType: string | undefined): string | undefined {
 	if (errorType) {
 		const code: number = parseInt(errorType, 10);
+
 		if (!isNaN(code)) {
 			return vscode.l10n.t('Failed with code "{0}".', code);
 		}
@@ -165,6 +170,7 @@ function parseIfXml(message: string): string {
 	const matches: RegExpMatchArray | null = message.match(
 		/<Message>(.*)<\/Message>/is,
 	);
+
 	if (matches) {
 		return matches[1];
 	}
@@ -185,6 +191,7 @@ function getMessage(o: any, defaultMessage: string): string {
 
 function getCode(o: any, defaultCode: string): string {
 	const code: any = o && (o.code || o.Code || o.errorCode || o.statusCode);
+
 	return code ? String(code) : defaultCode;
 }
 
@@ -195,8 +202,10 @@ function unpackErrorsInMessage(message: string): string {
 		const errorsInMessage: RegExpMatchArray | null = message.match(
 			/"Errors":\[\s*"([^"]+)"/,
 		);
+
 		if (errorsInMessage !== null) {
 			const [, firstError] = errorsInMessage;
+
 			return firstError;
 		}
 	}
@@ -207,6 +216,7 @@ function unpackErrorsInMessage(message: string): string {
 function unpackErrorFromField(error: any, prop: string): any {
 	// Handle objects from Azure SDK that contain the error information in a "body" field (serialized or not)
 	let field: any = error && error[prop];
+
 	if (field) {
 		if (typeof field === "string" && field.indexOf("{") >= 0) {
 			try {
@@ -251,6 +261,7 @@ function getCallstack(error: { stack?: unknown }): string | undefined {
 				const functionMatch: RegExpMatchArray | null = l.match(
 					/^[\s]*at ([^\(\\\/]+(?:\\|\/)?)+/i,
 				);
+
 				if (functionMatch) {
 					result += functionMatch[1];
 				}
@@ -261,9 +272,12 @@ function getCallstack(error: { stack?: unknown }): string | undefined {
 				// From above example: azure-storage
 				const moduleRegExp: RegExp =
 					/node_modules(?:\\|\/)([^\\\/]+)/gi;
+
 				let moduleMatch: RegExpExecArray | null;
+
 				do {
 					moduleMatch = moduleRegExp.exec(l);
+
 					if (moduleMatch) {
 						parts.push(moduleMatch[1]);
 					}
@@ -290,6 +304,7 @@ function parseIfFileSystemError(
 	const match: RegExpMatchArray | null = message.match(
 		/\((([a-z]*) \(FileSystemError\).*)\)$/i,
 	);
+
 	if (match) {
 		message = match[1];
 		errorType = match[2];

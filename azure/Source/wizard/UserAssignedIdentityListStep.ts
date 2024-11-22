@@ -60,8 +60,10 @@ export class UserAssignedIdentityListStep<
 		wizardContext: T,
 	): Promise<IAzureQuickPickItem<Identity | undefined>[]> {
 		const picks: IAzureQuickPickItem<Identity | undefined>[] = [];
+
 		const miClient =
 			await createManagedServiceIdentityClient(wizardContext);
+
 		const uai = await uiUtils.listAllIterator(
 			miClient.userAssignedIdentities.listBySubscription(),
 		);

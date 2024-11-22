@@ -40,8 +40,10 @@ export class TestUserInput implements types.TestUserInput {
 
     public async runWithInputs<T>(inputs: (string | RegExp | types.TestInput)[], callback: () => Promise<T>): Promise<T> {
         this.setInputs(inputs);
+
         const result: T = await callback();
         this.validateAllInputsUsed();
+
         return result;
     }
 
@@ -57,7 +59,9 @@ export class TestUserInput implements types.TestUserInput {
         const resolvedItems: T[] = await Promise.resolve(items);
 
         let result: T | T[];
+
         const input: string | RegExp | TestInput | undefined = this._inputs.shift();
+
         if (input === undefined) {
             throw new Error(`No more inputs left for call to showQuickPick. Placeholder: '${options.placeHolder}'`);
         } else if (input === TestInput.BackButton) {
@@ -70,7 +74,9 @@ export class TestUserInput implements types.TestUserInput {
             } else {
                 function qpiMatchesInput(qpi: vscodeTypes.QuickPickItem): boolean {
                     const description = qpi.description || '';
+
                     const valuesToTest = [qpi.label, description, `${qpi.label} ${description}`];
+
                     return valuesToTest.some(v => input instanceof RegExp ? input.test(v) : input === v);
                 }
 
@@ -78,11 +84,13 @@ export class TestUserInput implements types.TestUserInput {
                     result = resolvedItems.filter(qpiMatchesInput);
                 } else {
                     const resolvedItem: T | undefined = resolvedItems.find(qpiMatchesInput);
+
                     if (resolvedItem) {
                         result = resolvedItem;
                     } else {
                         const picksString = resolvedItems.map(i => `"${i.label}"`).join(', ')
                         const lastItem = resolvedItems[resolvedItems.length - 1];
+
                         if (/load more/i.test(lastItem.label)) {
                             console.log(`Loading more items for quick pick with placeholder "${options.placeHolder}"...`);
                             result = lastItem;
@@ -95,13 +103,16 @@ export class TestUserInput implements types.TestUserInput {
             }
 
             this._onDidFinishPromptEmitter.fire({ value: result });
+
             return result;
         }
     }
 
     public async showInputBox(options: vscodeTypes.InputBoxOptions): Promise<string> {
         let result: string;
+
         const input: string | RegExp | TestInput | undefined = this._inputs.shift();
+
         if (input === undefined) {
             throw new Error(`No more inputs left for call to showInputBox. Placeholder: '${options.placeHolder}'. Prompt: '${options.prompt}'`);
         } else if (input === TestInput.BackButton) {
@@ -115,6 +126,7 @@ export class TestUserInput implements types.TestUserInput {
         } else if (typeof input === 'string') {
             if (options.validateInput) {
                 const msg: string | vscodeTypes.InputBoxValidationMessage | null | undefined = await Promise.resolve(options.validateInput(input));
+
                 if (msg !== null && msg !== undefined) {
                     if (typeof msg === 'object' && 'message' in msg) {
                         throw new Error(msg.message);
@@ -132,6 +144,7 @@ export class TestUserInput implements types.TestUserInput {
             value: result,
             matchesDefault: result === options.value
         });
+
         return result;
     }
 
@@ -140,12 +153,15 @@ export class TestUserInput implements types.TestUserInput {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     public async showWarningMessage<T extends vscodeTypes.MessageItem>(message: string, ...args: any[]): Promise<T> {
         let result: T;
+
         const input: string | RegExp | TestInput | undefined = this._inputs.shift();
+
         if (input === undefined) {
             throw new Error(`No more inputs left for call to showWarningMessage. Message: ${message}`);
         } else if (typeof input === 'string') {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             const matchingItem: T | undefined = args.find((item: T) => item.title === input);
+
             if (matchingItem) {
                 result = matchingItem;
             } else {
@@ -156,12 +172,15 @@ export class TestUserInput implements types.TestUserInput {
         }
 
         this._onDidFinishPromptEmitter.fire({ value: result });
+
         return result;
     }
 
     public async showOpenDialog(options: vscodeTypes.OpenDialogOptions): Promise<vscodeTypes.Uri[]> {
         let result: vscodeTypes.Uri[];
+
         const input: string | RegExp | TestInput | undefined = this._inputs.shift();
+
         if (input === undefined) {
             throw new Error(`No more inputs left for call to showOpenDialog. Message: ${options.openLabel}`);
         } else if (typeof input === 'string') {
@@ -171,19 +190,23 @@ export class TestUserInput implements types.TestUserInput {
         }
 
         this._onDidFinishPromptEmitter.fire({ value: result });
+
         return result;
     }
 
     public async showWorkspaceFolderPick(options: vscodeTypes.WorkspaceFolderPickOptions): Promise<vscodeTypes.WorkspaceFolder> {
         let result: vscodeTypes.WorkspaceFolder;
+
         const input: string | RegExp | TestInput | undefined = this._inputs.shift();
 
         if (input === undefined) {
             throw new Error(`No more inputs left for call to showWorkspaceFolderPick. Placeholder: ${options.placeHolder}`);
         } else if (typeof input === 'string' || input instanceof RegExp) {
             const workspaceFolders: readonly vscodeTypes.WorkspaceFolder[] | undefined = this._vscode.workspace.workspaceFolders;
+
             const workspaceFolder: vscodeTypes.WorkspaceFolder | undefined = workspaceFolders?.find(workspace => {
                 const valuesToTest: string[] = [workspace.name, workspace.uri.path];
+
                 if (typeof input === 'string') {
                     return !!valuesToTest.find(v => v === input);
                 } else {
@@ -200,6 +223,7 @@ export class TestUserInput implements types.TestUserInput {
         }
 
         this._onDidFinishPromptEmitter.fire({ value: result });
+
         return result;
     }
 }
@@ -208,6 +232,7 @@ export class TestUserInput implements types.TestUserInput {
 export async function runWithInputs<T>(callbackId: string, inputs: (string | RegExp | types.TestInput)[], registerOnActionStartHandler: types.registerOnActionStartHandlerType, callback: () => Promise<T>): Promise<T> {
     const testUserInput = await TestUserInput.create();
     testUserInput.setInputs(inputs);
+
     const disposable = registerOnActionStartHandler((context) => {
         if (context.callbackId === callbackId) {
             context.ui = testUserInput;
@@ -216,6 +241,7 @@ export async function runWithInputs<T>(callbackId: string, inputs: (string | Reg
     });
 
     let result: T;
+
     try {
         result = await callback();
     } finally {
@@ -223,5 +249,6 @@ export async function runWithInputs<T>(callbackId: string, inputs: (string | Reg
     }
 
     testUserInput.validateAllInputsUsed();
+
     return result;
 }

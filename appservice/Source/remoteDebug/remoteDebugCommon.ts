@@ -39,7 +39,9 @@ export async function setRemoteDebug(
 	learnMoreLink?: string,
 ): Promise<void> {
 	const client = await site.createClient(context);
+
 	const state: string | undefined = await client.getState();
+
 	if (state && state.toLowerCase() === "stopped") {
 		throw new Error(
 			vscode.l10n.t(

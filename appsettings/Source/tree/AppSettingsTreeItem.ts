@@ -36,11 +36,13 @@ export function validateAppSettingKey(
 	}
 
 	newKey = newKey.trim();
+
 	if (newKey.length === 0) {
 		return "App setting names must have at least one non-whitespace character.";
 	}
 
 	oldKey = oldKey ? oldKey.trim().toLowerCase() : oldKey;
+
 	if (settings.properties && newKey.toLowerCase() !== oldKey) {
 		for (const key of Object.keys(settings.properties)) {
 			if (key.toLowerCase() === newKey.toLowerCase()) {
@@ -64,6 +66,7 @@ export function validateAppSettingValue(value: string): string | undefined {
 
 interface AppSettingsTreeItemOptions {
 	supportsSlots?: boolean;
+
 	settingsToHide?: string[];
 	contextValuesToAdd?: string[];
 }
@@ -116,7 +119,9 @@ export class AppSettingsTreeItem extends AzExtParentTreeItem {
 	): Promise<AzExtTreeItem[]> {
 		const client = await this.clientProvider.createClient(context);
 		this._settings = await client.listApplicationSettings();
+
 		const treeItems: AppSettingTreeItem[] = [];
+
 		const properties: { [name: string]: string } =
 			this._settings.properties || {};
 		await Promise.all(
@@ -128,6 +133,7 @@ export class AppSettingsTreeItem extends AzExtParentTreeItem {
 						key,
 						properties[key],
 					);
+
 				if (!this._settingsToHide?.includes(key)) {
 					treeItems.push(appSettingTreeItem);
 				}
@@ -148,6 +154,7 @@ export class AppSettingsTreeItem extends AzExtParentTreeItem {
 		const settings: StringDictionary = JSON.parse(
 			JSON.stringify(await this.ensureSettings(context)),
 		);
+
 		if (settings.properties) {
 			if (oldKey !== newKey) {
 				delete settings.properties[oldKey];
@@ -186,6 +193,7 @@ export class AppSettingsTreeItem extends AzExtParentTreeItem {
 		const settings: StringDictionary = JSON.parse(
 			JSON.stringify(await this.ensureSettings(context)),
 		);
+
 		const newKey: string = await context.ui.showInputBox({
 			prompt: "Enter new app setting name",
 			stepName: "appSettingName",
@@ -205,6 +213,7 @@ export class AppSettingsTreeItem extends AzExtParentTreeItem {
 		}
 
 		context.showCreatingTreeItem(newKey);
+
 		settings.properties[newKey] = newValue;
 
 		this._settings = await client.updateApplicationSettings(settings);

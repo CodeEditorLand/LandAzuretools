@@ -18,10 +18,12 @@ export async function pingFunctionApp(
 	site: ParsedSite,
 ): Promise<void> {
 	const client = await site.createClient(context);
+
 	const genericClient: ServiceClient = await createGenericClient(
 		context,
 		undefined,
 	);
+
 	const headers = createHttpHeaders({
 		"x-functions-key": (await client.listHostKeys()).masterKey || "",
 	});

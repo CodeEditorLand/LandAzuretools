@@ -11,8 +11,11 @@ export namespace randomUtils {
 		s: string,
 	): Promise<string> {
 		const buffer = Buffer.from(s);
+
 		const hashBuffer = await crypto.subtle.digest("SHA-256", buffer);
+
 		const hashArray = Array.from(new Uint8Array(hashBuffer));
+
 		const hashHex = hashArray
 			.map((b) => b.toString(16).padStart(2, "0"))
 			.join(""); // convert bytes to hex string
@@ -26,6 +29,7 @@ export namespace randomUtils {
 
 		const array = new Uint8Array(Math.ceil(length / 2)); // Each byte is represented by 2 hex characters
 		crypto.getRandomValues(array);
+
 		return Buffer.from(array).toString("hex").slice(0, length);
 	}
 

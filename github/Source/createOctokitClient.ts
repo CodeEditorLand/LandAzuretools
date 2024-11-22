@@ -19,6 +19,7 @@ export async function createOctokitClient(
 	context: GitHubContext,
 ): Promise<Octokit> {
 	context.gitHubAccessToken ||= await getGitHubAccessToken();
+
 	return new Octokit({
 		userAgent: appendExtensionUserAgent(),
 		auth: context.gitHubAccessToken,

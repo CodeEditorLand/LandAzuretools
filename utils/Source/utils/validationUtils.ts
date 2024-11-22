@@ -16,6 +16,7 @@ export namespace validationUtils {
 		rc?: RangeConstraints,
 	): boolean {
 		const lowerLimitIncl = !rc?.lowerLimitIncl ? 1 : rc.lowerLimitIncl;
+
 		const upperLimitIncl =
 			!rc?.upperLimitIncl || rc.upperLimitIncl > Number.MAX_SAFE_INTEGER
 				? Number.MAX_SAFE_INTEGER

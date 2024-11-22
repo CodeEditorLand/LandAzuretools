@@ -16,5 +16,6 @@ export type Orgs =
  */
 export async function getOrgs(context: GitHubContext): Promise<Orgs> {
 	const client: Octokit = await createOctokitClient(context);
+
 	return (await client.orgs.listForAuthenticatedUser()).data;
 }

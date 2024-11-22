@@ -32,8 +32,11 @@ export async function getDeployFsPath(
 	fileExtensions?: string | string[],
 ): Promise<IDeployPaths> {
 	let originalDeployFsPath: string | undefined;
+
 	let effectiveDeployFsPath: string | undefined;
+
 	let workspaceFolder: vscode.WorkspaceFolder | undefined;
+
 	if (target instanceof vscode.Uri) {
 		originalDeployFsPath = target.fsPath;
 		workspaceFolder = vscode.workspace.getWorkspaceFolder(target);
@@ -58,11 +61,13 @@ export async function getDeployFsPath(
 	) {
 		// If there is only one workspace and it has 'deploySubPath' set - return that value without prompting
 		const singleWorkspace = vscode.workspace.workspaceFolders[0];
+
 		const deploySubpath: string | undefined = getWorkspaceSetting(
 			deploySubpathSetting,
 			ext.prefix,
 			singleWorkspace,
 		);
+
 		if (deploySubpath) {
 			context.telemetry.properties.hasDeploySubpathSetting = "true";
 			originalDeployFsPath = singleWorkspace.uri.fsPath;
@@ -83,6 +88,7 @@ export async function getDeployFsPath(
 			"Select the {0} file to deploy",
 			fileExtensions ? fileExtensions.join("/") : "",
 		);
+
 		const selectFolder: string = vscode.l10n.t(
 			"Select the folder to deploy",
 		);
@@ -94,6 +100,7 @@ export async function getDeployFsPath(
 					fileExtensions,
 				)
 			: await workspaceUtil.selectWorkspaceFolder(context, selectFolder);
+
 		if (selectedItem instanceof vscode.Uri) {
 			originalDeployFsPath = selectedItem.fsPath;
 			workspaceFolder = vscode.workspace.getWorkspaceFolder(selectedItem);
@@ -118,6 +125,7 @@ export async function getDeployFsPath(
 	context.telemetry.properties.deployingSubpathOfWorkspace = String(
 		isSubpath(workspaceFolder.uri.fsPath, effectiveDeployFsPath),
 	);
+
 	return { originalDeployFsPath, effectiveDeployFsPath, workspaceFolder };
 }
 
@@ -160,6 +168,7 @@ async function checkRuntimeExtension(
 		undefined,
 		1 /* maxResults */,
 	);
+
 	if (files.length > 0) {
 		runtimeFiles.push(extension);
 	}
@@ -180,6 +189,7 @@ async function appendDeploySubpathSetting(
 			ext.prefix,
 			workspaceFolder,
 		);
+
 		if (deploySubPath) {
 			context.telemetry.properties.hasDeploySubpathSetting = "true";
 
@@ -190,16 +200,19 @@ async function appendDeploySubpathSetting(
 					workspaceFolder.uri.fsPath,
 					deploySubPath,
 				);
+
 				if (!isPathEqual(fsPathWithSetting, targetPath)) {
 					context.telemetry.properties.overwriteTargetWithSubpathSetting =
 						"true";
 
 					const settingKey: string = "showDeploySubpathWarning";
+
 					if (getWorkspaceSetting(settingKey, ext.prefix)) {
 						const selectedFolder: string = path.relative(
 							workspaceFolder.uri.fsPath,
 							targetPath,
 						);
+
 						const message: string = vscode.l10n.t(
 							'Deploying "{0}" instead of selected folder "{1}". Use "{2}.{3}" to change this behavior.',
 							deploySubPath,
@@ -250,6 +263,7 @@ function promptToOpenWorkspace(
 	const openInNewWindow: vscode.MessageItem = {
 		title: vscode.l10n.t("Open in new window"),
 	};
+
 	const message: string = vscode.l10n.t(
 		'Failed to deploy because "{0}" is not part of an open workspace.',
 		path.basename(originalDeployFsPath),
@@ -264,6 +278,7 @@ function promptToOpenWorkspace(
 				async (postDeployContext: IActionContext) => {
 					postDeployContext.telemetry.properties.dialogResult =
 						result?.title;
+
 					if (result === openInNewWindow) {
 						await vscode.commands.executeCommand(
 							"vscode.openFolder",

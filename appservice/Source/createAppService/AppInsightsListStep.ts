@@ -60,6 +60,7 @@ export class AppInsightsListStep extends AzureWizardPromptStep<IAppServiceWizard
 				"Select an Application Insights resource for your app.",
 			id: `AppInsightsListStep/${context.subscriptionId}`,
 		};
+
 		const input: IAzureQuickPickItem<
 			ApplicationInsightsComponent | undefined
 		> = await context.ui.showQuickPick(
@@ -94,6 +95,7 @@ export class AppInsightsListStep extends AzureWizardPromptStep<IAppServiceWizard
 			const promptSteps: AzureWizardPromptStep<IAppServiceWizardContext>[] =
 				[new AppInsightsNameStep()];
 			LocationListStep.addStep(context, promptSteps);
+
 			return {
 				promptSteps: promptSteps,
 				executeSteps: [

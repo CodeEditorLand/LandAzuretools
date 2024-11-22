@@ -21,24 +21,30 @@ export namespace AzExtFsExtra {
 		resource: Uri | string,
 	): Promise<boolean> {
 		const uri = convertToUri(resource);
+
 		const stats = await workspace.fs.stat(uri);
+
 		return stats.type === FileType.Directory;
 	}
 
 	export async function isFile(resource: Uri | string): Promise<boolean> {
 		const uri = convertToUri(resource);
+
 		const stats = await workspace.fs.stat(uri);
+
 		return stats.type === FileType.File;
 	}
 
 	export async function ensureDir(resource: Uri | string): Promise<void> {
 		const uri = convertToUri(resource);
+
 		try {
 			// if it is a file, then we should create the directory
 			if (await isDirectory(uri)) return;
 		} catch (err) {
 			// throws a vscode.FileSystemError is it doesn't exist
 			const pError = parseError(err);
+
 			if (pError && pError.errorType === "FileNotFound") {
 				// drop down below to create the directory
 			} else {
@@ -51,12 +57,14 @@ export namespace AzExtFsExtra {
 
 	export async function ensureFile(resource: Uri | string): Promise<void> {
 		const uri = convertToUri(resource);
+
 		try {
 			// file exists so exit
 			if (await isFile(uri)) return;
 		} catch (err) {
 			// throws a vscode.FileSystemError is it doesn't exist
 			const pError = parseError(err);
+
 			if (pError && pError.errorType === "FileNotFound") {
 				const dir: string = path.dirname(uri.fsPath);
 				await ensureDir(dir);
@@ -70,6 +78,7 @@ export namespace AzExtFsExtra {
 
 	export async function readFile(resource: Uri | string): Promise<string> {
 		const uri = convertToUri(resource);
+
 		return (await workspace.fs.readFile(uri)).toString();
 	}
 
@@ -87,6 +96,7 @@ export namespace AzExtFsExtra {
 		separator: string = "\r\n\r\n",
 	): Promise<void> {
 		const uri = convertToUri(resource);
+
 		const existingContent = await AzExtFsExtra.readFile(uri);
 		await AzExtFsExtra.writeFile(
 			uri,
@@ -96,7 +106,9 @@ export namespace AzExtFsExtra {
 
 	export async function pathExists(resource: Uri | string): Promise<boolean> {
 		let stats: FileStat | undefined;
+
 		const uri = convertToUri(resource);
+
 		try {
 			stats = await workspace.fs.stat(uri);
 		} catch {
@@ -107,10 +119,12 @@ export namespace AzExtFsExtra {
 
 	export async function readJSON<T>(resource: Uri | string): Promise<T> {
 		const file = await readFile(resource);
+
 		try {
 			return JSON.parse(file) as T;
 		} catch (err) {
 			const pError = parseError(err);
+
 			if (pError.errorType === "SyntaxError") {
 				throw new Error(
 					`Error parsing JSON file: ${resource}. ${pError.message}`,
@@ -139,6 +153,7 @@ export namespace AzExtFsExtra {
 		resource: Uri | string,
 	): Promise<{ fsPath: string; name: string; type: FileType }[]> {
 		const uri = convertToUri(resource);
+
 		const fileTuples = await workspace.fs.readDirectory(uri);
 		// workspace.fs.readDirectory() returns a tuple with the file name and FileType
 		// typically, it's more useful to have the full fsPath, so return that as well
@@ -153,6 +168,7 @@ export namespace AzExtFsExtra {
 
 	export async function emptyDir(resource: Uri | string): Promise<void> {
 		const uri = convertToUri(resource);
+
 		const files = await workspace.fs.readDirectory(uri);
 
 		await Promise.all(
@@ -171,6 +187,7 @@ export namespace AzExtFsExtra {
 		options?: { overwrite?: boolean },
 	): Promise<void> {
 		const sUri = convertToUri(src);
+
 		const dUri = convertToUri(dest);
 
 		await workspace.fs.copy(sUri, dUri, options);

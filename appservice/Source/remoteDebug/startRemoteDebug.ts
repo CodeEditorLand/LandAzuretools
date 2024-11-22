@@ -45,10 +45,12 @@ export async function startRemoteDebug(
 	}
 
 	isRemoteDebugging = true;
+
 	try {
 		await startRemoteDebugInternal(context, options);
 	} catch (error) {
 		isRemoteDebugging = false;
+
 		throw error;
 	}
 }
@@ -61,6 +63,7 @@ async function startRemoteDebugInternal(
 		{ location: vscode.ProgressLocation.Notification, cancellable: true },
 		async (progress, token): Promise<void> => {
 			const localHostPortNumber: number = await findFreePort();
+
 			const debugConfig: vscode.DebugConfiguration =
 				await getDebugConfiguration(
 					options.language,
@@ -168,17 +171,20 @@ async function getDebugConfiguration(
 	portNumber: number,
 ): Promise<vscode.DebugConfiguration> {
 	const sessionId: string = Date.now().toString();
+
 	const host: string = "localhost";
 
 	switch (language) {
 		case RemoteDebugLanguage.Node:
 			return await getNodeDebugConfiguration(sessionId, portNumber, host);
+
 		case RemoteDebugLanguage.Python:
 			return await getPythonDebugConfiguration(
 				sessionId,
 				portNumber,
 				host,
 			);
+
 		default:
 			throw new Error(
 				vscode.l10n.t(
@@ -198,7 +204,9 @@ async function getDebugPath(): Promise<string> {
 			// In this case we don't know which folder to use. Show a warning and proceed.
 			// In the future we should allow users to choose a workspace folder to map sources from.
 			const root = await vscode.window.showWorkspaceFolderPick();
+
 			if (root) return root.uri.fsPath;
+
 			else
 				throw new Error(
 					vscode.l10n.t(
@@ -231,6 +239,7 @@ async function getNodeDebugConfiguration(
 		port: portNumber,
 	};
 	config.localRoot = await getDebugPath();
+
 	return config;
 }
 
@@ -240,6 +249,7 @@ async function getPythonDebugConfiguration(
 	host: string,
 ): Promise<vscode.DebugConfiguration> {
 	const localRoot = await getDebugPath();
+
 	const config: vscode.DebugConfiguration = {
 		name: sessionId,
 		type: "python",

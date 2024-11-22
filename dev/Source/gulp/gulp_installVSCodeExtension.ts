@@ -24,13 +24,17 @@ export async function gulp_installVSCodeExtension(
 	useInsiders: boolean = false,
 ): Promise<void> {
 	const extensionId: string = `${publisherId}.${extensionName}`;
+
 	const vsCodeDir: string = useInsiders ? ".vscode-insiders" : ".vscode";
+
 	const extensionsPath: string = path.join(
 		os.homedir(),
 		vsCodeDir,
 		"extensions",
 	);
+
 	let existingExtensions: string[] = [];
+
 	if (await fse.pathExists(extensionsPath)) {
 		existingExtensions = await fse.readdir(extensionsPath);
 	}
@@ -38,14 +42,17 @@ export async function gulp_installVSCodeExtension(
 		console.log(`"Installing" test extension with id "${extensionId}".`);
 
 		const version: string = "0.0.1";
+
 		const extensionPath: string = path.join(
 			extensionsPath,
 			`${extensionId}-${version}`,
 		);
+
 		const packageJsonPath: string = path.join(
 			extensionPath,
 			"package.json",
 		);
+
 		const packageJson: {} = {
 			name: extensionName,
 			displayName: "",
@@ -66,6 +73,7 @@ export async function gulp_installVSCodeExtension(
 			extensionPath,
 			"extension.js",
 		);
+
 		const extensionJs: string = `exports.activate = function activate() { };exports.deactivate = function deactivate() { };`;
 		await fse.ensureFile(extensionJsPath);
 		await fse.writeFile(extensionJsPath, extensionJs);

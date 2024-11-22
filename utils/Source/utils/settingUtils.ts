@@ -18,6 +18,7 @@ export namespace settingUtils {
 				prefix,
 				fsPath ? Uri.file(fsPath) : undefined,
 			);
+
 		return projectConfiguration.get<T>(key);
 	}
 }

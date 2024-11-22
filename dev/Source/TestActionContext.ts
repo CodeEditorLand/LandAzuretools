@@ -23,7 +23,9 @@ export async function runWithTestActionContext(
 	callback: (context: types.TestActionContext) => Promise<void>,
 ): Promise<void> {
 	const context = await createTestActionContext();
+
 	const start: number = Date.now();
+
 	try {
 		await callback(context);
 	} finally {

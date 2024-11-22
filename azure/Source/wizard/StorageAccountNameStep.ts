@@ -66,6 +66,7 @@ export class StorageAccountNameStep<
 		name: string,
 	): Promise<string | undefined> {
 		name = name.trim();
+
 		if (
 			!name ||
 			name.length < storageAccountNamingRules.minLength ||
@@ -88,6 +89,7 @@ export class StorageAccountNameStep<
 					name,
 					type: storageProviderType,
 				});
+
 			if (!nameAvailabilityResult.nameAvailable) {
 				return nameAvailabilityResult.message;
 			} else {

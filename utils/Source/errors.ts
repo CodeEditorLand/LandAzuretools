@@ -10,6 +10,7 @@ import { ITreeItemPickerContext } from "..";
 export class UserCancelledError extends Error {
 	_isUserCancelledError = true;
 	public stepName: string | undefined;
+
 	constructor(stepName?: string) {
 		super(vscode.l10n.t("Operation cancelled."));
 		this.stepName = stepName;

@@ -24,5 +24,6 @@ export async function getBranches(
 	reqParams: GetBranchesParams,
 ): Promise<Branches> {
 	const client: Octokit = await createOctokitClient(context);
+
 	return (await client.repos.listBranches(reqParams)).data;
 }

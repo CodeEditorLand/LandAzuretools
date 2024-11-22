@@ -49,6 +49,7 @@ async function tryGetSiteResource<T>(
 		return await callback();
 	} catch (error) {
 		const regExp: RegExp = /NotFound/i;
+
 		if (regExp.test(parseError(error).errorType)) {
 			return undefined;
 		} else {

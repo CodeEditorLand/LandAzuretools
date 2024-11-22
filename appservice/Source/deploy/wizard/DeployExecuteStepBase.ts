@@ -28,6 +28,7 @@ export abstract class DeployExecuteStepBase extends AzureWizardExecuteStep<Inner
 	): Promise<void> {
 		const client = context.client;
 		this.progress = progress;
+
 		const config: SiteConfigResource = await client.getSiteConfig();
 		// We use the AppServicePlan in a few places, but we don't want to delay deployment, so start the promise now and save as a const
 		try {
@@ -110,6 +111,7 @@ async function setDeploymentTelemetry(
 			if (plan) {
 				context.telemetry.properties.planStatus = String(plan.status);
 				context.telemetry.properties.planKind = String(plan.kind);
+
 				if (plan.sku) {
 					context.telemetry.properties.planSize = String(
 						plan.sku.size,

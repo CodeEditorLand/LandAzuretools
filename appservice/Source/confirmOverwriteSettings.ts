@@ -15,11 +15,15 @@ export async function confirmOverwriteSettings(
 	destinationName: string,
 ): Promise<void> {
 	let suppressPrompt: boolean = false;
+
 	let overwriteSetting: boolean = false;
 
 	const addedKeys: string[] = [];
+
 	const updatedKeys: string[] = [];
+
 	const userIgnoredKeys: string[] = [];
+
 	const matchingKeys: string[] = [];
 
 	for (const srcKey of Object.keys(sourceSettings)) {
@@ -38,12 +42,15 @@ export async function confirmOverwriteSettings(
 			// ignore empty settings
 			if (!suppressPrompt) {
 				const yesToAll: MessageItem = { title: l10n.t("Yes to all") };
+
 				const noToAll: MessageItem = { title: l10n.t("No to all") };
+
 				const message: string = l10n.t(
 					'Setting "{0}" already exists in "{1}". Overwrite?',
 					destKey,
 					destinationName,
 				);
+
 				const result: MessageItem = await context.ui.showWarningMessage(
 					message,
 					{ modal: true, stepName: "confirmOverwriteSetting" },
@@ -52,6 +59,7 @@ export async function confirmOverwriteSettings(
 					DialogResponses.no,
 					noToAll,
 				);
+
 				if (result === DialogResponses.yes) {
 					overwriteSetting = true;
 				} else if (result === yesToAll) {

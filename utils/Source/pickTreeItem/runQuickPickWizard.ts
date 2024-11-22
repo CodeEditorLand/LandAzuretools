@@ -30,6 +30,7 @@ export async function runQuickPickWizard<TPick>(
 	await wizard.prompt();
 
 	const lastPickedItem = getLastNode(wizardContext);
+
 	if (!lastPickedItem) {
 		throw new NoResourceFoundError(wizardContext);
 	} else {

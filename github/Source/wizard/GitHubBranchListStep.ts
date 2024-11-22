@@ -33,6 +33,7 @@ export class GitHubBranchListStep extends AzureWizardPromptStep<GitHubContext> {
 		const placeHolder: string = l10n.t("Select a branch");
 
 		let page: number = 0;
+
 		while (!context.gitHubBranch) {
 			page++;
 			context.gitHubBranch = (
@@ -54,12 +55,14 @@ export class GitHubBranchListStep extends AzureWizardPromptStep<GitHubContext> {
 		page: number,
 	): Promise<IAzureQuickPickItem<string | undefined>[]> {
 		const perPage: number = 50;
+
 		const branchParams: GetBranchesParams = {
 			owner: nonNullProp(context, "gitHubRepositoryOwner"),
 			repo: nonNullProp(context, "gitHubRepository"),
 			per_page: perPage,
 			page,
 		};
+
 		const branches: Branches = await getBranches(context, branchParams);
 
 		this.picks.push(
@@ -79,6 +82,7 @@ export class GitHubBranchListStep extends AzureWizardPromptStep<GitHubContext> {
 		});
 
 		const maxAvailablePicks: number = perPage * page;
+
 		return maxAvailablePicks === this.picks.length
 			? [...this.picks, loadMoreQp]
 			: this.picks;

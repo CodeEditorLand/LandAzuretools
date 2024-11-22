@@ -52,6 +52,7 @@ export class AzExtUserInput implements types.IAzureUserInput {
 			"quickPick",
 			options.placeHolder,
 		);
+
 		if (
 			this._context.ui.wizard?.cancellationToken.isCancellationRequested
 		) {
@@ -59,8 +60,10 @@ export class AzExtUserInput implements types.IAzureUserInput {
 		}
 		try {
 			this._isPrompting = true;
+
 			const result = await showQuickPick(this._context, picks, options);
 			this._onDidFinishPromptEmitter.fire({ value: result });
+
 			return result;
 		} finally {
 			this._isPrompting = false;
@@ -76,6 +79,7 @@ export class AzExtUserInput implements types.IAzureUserInput {
 			"inputBox",
 			options.prompt,
 		);
+
 		if (
 			this._context.ui.wizard?.cancellationToken.isCancellationRequested
 		) {
@@ -83,11 +87,13 @@ export class AzExtUserInput implements types.IAzureUserInput {
 		}
 		try {
 			this._isPrompting = true;
+
 			const result = await showInputBox(this._context, options);
 			this._onDidFinishPromptEmitter.fire({
 				value: result,
 				matchesDefault: result === options.value,
 			});
+
 			return result;
 		} finally {
 			this._isPrompting = false;
@@ -103,6 +109,7 @@ export class AzExtUserInput implements types.IAzureUserInput {
 			"openDialog",
 			options.title,
 		);
+
 		if (
 			this._context.ui.wizard?.cancellationToken.isCancellationRequested
 		) {
@@ -110,8 +117,10 @@ export class AzExtUserInput implements types.IAzureUserInput {
 		}
 		try {
 			this._isPrompting = true;
+
 			const result = await showOpenDialog(options);
 			this._onDidFinishPromptEmitter.fire({ value: result });
+
 			return result;
 		} finally {
 			this._isPrompting = false;
@@ -127,6 +136,7 @@ export class AzExtUserInput implements types.IAzureUserInput {
 			"WorkspaceFolderPick",
 			options.placeHolder,
 		);
+
 		if (
 			this._context.ui.wizard?.cancellationToken.isCancellationRequested
 		) {
@@ -134,8 +144,10 @@ export class AzExtUserInput implements types.IAzureUserInput {
 		}
 		try {
 			this._isPrompting = true;
+
 			const result = await showWorkspaceFolderPick(options);
 			this._onDidFinishPromptEmitter.fire({ value: result });
+
 			return result;
 		} finally {
 			this._isPrompting = false;
@@ -157,7 +169,9 @@ export class AzExtUserInput implements types.IAzureUserInput {
 		...args: any[]
 	): Promise<T> {
 		let stepName: string | undefined;
+
 		const firstArg: unknown = args[0];
+
 		if (
 			typeof firstArg === "object" &&
 			firstArg &&
@@ -167,6 +181,7 @@ export class AzExtUserInput implements types.IAzureUserInput {
 		}
 
 		addStepTelemetry(this._context, stepName, "warningMessage", message);
+
 		if (
 			this._context.ui.wizard?.cancellationToken.isCancellationRequested
 		) {
@@ -181,6 +196,7 @@ export class AzExtUserInput implements types.IAzureUserInput {
 				...args,
 			);
 			this._onDidFinishPromptEmitter.fire({ value: result });
+
 			return result;
 		} finally {
 			this._isPrompting = false;

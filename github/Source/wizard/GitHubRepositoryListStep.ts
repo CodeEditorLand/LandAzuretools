@@ -39,7 +39,9 @@ export class GitHubRepositoryListStep extends AzureWizardPromptStep<GitHubContex
 		const placeHolder: string = l10n.t("Select a repository");
 
 		let page: number = 0;
+
 		let repositoryData: RepositoryData | undefined;
+
 		while (!repositoryData) {
 			page++;
 			repositoryData = (
@@ -67,12 +69,14 @@ export class GitHubRepositoryListStep extends AzureWizardPromptStep<GitHubContex
 		page: number,
 	): Promise<IAzureQuickPickItem<RepositoryData | undefined>[]> {
 		const perPage: number = 50;
+
 		const userRepoParams: GetUserReposReqParams = {
 			affiliation: "owner",
 			visibility: "all",
 			per_page: perPage,
 			page,
 		};
+
 		const orgRepoParams: GetOrgReposReqParams = {
 			// Doesn't matter if context.gitHubOrg is undefined; that just means we will end up calling 'getRepositoriesByUser' instead
 			org: context.gitHubOrg ?? "",
@@ -114,6 +118,7 @@ export class GitHubRepositoryListStep extends AzureWizardPromptStep<GitHubContex
 		);
 
 		const maxPicksAvailable: number = perPage * page;
+
 		return maxPicksAvailable === this.picks.length
 			? [...this.picks, loadMoreQp]
 			: this.picks;

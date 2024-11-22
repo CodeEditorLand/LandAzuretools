@@ -32,12 +32,14 @@ export async function showQuickPick<
 	options: types.IAzureQuickPickOptions,
 ): Promise<TPick | TPick[]> {
 	const disposables: Disposable[] = [];
+
 	try {
 		const quickPick: QuickPick<TPick> = createQuickPick(context, options);
 		disposables.push(quickPick);
 
 		const recentlyUsedKey: string | undefined =
 			await getRecentlyUsedKey(options);
+
 		const groups: QuickPickGroup[] = [];
 
 		// eslint-disable-next-line @typescript-eslint/no-misused-promises, no-async-promise-executor
@@ -84,6 +86,7 @@ export async function showQuickPick<
 				quickPick.busy = true;
 				quickPick.enabled = false;
 				quickPick.show();
+
 				try {
 					quickPick.items = await createQuickPickItems<TPick>(
 						picks,
@@ -141,14 +144,17 @@ export function createQuickPick<
 	const quickPick: QuickPick<TPick> = window.createQuickPick<TPick>();
 
 	const wizard = context.ui.wizard;
+
 	if (wizard && wizard.showTitle) {
 		quickPick.title = wizard.title;
+
 		if (!wizard.hideStepCount && wizard.title) {
 			quickPick.step = wizard.currentStep;
 			quickPick.totalSteps = wizard.totalSteps;
 		}
 	}
 	const buttons: QuickInputButton[] = [];
+
 	if (wizard?.showBackButton) {
 		buttons.push(QuickInputButtons.Back);
 	}
@@ -175,6 +181,7 @@ export function createQuickPick<
 	quickPick.matchOnDescription = !!options.matchOnDescription;
 	quickPick.matchOnDetail = !!options.matchOnDetail;
 	quickPick.canSelectMany = !!options.canPickMany;
+
 	return quickPick;
 }
 
@@ -182,7 +189,9 @@ async function getRecentlyUsedKey(
 	options: types.IAzureQuickPickOptions,
 ): Promise<string | undefined> {
 	let recentlyUsedKey: string | undefined;
+
 	const unhashedKey: string | undefined = options.id || options.placeHolder;
+
 	if (unhashedKey && !options.canPickMany) {
 		const hashKey =
 			await randomUtils.getPseudononymousStringHash(unhashedKey);
@@ -233,7 +242,9 @@ export async function createQuickPickItems<
 
 		for (const pick of picks) {
 			const groupName: string | undefined = pick.group;
+
 			const group = groups.find((g) => g.name === groupName);
+
 			if (group) {
 				group.picks.push(pick);
 			} else {
@@ -256,7 +267,9 @@ async function bumpHighPriorityAndRecentlyUsed<
 		suppressPersistance || !recentlyUsedKey
 			? undefined
 			: globalState.get(recentlyUsedKey);
+
 	let recentlyUsedIndex: number = -1;
+
 	if (recentlyUsedValue) {
 		recentlyUsedIndex = await asyncFindIndex(
 			picks,
@@ -266,8 +279,10 @@ async function bumpHighPriorityAndRecentlyUsed<
 		// Update recently used item's description
 		if (recentlyUsedIndex >= 0) {
 			const recentlyUsedItem: T = picks[recentlyUsedIndex];
+
 			if (!recentlyUsedItem.suppressPersistence) {
 				const recentlyUsed: string = l10n.t("(recently used)");
+
 				if (!recentlyUsedItem.description) {
 					recentlyUsedItem.description = recentlyUsed;
 				} else if (
@@ -295,6 +310,7 @@ function stableSortPicks<T extends types.IAzureQuickPickItem<unknown>>(
 		switch (pick.priority) {
 			case "highest":
 				return recentlyUsedIndex === index ? 0 : 1;
+
 			case "normal":
 			default:
 				return recentlyUsedIndex === index ? 2 : 3;
@@ -311,6 +327,7 @@ function stableSortPicks<T extends types.IAzureQuickPickItem<unknown>>(
 
 	// Reconstitute array by pulling out items by index
 	const sortedPicks = sortableFacade.map((item) => picks[item[0]]);
+
 	return sortedPicks;
 }
 
@@ -318,6 +335,7 @@ function getGroupedPicks<TPick extends types.IAzureQuickPickItem<unknown>>(
 	groups: QuickPickGroup[],
 ): TPick[] {
 	let picks: types.IAzureQuickPickItem<unknown>[] = [];
+
 	if (shouldDisplayGroups(groups)) {
 		for (const group of groups) {
 			if (!group.name) {

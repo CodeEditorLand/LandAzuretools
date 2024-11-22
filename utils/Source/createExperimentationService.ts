@@ -18,6 +18,7 @@ export async function createExperimentationService(
 ): Promise<IExperimentationServiceAdapter> {
 	const result: ExperimentationServiceAdapter =
 		new ExperimentationServiceAdapter();
+
 	const { extensionId, extensionVersion } = getPackageInfo(ctx);
 
 	if (targetPopulation === undefined) {

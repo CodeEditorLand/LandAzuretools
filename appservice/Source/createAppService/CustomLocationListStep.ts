@@ -28,12 +28,14 @@ export class CustomLocationListStep<
 			placeHolder: vscode.l10n.t("Select a location for new resources."),
 			enableGrouping: true,
 		};
+
 		const result: AzExtLocation | CustomLocation = (
 			await context.ui.showQuickPick(
 				this.getCustomQuickPicks(context),
 				options,
 			)
 		).data;
+
 		if ("kubeEnvironment" in result) {
 			context.telemetry.properties.pickedCustomLoc = "true";
 			context.customLocation = result;
@@ -63,17 +65,21 @@ export class CustomLocationListStep<
 	): Promise<IAzureQuickPickItem<AzExtLocation | CustomLocation>[]> {
 		const picks: IAzureQuickPickItem<AzExtLocation | CustomLocation>[] =
 			await super.getQuickPicks(context);
+
 		if (context.newSiteOS !== "windows") {
 			try {
 				const client = await createResourceGraphClient(context);
+
 				const response = await client.resources({
 					query: customLocationQuery,
 					subscriptions: [context.subscriptionId],
 				});
+
 				const customLocations = response.data as unknown as Record<
 					number,
 					CustomLocation
 				>;
+
 				const customLocationFlattened = Object.values(
 					customLocations,
 				).sort((a, b) => a.name.localeCompare(b.name));

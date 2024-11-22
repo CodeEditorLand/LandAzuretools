@@ -16,6 +16,7 @@ export class DeployZipPushExecuteStep extends DeployZipBaseExecuteStep {
 		context: InnerDeployContext,
 	): Promise<AzExtPipelineResponse | void> {
 		const kuduClient = await context.site.createClient(context);
+
 		const callback = async (zipStream) => {
 			return await kuduClient.zipPushDeploy(
 				context,

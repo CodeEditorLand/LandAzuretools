@@ -7,7 +7,9 @@ import { randomUtils } from "../utils/randomUtils";
 
 export function getNewFileShareName(siteName: string): string {
 	const randomLetters: number = 6;
+
 	const maxFileShareNameLength: number = 63;
+
 	return (
 		siteName
 			.toLowerCase()

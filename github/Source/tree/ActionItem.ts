@@ -43,6 +43,7 @@ export class ActionItem implements TreeElementBase {
 
 	private get contextValue(): string {
 		const actionTreeItemContextValue: string = `${this.extensionPrefixContextValue}${ActionItem.contextValueSuffix}`;
+
 		const values: string[] = [actionTreeItemContextValue];
 
 		if (
@@ -77,11 +78,13 @@ export class ActionItem implements TreeElementBase {
 						gitHubUrlParse(
 							this.actionWorkflowRuns.repository.html_url,
 						);
+
 					const getJobsParams: GetJobsParams = {
 						owner: nonNullValue(ownerOrOrganization),
 						repo: nonNullValue(repositoryName),
 						run_id: this.actionWorkflowRuns.id,
 					};
+
 					return await getJobs(context, getJobsParams);
 				},
 			);

@@ -88,6 +88,7 @@ export class AzureWizard<T extends (IInternalActionContext & Partial<types.Execu
 
         try {
             let step: AzureWizardPromptStep<T> | undefined = this._promptSteps.pop();
+
             while (step) {
                 if (this._context.ui.wizard?.cancellationToken.isCancellationRequested) {
                     throw new UserCancelledError();
@@ -125,6 +126,7 @@ export class AzureWizard<T extends (IInternalActionContext & Partial<types.Execu
                         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                         step!.prompted = true;
                         loadingQuickPick?.show();
+
                         if (typeof result.value === 'string' && !result.matchesDefault && this.currentStepId && !step?.supportsDuplicateSteps) {
                             this._cachedInputBoxValues[this.currentStepId] = result.value;
                         }
@@ -136,8 +138,10 @@ export class AzureWizard<T extends (IInternalActionContext & Partial<types.Execu
                         await step.prompt(this._context);
                     } catch (err) {
                         const pe: types.IParsedError = parseError(err);
+
                         if (pe.errorType === 'GoBackError') { // Use `errorType` instead of `instanceof` so that tests can also hit this case
                             step = this.goBack(step);
+
                             continue;
                         } else {
                             throw err;
@@ -154,6 +158,7 @@ export class AzureWizard<T extends (IInternalActionContext & Partial<types.Execu
                         throw new UserCancelledError();
                     }
                     const subWizard: types.IWizardOptions<T> | void = await step.getSubWizard(this._context);
+
                     if (subWizard) {
                         this.addSubWizard(step, subWizard);
                     }
@@ -178,6 +183,7 @@ export class AzureWizard<T extends (IInternalActionContext & Partial<types.Execu
                 report: (value: { message?: string; increment?: number }): void => {
                     if (value.message) {
                         const totalSteps: number = currentStep + steps.filter(s => s.shouldExecute(this._context)).length;
+
                         if (totalSteps > 1) {
                             value.message += ` (${currentStep}/${totalSteps})`;
                         }
@@ -187,14 +193,18 @@ export class AzureWizard<T extends (IInternalActionContext & Partial<types.Execu
             };
 
             let step: AzureWizardExecuteStep<T> | undefined = steps.pop();
+
             while (step) {
                 if (!step.shouldExecute(this._context)) {
                     step = steps.pop();
+
                     continue;
                 }
 
                 let output: types.ExecuteActivityOutput | undefined;
+
                 const progressOutput: types.ExecuteActivityOutput | undefined = step.createProgressOutput?.(this._context);
+
                 if (progressOutput) {
                     this.displayActivityOutput(progressOutput, step.options);
                 }
@@ -205,6 +215,7 @@ export class AzureWizard<T extends (IInternalActionContext & Partial<types.Execu
                     output = step.createSuccessOutput?.(this._context);
                 } catch (e) {
                     output = step.createFailOutput?.(this._context);
+
                     if (!step.options.continueOnFail) {
                         throw e;
                     }
@@ -285,10 +296,12 @@ export class AzureWizard<T extends (IInternalActionContext & Partial<types.Execu
 
     private goBack(currentStep: AzureWizardPromptStep<T>): AzureWizardPromptStep<T> {
         let step: AzureWizardPromptStep<T> | undefined = currentStep;
+
         do {
             this._promptSteps.push(step);
             step = this._finishedPromptSteps.pop();
             step?.undo?.(this._context);
+
             if (!step) {
                 throw new GoBackError();
             }

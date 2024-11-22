@@ -19,5 +19,6 @@ export interface IInternalAzureWizard {
     showBackButton: boolean;
     showTitle: boolean;
     cancellationToken: CancellationToken;
+
     getCachedInputBoxValue(): string | undefined;
 }

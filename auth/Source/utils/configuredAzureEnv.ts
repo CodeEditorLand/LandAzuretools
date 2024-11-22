@@ -8,7 +8,9 @@ import * as vscode from "vscode";
 
 // These strings come from https://github.com/microsoft/vscode/blob/eac16e9b63a11885b538db3e0b533a02a2fb8143/extensions/microsoft-authentication/package.json#L40-L99
 const CustomCloudConfigurationSection = "microsoft-sovereign-cloud";
+
 const CloudEnvironmentSettingName = "environment";
+
 const CustomEnvironmentSettingName = "customEnvironment";
 
 enum CloudEnvironmentSettingValue {
@@ -28,6 +30,7 @@ export function getConfiguredAzureEnv(): azureEnv.Environment & {
 	const authProviderConfig = vscode.workspace.getConfiguration(
 		CustomCloudConfigurationSection,
 	);
+
 	const environmentSettingValue = authProviderConfig.get<string | undefined>(
 		CloudEnvironmentSettingName,
 	);

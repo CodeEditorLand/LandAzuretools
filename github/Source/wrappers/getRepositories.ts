@@ -21,6 +21,7 @@ export async function getRepositoriesByUser(
 	reqParams?: GetUserReposReqParams,
 ): Promise<UserRepos> {
 	const client: Octokit = await createOctokitClient(context);
+
 	return (await client.repos.listForAuthenticatedUser(reqParams)).data;
 }
 
@@ -39,5 +40,6 @@ export async function getRepositoriesByOrg(
 	reqParams: GetOrgReposReqParams,
 ): Promise<OrgRepos> {
 	const client: Octokit = await createOctokitClient(context);
+
 	return (await client.repos.listForOrg(reqParams)).data;
 }

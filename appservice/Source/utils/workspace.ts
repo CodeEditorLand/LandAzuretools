@@ -33,6 +33,7 @@ export async function selectWorkspaceFile(
 	fileExtensions?: string[],
 ): Promise<vscode.WorkspaceFolder | vscode.Uri> {
 	const filters: { [name: string]: string[] } = {};
+
 	if (fileExtensions) {
 		filters.Artifacts = fileExtensions;
 	}
@@ -51,6 +52,7 @@ export async function selectWorkspaceItem(
 	options: vscode.OpenDialogOptions,
 ): Promise<vscode.WorkspaceFolder | vscode.Uri> {
 	let folder: vscode.WorkspaceFolder | undefined;
+
 	if (vscode.workspace.workspaceFolders) {
 		const folderPicks: IAzureQuickPickItem<
 			vscode.WorkspaceFolder | undefined
@@ -79,6 +81,7 @@ export async function selectWorkspaceItem(
 		return folder;
 	} else {
 		context.telemetry.properties.browse = "true";
+
 		return (await context.ui.showOpenDialog(options))[0];
 	}
 }

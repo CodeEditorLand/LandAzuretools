@@ -21,6 +21,7 @@ export async function openInPortal(
 
 	const queryPrefix: string =
 		options && options.queryPrefix ? `?${options.queryPrefix}` : "";
+
 	const url: string = `${root.environment.portalUrl}/${queryPrefix}#@${root.tenantId}/resource${id}`;
 
 	await openUrl(url);

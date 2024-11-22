@@ -42,13 +42,17 @@ export abstract class AzureNameStep<
 		const minLength: number = Math.max(
 			...namingRules.map((n: IAzureNamingRules) => n.minLength),
 		);
+
 		const maxLength: number = Math.min(
 			...namingRules.map((n: IAzureNamingRules) => n.maxLength),
 		);
 
 		const maxTries: number = 100;
+
 		let count: number = 1;
+
 		let newName: string;
+
 		while (count < maxTries) {
 			newName = this.generateSuffixedName(
 				preferredName,
@@ -56,6 +60,7 @@ export abstract class AzureNameStep<
 				minLength,
 				maxLength,
 			);
+
 			if (await this.isRelatedNameAvailable(wizardContext, newName)) {
 				return newName;
 			}
@@ -72,10 +77,13 @@ export abstract class AzureNameStep<
 		maxLength: number,
 	): string {
 		const suffix: string = i === 1 ? "" : i.toString();
+
 		const minUnsuffixedLength: number = minLength - suffix.length;
+
 		const maxUnsuffixedLength: number = maxLength - suffix.length;
 
 		let unsuffixedName: string = preferredName;
+
 		if (unsuffixedName.length > maxUnsuffixedLength) {
 			unsuffixedName = preferredName.slice(0, maxUnsuffixedLength);
 		} else {

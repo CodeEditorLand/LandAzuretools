@@ -24,6 +24,7 @@ export async function runPreDeployTask(
 		deployFsPath,
 		scmType,
 	);
+
 	if (preDeployResult.failedToFindTask) {
 		throw new Error(
 			`Failed to find pre-deploy task "${preDeployResult.taskName}". Modify your tasks or the setting "${ext.prefix}.preDeployTask".`,
@@ -42,6 +43,7 @@ export async function tryRunPreDeployTask(
 	scmType: string | undefined,
 ): Promise<IPreDeployTaskResult> {
 	const settingKey: string = "preDeployTask";
+
 	const taskName: string | undefined = vscode.workspace
 		.getConfiguration(ext.prefix, vscode.Uri.file(deployFsPath))
 		.get(settingKey);
@@ -59,6 +61,7 @@ export async function tryRunPreDeployTask(
 			taskName,
 		);
 		context.telemetry.properties.foundPreDeployTask = String(!!task);
+
 		if (task) {
 			const progressMessage: string = vscode.l10n.t(
 				'Running preDeployTask "{0}"...',
@@ -105,6 +108,7 @@ export function shouldExecuteTask(
 		context.deployMethod === "storage" ||
 		context.deployMethod === "zip" ||
 		(scmType !== ScmType.LocalGit && scmType !== ScmType.GitHub);
+
 	if (!shouldExecute) {
 		ext.outputChannel.appendLog(
 			vscode.l10n.t(
@@ -173,12 +177,15 @@ export async function handleFailedPreDeployTask(
 		'Errors exist after running preDeployTask "{0}". See task output for more info.',
 		preDeployResult.taskName!,
 	);
+
 	const deployAnyway: vscode.MessageItem = {
 		title: vscode.l10n.t("Deploy Anyway"),
 	};
+
 	const openSettings: vscode.MessageItem = {
 		title: vscode.l10n.t("Open Settings"),
 	};
+
 	const result: vscode.MessageItem | undefined =
 		await vscode.window.showErrorMessage(
 			message,
@@ -186,14 +193,17 @@ export async function handleFailedPreDeployTask(
 			deployAnyway,
 			openSettings,
 		);
+
 	if (result === deployAnyway) {
 		context.telemetry.properties.preDeployTaskResponse = "deployAnyway";
 	} else if (result === openSettings) {
 		context.telemetry.properties.preDeployTaskResponse = "openSettings";
 		await vscode.commands.executeCommand("workbench.action.openSettings");
+
 		throw new UserCancelledError("preDeployFailed|OpenSettings");
 	} else {
 		context.telemetry.properties.preDeployTaskResponse = "cancel";
+
 		throw new UserCancelledError("preDeployFailed");
 	}
 }

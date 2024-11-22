@@ -60,6 +60,7 @@ export function addPackageLintSuites(
 		options.commandsRegisteredButNotInPackage || [];
 
 	let _registeredCommands: string[] | undefined;
+
 	async function getRegisteredCommands(): Promise<string[]> {
 		if (!_registeredCommands) {
 			// We must wait to call these until the tests are actually run, because suite() runs too early for extension activation
@@ -67,6 +68,7 @@ export function addPackageLintSuites(
 				!!(<{} | undefined>getExtensionContext()),
 				"The extension must be activated before any tests are run, otherwise its commands won't have been registered yet",
 			);
+
 			const registeredCommands: string[] = await getCommands();
 
 			// Remove predefined IDs
@@ -84,8 +86,11 @@ export function addPackageLintSuites(
 	const activationEvents: string[] = emptyIfUndefined(
 		packageJson.activationEvents,
 	);
+
 	const contributes = emptyIfUndefined(packageJson.contributes);
+
 	const views = emptyIfUndefined(contributes.views);
+
 	const commands = emptyIfUndefined(contributes.commands);
 
 	// All commands should start with the same prefix - get prefix from first command
@@ -106,6 +111,7 @@ export function addPackageLintSuites(
 
 		for (const viewContainerName of Object.keys(views)) {
 			const viewContainer = views[viewContainerName];
+
 			for (const view of viewContainer) {
 				// vscode automatic creates focus commands for each view
 				predefinedIds.push(`${view.id}.focus`);
@@ -118,6 +124,7 @@ export function addPackageLintSuites(
 	suite("Activation events for views", () => {
 		for (const viewContainerName of Object.keys(views)) {
 			const viewContainer = views[viewContainerName];
+
 			for (const view of viewContainer) {
 				const activationEvent: string = `onView:${view.id}`;
 				test(view.id, () => {
@@ -135,6 +142,7 @@ export function addPackageLintSuites(
 	suite("Activation events for commands in package.json", () => {
 		for (const cmd of commands) {
 			const cmdId: string = cmd.command;
+
 			const activationEvent: string = `onCommand:${cmdId}`;
 
 			test(cmdId, async () => {
@@ -157,6 +165,7 @@ export function addPackageLintSuites(
 
 		for (const event of activationEvents) {
 			const onCommand: string = "onCommand:";
+
 			if (event.startsWith("onCommand")) {
 				const cmdId: string = event.substr(onCommand.length);
 
@@ -178,14 +187,17 @@ export function addPackageLintSuites(
 
 	test("Activation events for commands registered with vscode", async () => {
 		const registeredCommands: string[] = await getRegisteredCommands();
+
 		for (const cmd of registeredCommands) {
 			const cmdId: string = cmd;
+
 			const activationEvent: string = `onCommand:${cmdId}`;
 
 			if (cmdId.startsWith(extensionPrefixWithPeriod)) {
 				const isInPackage: boolean = commands.some(
 					(c) => c.command === cmdId,
 				);
+
 				if (
 					commandsRegisteredButNotInPackage.some(
 						(c: string) => c === cmdId,

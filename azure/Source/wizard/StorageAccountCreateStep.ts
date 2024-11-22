@@ -37,9 +37,11 @@ export class StorageAccountCreateStep<
 		).name;
 		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 		const newName: string = wizardContext.newStorageAccountName!;
+
 		const newSkuName: SkuName = <SkuName>(
 			`${this._defaults.performance}_${this._defaults.replication}`
 		);
+
 		const creatingStorageAccount: string = l10n.t(
 			'Creating storage account "{0}" in location "{1}" with sku "{2}"...',
 			newName,
@@ -48,6 +50,7 @@ export class StorageAccountCreateStep<
 		);
 		ext.outputChannel.appendLog(creatingStorageAccount);
 		progress.report({ message: creatingStorageAccount });
+
 		const storageClient: StorageManagementClient =
 			await createStorageClient(wizardContext);
 		wizardContext.storageAccount =
@@ -63,6 +66,7 @@ export class StorageAccountCreateStep<
 					defaultToOAuthAuthentication: true,
 				},
 			);
+
 		const createdStorageAccount: string = l10n.t(
 			'Successfully created storage account "{0}".',
 			newName,

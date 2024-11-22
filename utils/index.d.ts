@@ -506,6 +506,7 @@ export interface IGenericTreeItemOptions {
 export declare class GenericTreeItem extends AzExtTreeItem {
     public label: string;
     public contextValue: string;
+
     constructor(parent: AzExtParentTreeItem | undefined, options: IGenericTreeItemOptions);
 }
 
@@ -1413,15 +1414,25 @@ export declare abstract class AzureNameStep<T extends IRelatedNameWizardContext>
  */
 export declare namespace DialogResponses {
     export const yes: MessageItem;
+
     export const no: MessageItem;
+
     export const cancel: MessageItem;
+
     export const deleteResponse: MessageItem;
+
     export const learnMore: MessageItem;
+
     export const dontWarnAgain: MessageItem;
+
     export const skipForNow: MessageItem;
+
     export const upload: MessageItem;
+
     export const alwaysUpload: MessageItem;
+
     export const dontUpload: MessageItem;
+
     export const reportAnIssue: MessageItem;
 }
 
@@ -1731,25 +1742,36 @@ export declare function registerReportIssueCommand(commandId: string): void;
  */
 export declare namespace AzExtFsExtra {
     export function isVirtualWorkspace(): boolean;
+
     export function isDirectory(resource: Uri | string): Promise<boolean>;
+
     export function isFile(resource: Uri | string): Promise<boolean>;
+
     export function ensureDir(resource: Uri | string): Promise<void>;
+
     export function ensureFile(resource: Uri | string): Promise<void>;
+
     export function readFile(resource: Uri | string): Promise<string>;
+
     export function writeFile(resource: Uri | string, contents: string): Promise<void>;
     /**
      * @param separator By default, will append "\r\n\r\n" between existing content and new content to be appended
      */
     export function appendFile(resource: Uri | string, contents: string, separator?: string): Promise<void>;
+
     export function pathExists(resource: Uri | string): Promise<boolean>;
+
     export function readJSON<T>(resource: Uri | string): Promise<T>
     /**
      * @param spaces Defaults to 2 spaces. If the default JSON.stringify behavior is required, input 0
      */
     export function writeJSON(resource: Uri | string, contents: string | unknown, spaces?: string | number): Promise<void>
     export function readDirectory(resource: Uri | string): Promise<{ fsPath: string, name: string, type: FileType }[]>;
+
     export function emptyDir(resource: Uri | string): Promise<void>;
+
     export function copy(src: Uri | string, dest: Uri | string, options?: { overwrite?: boolean }): Promise<void>;
+
     export function deleteResource(resource: Uri | string, options?: { recursive?: boolean, useTrash?: boolean }): Promise<void>
 }
 
@@ -2119,7 +2141,9 @@ export declare function runQuickPickWizard<TPick>(context: PickExperienceContext
  */
 export declare namespace randomUtils {
     export function getPseudononymousStringHash(s: string): Promise<string>;
+
     export function getRandomHexString(length?: number): string;
+
     export function getRandomInteger(minimumInclusive: number, maximumExclusive: number): number;
 }
 
@@ -2128,6 +2152,7 @@ export declare namespace randomUtils {
  */
 export declare interface TreeElementBase extends ResourceModelBase {
     getChildren?(): ProviderResult<TreeElementBase[]>;
+
     getTreeItem(): TreeItem | Thenable<TreeItem>;
 }
 

@@ -16,6 +16,7 @@ export class StopAppBeforeDeployExecuteStep extends AzureWizardExecuteStep<Inner
 		progress: Progress<{ message?: string; increment?: number }>,
 	): Promise<void> {
 		const site = context.site;
+
 		const client = await site.createClient(context);
 
 		const stoppingApp = l10n.t("Stopping app...");

@@ -47,6 +47,7 @@ export async function connectToGitHub(
 	const wizardContext: GitHubContext = {
 		...context,
 	};
+
 	const wizard: AzureWizard<GitHubContext> = new AzureWizard(wizardContext, {
 		title,
 		promptSteps: [
@@ -69,12 +70,14 @@ export async function connectToGitHub(
 	const repoName: string = `${nonNullProp(wizardContext, "gitHubRepositoryOwner")}/${nonNullProp(wizardContext, "gitHubRepository")}`;
 
 	const client = await site.createClient(context);
+
 	try {
 		const connectingToGithub: string = vscode.l10n.t(
 			'"{0}" is being connected to repo "{1}". This may take several minutes...',
 			site.fullName,
 			repoName,
 		);
+
 		const connectedToGithub: string = vscode.l10n.t(
 			'Repo "{0}" is connected and deployed to "{1}".',
 			repoName,

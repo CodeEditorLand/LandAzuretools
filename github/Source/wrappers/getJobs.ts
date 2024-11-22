@@ -24,5 +24,6 @@ export async function getJobs(
 	params: GetJobsParams,
 ): Promise<Jobs> {
 	const client: Octokit = await createOctokitClient(context);
+
 	return (await client.actions.listJobsForWorkflowRun(params)).data;
 }

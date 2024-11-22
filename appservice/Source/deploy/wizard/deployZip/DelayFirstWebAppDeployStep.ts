@@ -18,6 +18,7 @@ export class DelayFirstWebAppDeployStep extends AzureWizardExecuteStep<InnerDepl
 		// eslint-disable-next-line @typescript-eslint/no-misused-promises, no-async-promise-executor
 		await new Promise<void>(async (resolve: () => void): Promise<void> => {
 			setTimeout(resolve, 10000);
+
 			try {
 				// this delay is only valid for the first deployment to a Linux web app on a basic asp, so resolve for anything else
 				if (context.site.isFunctionApp) {
@@ -26,6 +27,7 @@ export class DelayFirstWebAppDeployStep extends AzureWizardExecuteStep<InnerDepl
 
 				const asp: AppServicePlan | undefined =
 					await context.aspPromise;
+
 				if (
 					!asp ||
 					!asp.sku ||
@@ -41,6 +43,7 @@ export class DelayFirstWebAppDeployStep extends AzureWizardExecuteStep<InnerDepl
 				const deployments: number = (
 					await context.client.getDeployResults(context)
 				).length;
+
 				if (deployments > 1) {
 					resolve();
 				}

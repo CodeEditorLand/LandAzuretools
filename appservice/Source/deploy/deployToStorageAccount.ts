@@ -46,13 +46,16 @@ export async function deployToStorageAccount(
 	context.telemetry.properties.useStorageAccountDeploy = "true";
 
 	const datePart: string = dayjs().utc().format("YYYYMMDDHHmmss");
+
 	const randomPart: string = randomUtils.getRandomHexString(32);
+
 	const blobName: string = `${datePart}-${randomPart}.zip`;
 
 	const blobService: BlobServiceClient = await createBlobServiceClient(
 		context,
 		site,
 	);
+
 	const blobUrl: string = await createBlobFromZip(
 		context,
 		fsPath,
@@ -60,7 +63,9 @@ export async function deployToStorageAccount(
 		blobService,
 		blobName,
 	);
+
 	const client = await site.createClient(context);
+
 	const appSettings: StringDictionary =
 		await client.listApplicationSettings();
 	appSettings.properties = appSettings.properties || {};
@@ -81,9 +86,12 @@ async function createBlobServiceClient(
 	const client = await site.createClient(context);
 	// Use same storage account as AzureWebJobsStorage for deployments
 	const azureWebJobsStorageKey: string = "AzureWebJobsStorage";
+
 	const settings: StringDictionary = await client.listApplicationSettings();
+
 	let connectionString: string | undefined =
 		settings.properties && settings.properties[azureWebJobsStorageKey];
+
 	if (connectionString) {
 		try {
 			return BlobServiceClient.fromConnectionString(connectionString);
@@ -91,7 +99,9 @@ async function createBlobServiceClient(
 			// EndpointSuffix was optional in the old sdk, but is required in the new sdk
 			// https://github.com/microsoft/vscode-azurefunctions/issues/2360
 			const endpointSuffix: string = "EndpointSuffix";
+
 			const separator: string = ";";
+
 			if (
 				parseError(error).message.includes(endpointSuffix) &&
 				!connectionString.includes(endpointSuffix)
@@ -100,6 +110,7 @@ async function createBlobServiceClient(
 					connectionString += separator;
 				}
 				connectionString += `${endpointSuffix}=${AzureCloudStorageEndpointSuffix}${separator}`;
+
 				return BlobServiceClient.fromConnectionString(connectionString);
 			} else {
 				throw error;
@@ -123,8 +134,10 @@ async function createBlobFromZip(
 	blobName: string,
 ): Promise<string> {
 	const containerName: string = "function-releases";
+
 	const containerClient: ContainerClient =
 		blobService.getContainerClient(containerName);
+
 	if (!(await containerClient.exists())) {
 		await containerClient.create();
 	}
@@ -161,6 +174,7 @@ async function createBlobFromZip(
 			},
 			blobService.credential,
 		).toString();
+
 		return url.toString();
 	} else {
 		throw new Error(

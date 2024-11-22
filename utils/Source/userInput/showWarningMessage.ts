@@ -31,11 +31,13 @@ export async function showWarningMessage<T extends MessageItem>(
 	// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 	const learnMoreLink: string | undefined =
 		args[0] && (<types.IAzureMessageOptions>args[0]).learnMoreLink;
+
 	if (learnMoreLink) {
 		args.push(DialogResponses.learnMore);
 	}
 
 	const back: MessageItem = { title: l10n.t("Back") };
+
 	if (context.ui.wizard?.showBackButton) {
 		args.push(back);
 	}
@@ -44,6 +46,7 @@ export async function showWarningMessage<T extends MessageItem>(
 	while (true) {
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument
 		const result: T = await window.showWarningMessage(message, ...args);
+
 		if (learnMoreLink && result === DialogResponses.learnMore) {
 			context.telemetry.properties.learnMoreStep =
 				context.telemetry.properties.lastStep;

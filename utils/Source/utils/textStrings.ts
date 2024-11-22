@@ -10,6 +10,7 @@ export function limitLines(s: string, n: number): string {
 	const match: RegExpMatchArray | null = s.match(
 		new RegExp(`((\\r\\n|\\n)?.*$){0,${n}}`, "m"),
 	);
+
 	return match ? match[0] : "";
 }
 
@@ -19,5 +20,6 @@ export function countLines(s: string): number {
 	}
 
 	const match: RegExpMatchArray | null = s.match(/(\r\n|\n)/g);
+
 	return match ? match.length + 1 : 1;
 }

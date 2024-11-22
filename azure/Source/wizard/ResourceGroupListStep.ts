@@ -60,6 +60,7 @@ export class ResourceGroupListStep<T extends types.IResourceGroupWizardContext>
 	>(wizardContext: T, name: string): Promise<boolean> {
 		const resourceGroupsTask: Promise<ResourceGroup[]> =
 			ResourceGroupListStep.getResourceGroups(wizardContext);
+
 		return !(await resourceGroupsTask).some(
 			(rg: ResourceGroup) =>
 				rg.name !== undefined &&
@@ -79,6 +80,7 @@ export class ResourceGroupListStep<T extends types.IResourceGroupWizardContext>
 				options,
 			)
 		).data;
+
 		if (
 			wizardContext.resourceGroup &&
 			!LocationListStep.hasLocation(wizardContext)
@@ -107,6 +109,7 @@ export class ResourceGroupListStep<T extends types.IResourceGroupWizardContext>
 			wizardContext.valuesToMask.push(
 				nonNullProp(wizardContext.resourceGroup, "name"),
 			);
+
 			return undefined;
 		}
 	}
@@ -134,7 +137,9 @@ export class ResourceGroupListStep<T extends types.IResourceGroupWizardContext>
 			await ResourceGroupListStep.getResourceGroups(wizardContext)
 		).sort((a, b) => {
 			const nameA: string = nonNullProp(a, "name");
+
 			const nameB: string = nonNullProp(b, "name");
+
 			if (nameA > nameB) {
 				return 1;
 			} else if (nameA < nameB) {

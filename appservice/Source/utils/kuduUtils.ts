@@ -20,6 +20,7 @@ export async function retryKuduCall<T>(
 				// only add telemetry if it needed a retry
 				const existingAttempt: number | undefined =
 					context.telemetry.measurements.kuduMaxRetry;
+
 				if (
 					existingAttempt === undefined ||
 					existingAttempt < attempt

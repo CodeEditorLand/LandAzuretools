@@ -16,6 +16,7 @@ export function nonNullProp<TSource, TKey extends keyof TSource>(
 	const value: NonNullable<TSource[TKey]> = <NonNullable<TSource[TKey]>>(
 		source[name]
 	);
+
 	return nonNullValue(value, <string>name);
 }
 

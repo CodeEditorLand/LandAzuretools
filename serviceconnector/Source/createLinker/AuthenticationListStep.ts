@@ -14,6 +14,7 @@ import { ICreateLinkerContext } from "./ICreateLinkerContext";
 export class AuthenticationListStep extends AzureWizardPromptStep<ICreateLinkerContext> {
 	public async prompt(context: ICreateLinkerContext): Promise<void> {
 		const placeHolder = vscode.l10n.t("Select Authentication Type");
+
 		const picks: IAzureQuickPickItem<AuthInfoBase>[] = [
 			{
 				label: vscode.l10n.t("System assigned managed identity"),

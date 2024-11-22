@@ -20,6 +20,7 @@ export async function deploy(
 	context: IDeployContext,
 ): Promise<void> {
 	const client = await site.createClient(context);
+
 	const aspPromise: Promise<AppServicePlan | undefined> =
 		client.getAppServicePlan();
 
@@ -29,8 +30,11 @@ export async function deploy(
 		client,
 		aspPromise,
 	});
+
 	const title: string = l10n.t('Deploying to app "{0}"', site.fullName);
+
 	const executeSteps = await createDeployExecuteSteps(innerContext);
+
 	const wizard: AzureWizard<InnerDeployContext> =
 		new AzureWizard<InnerDeployContext>(innerContext, {
 			executeSteps,

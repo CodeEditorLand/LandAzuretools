@@ -15,6 +15,7 @@ export function createPortalUri(
 ): vscode.Uri {
 	const queryPrefix: string =
 		options && options.queryPrefix ? `?${options.queryPrefix}` : "";
+
 	const url: string = `${subscription.environment.portalUrl}/${queryPrefix}#@${subscription.tenantId}/resource${id}`;
 
 	return vscode.Uri.parse(url);

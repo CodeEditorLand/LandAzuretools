@@ -22,9 +22,11 @@ export async function showDeployConfirmation(
 		'Are you sure you want to deploy to "{0}"? This will overwrite any previous deployment and cannot be undone.',
 		site.fullName,
 	);
+
 	const items: MessageItem[] = [{ title: l10n.t("Deploy") }];
 
 	const resetDefault: MessageItem = { title: "Reset default" };
+
 	if (context.appSource === AppSource.setting) {
 		items.push(resetDefault);
 	}
@@ -56,6 +58,7 @@ export async function showDeployConfirmation(
 		// If resetDefault button was clicked we ask what and where to deploy again
 		// don't wait
 		void commands.executeCommand(deployCommandId);
+
 		throw new UserCancelledError("resetDefault");
 	}
 }

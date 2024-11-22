@@ -61,6 +61,7 @@ export class AppServicePlanListStep extends AzureWizardPromptStep<IAppServiceWiz
 	): Promise<boolean> {
 		const plans: AppServicePlan[] =
 			await AppServicePlanListStep.getPlans(context);
+
 		return !plans.some(
 			(plan) =>
 				nonNullProp(plan, "resourceGroup").toLowerCase() ===
@@ -93,6 +94,7 @@ export class AppServicePlanListStep extends AzureWizardPromptStep<IAppServiceWiz
 		).data;
 
 		context.telemetry.properties.newPlan = String(!context.plan);
+
 		if (context.plan) {
 			await LocationListStep.setLocation(context, context.plan.location);
 		}
@@ -110,12 +112,14 @@ export class AppServicePlanListStep extends AzureWizardPromptStep<IAppServiceWiz
 					new ResourceGroupListStep(),
 				];
 			LocationListStep.addStep(context, promptSteps);
+
 			return {
 				promptSteps: promptSteps,
 				executeSteps: [new AppServicePlanCreateStep()],
 			};
 		} else {
 			context.valuesToMask.push(nonNullProp(context.plan, "name"));
+
 			return undefined;
 		}
 	}
@@ -142,7 +146,9 @@ export class AppServicePlanListStep extends AzureWizardPromptStep<IAppServiceWiz
 
 		let plans: AppServicePlan[] =
 			await AppServicePlanListStep.getPlans(context);
+
 		const famFilter: RegExp | undefined = context.planSkuFamilyFilter;
+
 		if (famFilter) {
 			plans = plans.filter(
 				(plan) =>
@@ -153,14 +159,17 @@ export class AppServicePlanListStep extends AzureWizardPromptStep<IAppServiceWiz
 		}
 
 		let location: AzExtLocation | undefined;
+
 		if (LocationListStep.hasLocation(context)) {
 			location = await LocationListStep.getLocation(context, webProvider);
 		}
 
 		let hasFilteredLocations: boolean = false;
+
 		for (const plan of plans) {
 			const isNewSiteLinux: boolean =
 				context.newSiteOS === WebsiteOS.linux;
+
 			let isPlanLinux: boolean = nonNullProp(plan, "kind")
 				.toLowerCase()
 				.includes(WebsiteOS.linux);
@@ -173,6 +182,7 @@ export class AppServicePlanListStep extends AzureWizardPromptStep<IAppServiceWiz
 				// also, the "reserved" property is always "false" in the list of plans returned above. We have to perform a separate get on each plan
 				const client: WebSiteManagementClient =
 					await createWebSiteClient(context);
+
 				const epPlan: AppServicePlan | undefined =
 					await tryGetAppServicePlan(
 						client,

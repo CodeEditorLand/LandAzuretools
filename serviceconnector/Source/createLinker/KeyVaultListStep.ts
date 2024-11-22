@@ -27,6 +27,7 @@ export interface KeyVaultAccountJsonResponse {
 export class KeyVaultListStep extends AzureWizardPromptStep<ICreateLinkerContext> {
 	public async prompt(context: ICreateLinkerContext): Promise<void> {
 		const placeHolder: string = vscode.l10n.t("Select a key vault");
+
 		const accounts = await getKeyVaultAccounts(context);
 		context.keyVaultAccount = (
 			await context.ui.showQuickPick(this.getPicks(accounts.value), {
@@ -52,6 +53,7 @@ async function getKeyVaultAccounts(
 	context: ICreateLinkerContext,
 ): Promise<KeyVaultJsonResponse> {
 	const url = `${context.environment.resourceManagerEndpointUrl}subscriptions/${context.subscriptionId}/resources?$filter=resourceType eq 'Microsoft.KeyVault/vaults'&api-version=2015-11-01`;
+
 	return (<AzExtPipelineResponse>(
 		await sendRequestWithTimeout(
 			context,

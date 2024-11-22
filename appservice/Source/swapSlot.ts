@@ -20,6 +20,7 @@ export async function swapSlot(
 	existingSlots: ParsedSite[],
 ): Promise<void> {
 	const productionSlotLabel: string = "production";
+
 	const otherSlots: IAzureQuickPickItem<ParsedSite | undefined>[] = [
 		{
 			label: productionSlotLabel,
@@ -45,6 +46,7 @@ export async function swapSlot(
 		'Select which slot to swap with "{0}".',
 		sourceSlot.slotName!,
 	);
+
 	const targetSlot = (
 		await context.ui.showQuickPick(otherSlots, {
 			placeHolder,
@@ -55,17 +57,20 @@ export async function swapSlot(
 	const targetSlotLabel: string = targetSlot
 		? targetSlot.fullName
 		: `${sourceSlot.siteName}-${productionSlotLabel}`;
+
 	const swappingSlots: string = l10n.t(
 		'Swapping "{0}" with "{1}"...',
 		targetSlotLabel,
 		sourceSlot.fullName,
 	);
+
 	const successfullySwapped: string = l10n.t(
 		'Successfully swapped "{0}" with "{1}".',
 		targetSlotLabel,
 		sourceSlot.fullName,
 	);
 	ext.outputChannel.appendLog(swappingSlots);
+
 	const client: WebSiteManagementClient = await createWebSiteClient([
 		context,
 		sourceSlot.subscription,

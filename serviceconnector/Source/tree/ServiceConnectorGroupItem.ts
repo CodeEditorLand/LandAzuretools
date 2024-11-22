@@ -37,9 +37,11 @@ export class ServiceConnectorGroupItem implements TreeElementBase {
 				const client = new (
 					await import("@azure/arm-servicelinker")
 				).ServiceLinkerManagementClient(this.subscription.credentials);
+
 				const linkers = await uiUtils.listAllIterator(
 					client.linker.list(nonNullProp(this.item, "id")),
 				);
+
 				return linkers.map((linker) =>
 					createServiceConnectorItem(
 						this.subscription,

@@ -102,10 +102,12 @@ function getApiInternal<T extends AzureExtensionApi>(
 					apiVersions,
 					apiVersionRange,
 				);
+
 				if (matchedApiVersion) {
 					const apiFactory = azExts.find(
 						(a) => a.apiVersion === matchedApiVersion,
 					);
+
 					return apiFactory
 						? apiFactory.createApi(options)
 						: undefined;
@@ -114,8 +116,11 @@ function getApiInternal<T extends AzureExtensionApi>(
 						apiVersions,
 						"",
 					);
+
 					let message: string;
+
 					let code: ApiVersionCode;
+
 					if (
 						minApiVersion &&
 						semver.gtr(minApiVersion, apiVersionRange)

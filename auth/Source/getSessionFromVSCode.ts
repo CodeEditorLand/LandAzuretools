@@ -29,12 +29,14 @@ function getResourceScopes(scopes?: string | string[]): string[] {
 			}
 		},
 	);
+
 	return Array.from(new Set<string>(arrScopes));
 }
 
 function addTenantIdScope(scopes: string[], tenantId: string): string[] {
 	const scopeSet = new Set<string>(scopes);
 	scopeSet.add(`VSCODE_TENANT:${tenantId}`);
+
 	return Array.from(scopeSet);
 }
 
@@ -43,6 +45,7 @@ function getScopes(
 	tenantId?: string,
 ): string[] {
 	let scopeArr = getResourceScopes(scopes);
+
 	if (tenantId) {
 		scopeArr = addTenantIdScope(scopeArr, tenantId);
 	}

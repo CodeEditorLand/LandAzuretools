@@ -16,9 +16,11 @@ import { IDeleteSiteWizardContext } from "./IDeleteSiteWizardContext";
 export class DeleteLastServicePlanStep extends AzureWizardPromptStep<IDeleteSiteWizardContext> {
 	public async prompt(context: IDeleteSiteWizardContext): Promise<void> {
 		const site = nonNullProp(context, "site");
+
 		const client = await site.createClient(context);
 
 		const plan = await client.getAppServicePlan();
+
 		if (
 			plan &&
 			!isNullOrUndefined(plan.numberOfSites) &&
@@ -29,6 +31,7 @@ export class DeleteLastServicePlanStep extends AzureWizardPromptStep<IDeleteSite
 				'This is the last app in the App Service plan "{0}". Do you want to delete this App Service plan to prevent unexpected charges?',
 				plan.name!,
 			);
+
 			const input: MessageItem = await context.ui.showWarningMessage(
 				message,
 				{ modal: true, stepName: "lastAppOnPlan" },

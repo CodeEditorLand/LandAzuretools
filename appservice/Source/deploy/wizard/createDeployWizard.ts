@@ -27,6 +27,7 @@ export async function createDeployExecuteSteps(
 	context: InnerDeployContext,
 ): Promise<AzureWizardExecuteStep<InnerDeployContext>[]> {
 	const executeSteps: AzureWizardExecuteStep<InnerDeployContext>[] = [];
+
 	const config: SiteConfigResource = await context.client.getSiteConfig();
 
 	if (context.stopAppBeforeDeploy) {
@@ -47,6 +48,7 @@ export async function createDeployExecuteSteps(
 		const javaRuntime = context.site.isLinux
 			? config.linuxFxVersion
 			: config.javaContainer;
+
 		if (javaRuntime && /^(tomcat|wildfly|jboss)/i.test(javaRuntime)) {
 			executeSteps.push(new DeployWarExecuteStep());
 		} else if (

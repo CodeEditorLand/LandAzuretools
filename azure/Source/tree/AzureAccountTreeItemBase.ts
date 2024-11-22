@@ -42,24 +42,34 @@ import { getIconPath } from "./IconPath";
 import { SubscriptionTreeItemBase } from "./SubscriptionTreeItemBase";
 
 const signInLabel: string = l10n.t("Sign in to Azure...");
+
 const createAccountLabel: string = l10n.t("Create an Azure Account...");
+
 const createStudentAccountLabel: string = l10n.t(
 	"Create an Azure for Students Account...",
 );
+
 const selectSubscriptionsLabel: string = l10n.t("Select Subscriptions...");
+
 const signInCommandId: string = "azure-account.login";
+
 const createAccountCommandId: string = "azure-account.createAccount";
+
 const createStudentAccountCommandId: string =
 	"azure-account.createStudentAccount";
+
 const selectSubscriptionsCommandId: string =
 	"azure-account.selectSubscriptions";
+
 const azureAccountExtensionId: string = "ms-vscode.azure-account";
+
 const extensionOpenCommand: string = "extension.open";
 
 type AzureAccountResult =
 	| AzureAccountExtensionApi
 	| "notInstalled"
 	| "needsUpdate";
+
 const minAccountExtensionVersion: string = "0.9.0";
 
 export abstract class AzureAccountTreeItemBase
@@ -111,6 +121,7 @@ export abstract class AzureAccountTreeItemBase
 		context: IActionContext,
 	): Promise<AzExtTreeItem[]> {
 		let azureAccount: AzureAccountResult = await this._azureAccountTask;
+
 		if (typeof azureAccount === "string") {
 			// Refresh the AzureAccount, to handle Azure account extension installation after the previous refresh
 			this._azureAccountTask = this.loadAzureAccount(this._testAccount);
@@ -119,6 +130,7 @@ export abstract class AzureAccountTreeItemBase
 
 		if (typeof azureAccount === "string") {
 			context.telemetry.properties.accountStatus = azureAccount;
+
 			const label: string =
 				azureAccount === "notInstalled"
 					? l10n.t("Install Azure Account Extension...")
@@ -126,7 +138,9 @@ export abstract class AzureAccountTreeItemBase
 							'Update Azure Account Extension to at least version "{0}"...',
 							minAccountExtensionVersion,
 						);
+
 			const iconPath: TreeItemIconPath = new ThemeIcon("warning");
+
 			const result: AzExtTreeItem = new GenericTreeItem(this, {
 				label,
 				commandId: extensionOpenCommand,
@@ -135,10 +149,12 @@ export abstract class AzureAccountTreeItemBase
 				iconPath,
 			});
 			result.commandArgs = [azureAccountExtensionId];
+
 			return [result];
 		}
 
 		context.telemetry.properties.accountStatus = azureAccount.status;
+
 		const existingSubscriptions: SubscriptionTreeItemBase[] = this
 			._subscriptionTreeItems
 			? this._subscriptionTreeItems
@@ -146,6 +162,7 @@ export abstract class AzureAccountTreeItemBase
 		this._subscriptionTreeItems = [];
 
 		const contextValue: string = "azureCommand";
+
 		if (
 			azureAccount.status === "Initializing" ||
 			azureAccount.status === "LoggingIn"
@@ -218,6 +235,7 @@ export abstract class AzureAccountTreeItemBase
 							| undefined = existingSubscriptions.find(
 							(ti) => ti.id === filter.subscription.id,
 						);
+
 						if (existingTreeItem) {
 							// Return existing treeItem (which might have many 'cached' tree items underneath it) rather than creating a brand new tree item every time
 							return existingTreeItem;
@@ -251,6 +269,7 @@ export abstract class AzureAccountTreeItemBase
 								filter.subscription,
 								"subscriptionId",
 							);
+
 							return await this.createSubscriptionTreeItem({
 								credentials: <AzExtServiceClientCredentials>(
 									filter.session.credentials2
@@ -280,12 +299,14 @@ export abstract class AzureAccountTreeItemBase
 					},
 				),
 			);
+
 			return this._subscriptionTreeItems;
 		}
 	}
 
 	public async getIsLoggedIn(): Promise<boolean> {
 		const azureAccount: AzureAccountResult = await this._azureAccountTask;
+
 		return (
 			typeof azureAccount !== "string" &&
 			azureAccount.status === "LoggedIn"
@@ -297,12 +318,15 @@ export abstract class AzureAccountTreeItemBase
 	): Promise<AzureWizardPromptStep<ISubscriptionActionContext> | undefined> {
 		const subscriptionNodes: SubscriptionTreeItemBase[] =
 			await this.ensureSubscriptionTreeItems(context);
+
 		if (subscriptionNodes.length === 1) {
 			Object.assign(context, subscriptionNodes[0].subscription);
+
 			return undefined;
 		} else {
 			// eslint-disable-next-line @typescript-eslint/no-this-alias
 			const me: AzureAccountTreeItemBase = this;
+
 			class SubscriptionPromptStep extends AzureWizardPromptStep<ISubscriptionActionContext> {
 				public async prompt(): Promise<void> {
 					const ti: SubscriptionTreeItemBase = <
@@ -327,6 +351,7 @@ export abstract class AzureAccountTreeItemBase
 		_expectedContextValues: (string | RegExp)[],
 	): Promise<AzExtTreeItem | undefined> {
 		const azureAccount: AzureAccountResult = await this._azureAccountTask;
+
 		if (
 			typeof azureAccount !== "string" &&
 			(azureAccount.status === "LoggingIn" ||
@@ -366,6 +391,7 @@ export abstract class AzureAccountTreeItemBase
 				extensions.getExtension<AzureAccountExtensionApi>(
 					azureAccountExtensionId,
 				);
+
 			if (extension) {
 				try {
 					// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
@@ -417,6 +443,7 @@ export abstract class AzureAccountTreeItemBase
 				"isAzureAccountInstalled",
 				true,
 			);
+
 			return azureAccount;
 		} else {
 			return "notInstalled";
@@ -427,9 +454,12 @@ export abstract class AzureAccountTreeItemBase
 		context: IActionContext,
 	): Promise<SubscriptionTreeItemBase[]> {
 		const azureAccount: AzureAccountResult = await this._azureAccountTask;
+
 		if (typeof azureAccount === "string") {
 			let message: string;
+
 			let stepName: string;
+
 			if (azureAccount === "notInstalled") {
 				stepName = "requiresAzureAccount";
 				message = l10n.t(
@@ -446,6 +476,7 @@ export abstract class AzureAccountTreeItemBase
 			const viewInMarketplace: MessageItem = {
 				title: l10n.t("View in Marketplace"),
 			};
+
 			if (
 				(await context.ui.showWarningMessage(
 					message,

@@ -36,6 +36,7 @@ export function getDefaultWebpackConfig(options: DefaultWebpackOptions): webpack
     // Only use defaultExternalNodeModules entries that are actually in package-lock.json
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const packageLockJson: PackageLock = fse.readJsonSync(path.resolve(options.projectRoot, 'package-lock.json'));
+
     const existingDefaultExtNodeModules: string[] = defaultExternalNodeModules.filter((moduleName: string) => packageLockJson.dependencies && !!packageLockJson.dependencies[moduleName]);
 
     const externalNodeModules: string[] = (options.externalNodeModules || []).concat(existingDefaultExtNodeModules);
@@ -120,6 +121,7 @@ export function getDefaultWebpackConfig(options: DefaultWebpackOptions): webpack
     // needed to replace the node.js implementation of crypto with the browser implementation
     // the path is actually in utils and not dev, which is why we need to back up 4 directories
     const nodeCryptoPath = path.resolve(__dirname, '..', '..', '..', '..', 'vscode-azext-utils', 'out/src/node/crypto');
+
     const webCryptoPath = path.resolve(__dirname, '..', '..', '..', '..', 'vscode-azext-utils', 'out/src/browser/crypto')
 
     const alias: { [index: string]: string | false | string[] } = options.alias ?? {};

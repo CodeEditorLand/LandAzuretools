@@ -32,10 +32,12 @@ export class DeployFlexExecuteStep extends DeployZipBaseExecuteStep {
 			context.site.siteName,
 		);
 		await this.tryCreateStorageContainer(context, site);
+
 		const kuduClient = await context.site.createClient(context);
 
 		const RemoteBuild: boolean =
 			site.properties?.functionAppConfig?.runtime.name === "python";
+
 		const callback = async (zipStream) => {
 			return await kuduClient.flexDeploy(
 				context,
@@ -64,21 +66,28 @@ export class DeployFlexExecuteStep extends DeployZipBaseExecuteStep {
 		const connectionStringAppSettingName = site.properties
 			?.functionAppConfig?.deployment.storage.authentication
 			.storageAccountConnectionStringName as unknown as string;
+
 		const siteClient = await context.site.createClient(context);
+
 		const settings: StringDictionary =
 			await siteClient.listApplicationSettings();
+
 		const connectionString =
 			settings.properties &&
 			settings.properties[connectionStringAppSettingName];
+
 		if (connectionString) {
 			const blobClient =
 				BlobServiceClient.fromConnectionString(connectionString);
+
 			const containerName =
 				site.properties?.functionAppConfig?.deployment.storage.value
 					.split("/")
 					.pop();
+
 			if (containerName) {
 				const client = blobClient.getContainerClient(containerName);
+
 				if (!(await client.exists())) {
 					await blobClient.createContainer(containerName);
 				}
@@ -109,9 +118,11 @@ export class DeployFlexExecuteStep extends DeployZipBaseExecuteStep {
 			context,
 			context.site.subscription,
 		);
+
 		const result = (await client.sendRequest(
 			createPipelineRequest(options),
 		)) as AzExtPipelineResponse;
+
 		return result.parsedBody as Site & {
 			properties?: { functionAppConfig: FunctionAppConfig };
 		};

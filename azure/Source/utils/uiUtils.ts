@@ -18,6 +18,7 @@ export namespace uiUtils {
 
 		let list: IPartialList<T> = await first;
 		all.push(...list);
+
 		while (list.nextLink) {
 			list = await client.listNext(list.nextLink);
 			all.push(...list);
@@ -30,6 +31,7 @@ export namespace uiUtils {
 		iterator: PagedAsyncIterableIterator<T>,
 	): Promise<T[]> {
 		const resources: T[] = [];
+
 		for await (const r of iterator) {
 			resources.push(r);
 		}

@@ -52,10 +52,12 @@ export class SiteNameStep extends AzureNameStep<SiteNameStepWizardContext> {
 		const client = await createWebSiteClient(context);
 
 		let placeHolder: string | undefined;
+
 		if (context.environment.name === "Azure") {
 			// Unfortunately, the environment object doesn't have the url we need for this placeholder. Might be fixed in the new sdk: https://github.com/microsoft/vscode-azuretools/issues/510
 			// For now, we'll only display this placeholder for the most common case
 			let namePlaceholder: string;
+
 			if (context.newSiteKind === AppKind.functionapp) {
 				namePlaceholder = vscode.l10n.t("function app name");
 			} else if (context.newSiteKind?.includes(AppKind.workflowapp)) {
@@ -67,6 +69,7 @@ export class SiteNameStep extends AzureNameStep<SiteNameStepWizardContext> {
 		}
 
 		let prompt: string;
+
 		if (context.newSiteKind === AppKind.functionapp) {
 			prompt = vscode.l10n.t(
 				"Enter a globally unique name for the new function app.",
@@ -118,6 +121,7 @@ export class SiteNameStep extends AzureNameStep<SiteNameStepWizardContext> {
 		context.valuesToMask.push(context.newSiteName);
 
 		const namingRules: IAzureNamingRules[] = [resourceGroupNamingRules];
+
 		if (context.newSiteKind === AppKind.functionapp) {
 			namingRules.push(storageAccountNamingRules);
 		} else {
@@ -154,6 +158,7 @@ export class SiteNameStep extends AzureNameStep<SiteNameStepWizardContext> {
 		const tasks: Promise<boolean>[] = [
 			ResourceGroupListStep.isNameAvailable(context, name),
 		];
+
 		if (context.newSiteKind === AppKind.functionapp) {
 			tasks.push(StorageAccountListStep.isNameAvailable(context, name));
 		} else {
@@ -199,6 +204,7 @@ export class SiteNameStep extends AzureNameStep<SiteNameStepWizardContext> {
 	): Promise<string | undefined> {
 		const nameAvailability: ResourceNameAvailability =
 			await client.checkNameAvailability(name, "Site");
+
 		if (!nameAvailability.nameAvailable) {
 			return nameAvailability.message;
 		} else {

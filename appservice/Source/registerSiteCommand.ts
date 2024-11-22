@@ -37,11 +37,14 @@ export function registerSiteCommand(
 
 function handleSiteErrors(context: IActionContext, error: unknown): void {
 	const parsedError: IParsedError = parseError(error);
+
 	if (parsedError.errorType === "502" || parsedError.errorType === "503") {
 		context.errorHandling.suppressReportIssue = true;
+
 		const troubleshooting: string = vscode.l10n.t(
 			"View troubleshooting tips [here](https://aka.ms/AA772mm).",
 		);
+
 		throw new Error(`${parsedError.message} ${troubleshooting}`);
 	} else {
 		throw error;

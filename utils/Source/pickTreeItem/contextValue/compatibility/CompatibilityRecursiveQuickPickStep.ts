@@ -44,6 +44,7 @@ export class CompatibilityRecursiveQuickPickStep<
 		wizardContext: TContext,
 	): Promise<unknown> {
 		const lastPickedItem = getLastNode(wizardContext);
+
 		const lastPickedItemTi = isWrapper(lastPickedItem)
 			? lastPickedItem.unwrap<AzExtTreeItem>()
 			: lastPickedItem;
@@ -113,6 +114,7 @@ export class CompatibilityRecursiveQuickPickStep<
 				const picks = (await this.getPicks(
 					wizardContext,
 				)) as types.IAzureQuickPickItem<unknown>[];
+
 				const createdPick = picks.find((pick) => {
 					return (
 						(pick.data as Wrapper).unwrap<AzExtTreeItem>()
@@ -170,6 +172,7 @@ export class CompatibilityRecursiveQuickPickStep<
 		wizardContext: TContext,
 	): Promise<types.IAzureQuickPickItem<unknown>[]> {
 		const picks: types.IAzureQuickPickItem<unknown | CreateCallback>[] = [];
+
 		try {
 			picks.push(...(await super.getPicks(wizardContext)));
 		} catch (error) {

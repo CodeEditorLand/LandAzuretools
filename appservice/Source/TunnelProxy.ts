@@ -80,12 +80,14 @@ export class TunnelProxy {
 	): Promise<void> {
 		try {
 			await this.checkTunnelStatusWithRetry(context, token);
+
 			const bearerToken = (
 				(await this._credentials.getToken()) as { token: string }
 			).token;
 			await this.setupTunnelServer(bearerToken, token);
 		} catch (error) {
 			this.dispose();
+
 			throw error;
 		}
 	}
@@ -103,11 +105,14 @@ export class TunnelProxy {
 	 */
 	private async pingApp(context: IActionContext): Promise<void> {
 		ext.outputChannel.appendLog("[Tunnel] Pinging app default url...");
+
 		const client: ServiceClient = await createGenericClient(
 			context,
 			undefined,
 		);
+
 		let statusCode: number | undefined;
+
 		try {
 			const response: AzExtPipelineResponse = await client.sendRequest(
 				createPipelineRequest({
@@ -141,6 +146,7 @@ export class TunnelProxy {
 		);
 
 		let tunnelStatus: ITunnelStatus;
+
 		try {
 			const response: AzExtPipelineResponse = await client.sendRequest(
 				createPipelineRequest({
@@ -157,6 +163,7 @@ export class TunnelProxy {
 			ext.outputChannel.appendLog(
 				`[Tunnel] Checking status, error: ${parsedError.message}`,
 			);
+
 			throw new Error(
 				l10n.t(
 					"Error getting tunnel status: {0}",
@@ -183,6 +190,7 @@ export class TunnelProxy {
 			throw new RetryableTunnelStatusError();
 		} else if (tunnelStatus.state === AppState.STOPPED) {
 			await this.pingApp(context);
+
 			throw new RetryableTunnelStatusError();
 		} else {
 			throw new Error(
@@ -197,17 +205,21 @@ export class TunnelProxy {
 	): Promise<void> {
 		const timeoutSeconds: number = 240; // 4 minutes, matches App Service internal timeout for starting up an app
 		const timeoutMs: number = timeoutSeconds * 1000;
+
 		const pollingIntervalMs: number = 5000;
 
 		const start: number = Date.now();
+
 		while (Date.now() < start + timeoutMs) {
 			if (token.isCancellationRequested) {
 				throw new UserCancelledError("checkTunnelStatus");
 			}
 
 			await this.pingApp(context);
+
 			try {
 				await this.checkTunnelStatus(context);
+
 				return;
 			} catch (error) {
 				if (!(error instanceof RetryableTunnelStatusError)) {
@@ -262,6 +274,7 @@ export class TunnelProxy {
 					tunnelSocket.on("close", () => {
 						const index: number =
 							this._openSockets.indexOf(tunnelSocket);
+
 						if (index >= 0) {
 							this._openSockets.splice(index, 1);
 							ext.outputChannel.appendLog(

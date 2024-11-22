@@ -42,9 +42,11 @@ export class CompatibilityContextValueQuickPickStep<
 	 */
 	private setCustomPlaceholder(context: TContext): void {
 		const lastPickedItem = getLastNode(context);
+
 		const lastPickedItemUnwrapped = isWrapper(lastPickedItem)
 			? lastPickedItem.unwrap()
 			: lastPickedItem;
+
 		if (
 			isAzExtParentTreeItem(lastPickedItemUnwrapped) &&
 			lastPickedItemUnwrapped.childTypeLabel
@@ -66,28 +68,35 @@ export class CompatibilityContextValueQuickPickStep<
 		wizardContext: TContext,
 	): Promise<boolean> {
 		const lastPickedItem = getLastNode(wizardContext);
+
 		const lastPickedItemUnwrapped = isWrapper(lastPickedItem)
 			? lastPickedItem.unwrap()
 			: lastPickedItem;
+
 		if (isAzExtParentTreeItem(lastPickedItemUnwrapped)) {
 			const children =
 				await this.treeDataProvider.getChildren(lastPickedItem);
+
 			if (children && children.length) {
 				this.pickOptions.skipIfOne =
 					lastPickedItemUnwrapped.autoSelectInTreeItemPicker;
+
 				const customChild = await this.getCustomChildren(
 					wizardContext,
 					lastPickedItemUnwrapped,
 				);
+
 				const customPick = children.find((child) => {
 					const ti: AzExtTreeItem = isWrapper(child)
 						? child.unwrap()
 						: (child as unknown as AzExtTreeItem);
+
 					return ti.fullId === customChild?.fullId;
 				});
 
 				if (customPick) {
 					wizardContext.pickedNodes.push(customPick);
+
 					return true;
 				}
 			}
@@ -112,6 +121,7 @@ class CompatibleContextValuePickFilter extends ContextValuePickFilter {
 	// For compatiblity, if the include option is a RegExp test the entire contextValue against it.
 	override isFinalPick(node: TreeItem): boolean {
 		const includeOption = this.pickOptions.contextValueFilter.include;
+
 		if (includeOption instanceof RegExp && node.contextValue) {
 			return includeOption.test(node.contextValue);
 		}
@@ -126,11 +136,13 @@ class CompatibleContextValuePickFilter extends ContextValuePickFilter {
 		const element = isWrapper(elementWrapper)
 			? elementWrapper.unwrap()
 			: elementWrapper;
+
 		const include = Array.isArray(
 			this.pickOptions.contextValueFilter.include,
 		)
 			? this.pickOptions.contextValueFilter.include
 			: [this.pickOptions.contextValueFilter.include];
+
 		return include.some((val: string | RegExp) => {
 			if (isAzExtTreeItem(element) && element.isAncestorOfImpl) {
 				return element.isAncestorOfImpl(val);

@@ -25,6 +25,7 @@ import { KeyVaultListStep } from "./KeyVaultListStep";
 export class TargetServiceListStep extends AzureWizardPromptStep<ICreateLinkerContext> {
 	public async prompt(context: ICreateLinkerContext): Promise<void> {
 		const placeHolder = vscode.l10n.t("Select Target Service Type");
+
 		const picks: IAzureQuickPickItem<TargetServiceType>[] = [
 			{
 				label: vscode.l10n.t("Blob"),
@@ -145,10 +146,14 @@ export class TargetServiceListStep extends AzureWizardPromptStep<ICreateLinkerCo
 				promptSteps.push(
 					new StorageAccountListStep(storageAccountCreateOptions),
 				);
+
 				break;
+
 			case TargetServiceTypeName.CosmosDB:
 				promptSteps.push(new CosmosDBAccountListStep());
+
 				break;
+
 			case TargetServiceTypeName.KeyVault:
 				promptSteps.push(new KeyVaultListStep());
 		}

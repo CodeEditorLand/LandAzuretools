@@ -31,9 +31,11 @@ export class LinkerListStep extends AzureWizardPromptStep<IPickLinkerContext> {
 		context: IPickLinkerContext,
 	): Promise<IAzureQuickPickItem<string>[]> {
 		const client = await createLinkerClient(context);
+
 		const linkers = await uiUtils.listAllIterator(
 			client.linker.list(nonNullProp(context, "sourceResourceUri")),
 		);
+
 		return linkers.map((l) => {
 			return {
 				label: nonNullProp(l, "name"),

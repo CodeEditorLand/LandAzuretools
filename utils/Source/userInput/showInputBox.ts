@@ -29,6 +29,7 @@ export async function showInputBox(
 	options: types.AzExtInputBoxOptions,
 ): Promise<string> {
 	const disposables: Disposable[] = [];
+
 	try {
 		const inputBox: InputBox = createInputBox(context, options);
 		disposables.push(inputBox);
@@ -37,6 +38,7 @@ export async function showInputBox(
 			options.validateInput
 				? Promise.resolve(options.validateInput(inputBox.value))
 				: Promise.resolve("");
+
 		return await new Promise<string>((resolve, reject): void => {
 			disposables.push(
 				inputBox.onDidChangeValue(async (text) => {
@@ -44,8 +46,10 @@ export async function showInputBox(
 						const validation: Promise<InputBoxValidationResult> =
 							Promise.resolve(options.validateInput(text));
 						latestValidation = validation;
+
 						const message: InputBoxValidationResult =
 							await validation;
+
 						if (validation === latestValidation) {
 							inputBox.validationMessage = message || "";
 						}
@@ -58,10 +62,12 @@ export async function showInputBox(
 
 					const validateInputResult: InputBoxValidationResult =
 						await latestValidation;
+
 					const asyncValidationResult: string | undefined | null =
 						options.asyncValidationTask
 							? await options.asyncValidationTask(inputBox.value)
 							: undefined;
+
 					if (!validateInputResult && !asyncValidationResult) {
 						resolve(inputBox.value);
 					} else if (validateInputResult) {
@@ -102,8 +108,10 @@ function createInputBox(
 	const inputBox: InputBox = window.createInputBox();
 
 	const wizard = context.ui.wizard;
+
 	if (wizard && wizard.showTitle) {
 		inputBox.title = wizard.title;
+
 		if (!wizard.hideStepCount && wizard.title) {
 			inputBox.step = wizard.currentStep;
 			inputBox.totalSteps = wizard.totalSteps;
@@ -111,6 +119,7 @@ function createInputBox(
 	}
 
 	const buttons: QuickInputButton[] = [];
+
 	if (wizard?.showBackButton) {
 		buttons.push(QuickInputButtons.Back);
 	}
@@ -126,6 +135,7 @@ function createInputBox(
 	}
 
 	const validateInput = options.validateInput;
+
 	if (validateInput) {
 		options.validateInput = async (v): Promise<InputBoxValidationResult> =>
 			validOnTimeoutOrException(async () => await validateInput(v));
@@ -142,5 +152,6 @@ function createInputBox(
 	inputBox.placeholder = options.placeHolder;
 	inputBox.prompt = options.prompt;
 	inputBox.title ??= options.title;
+
 	return inputBox;
 }

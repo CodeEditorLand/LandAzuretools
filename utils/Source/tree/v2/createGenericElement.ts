@@ -11,6 +11,7 @@ export function createGenericElement(
 	options: types.GenericElementOptions,
 ): types.TreeElementBase {
 	let commandArgs = options.commandArgs;
+
 	const item = {
 		id: options.id,
 		getTreeItem(): vscode.TreeItem {
@@ -29,5 +30,6 @@ export function createGenericElement(
 
 	// if command args is not set, then set it to the item itself
 	commandArgs ??= [item];
+
 	return item;
 }

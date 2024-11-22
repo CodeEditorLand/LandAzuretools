@@ -28,9 +28,13 @@ export function getPackageInfo(ctx?: ExtensionContext): IPackageInfo {
 		);
 
 		const extensionName: string | undefined = packageJson.name;
+
 		const extensionVersion: string | undefined = packageJson.version;
+
 		const aiKey: string | undefined = packageJson.aiKey;
+
 		const publisher: string | undefined = packageJson.publisher;
+
 		const bugsUrl: string | undefined = !packageJson.bugs
 			? undefined
 			: typeof packageJson.bugs === "string"

@@ -33,9 +33,12 @@ export class LogAnalyticsCreateStep extends AzureWizardExecuteStep<IAppServiceWi
 	): Promise<void> {
 		const opClient =
 			await createOperationalInsightsManagementClient(context);
+
 		const rgName = nonNullValueAndProp(context.resourceGroup, "name");
+
 		const resourceLocation: AzExtLocation =
 			await LocationListStep.getLocation(context);
+
 		const location = await getAppInsightsSupportedLocation(
 			context,
 			resourceLocation,
@@ -49,9 +52,11 @@ export class LogAnalyticsCreateStep extends AzureWizardExecuteStep<IAppServiceWi
 		const workspaces = await uiUtils.listAllIterator(
 			opClient.workspaces.list(),
 		);
+
 		const workspacesInSameLoc = workspaces.filter(
 			(ws) => ws.location === location,
 		);
+
 		const workspacesInSameRg = workspacesInSameLoc.filter(
 			(ws) => getResourceGroupFromId(nonNullProp(ws, "id")) === rgName,
 		);
@@ -73,7 +78,9 @@ export class LogAnalyticsCreateStep extends AzureWizardExecuteStep<IAppServiceWi
 			);
 			progress.report({ message: creatingLaw });
 			ext.outputChannel.appendLog(creatingLaw);
+
 			const workspaceName = `workspace-${context.newAppInsightsName}`;
+
 			const createdLaw: string = l10n.t(
 				'Successfully created new Log Analytics workspace "{0}".',
 				workspaceName,

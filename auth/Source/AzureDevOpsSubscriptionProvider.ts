@@ -43,6 +43,7 @@ export function createAzureDevOpsSubscriptionProviderFactory(
 		azureDevOpsSubscriptionProvider ??= new AzureDevOpsSubscriptionProvider(
 			initializer,
 		);
+
 		return azureDevOpsSubscriptionProvider;
 	};
 }
@@ -96,6 +97,7 @@ export class AzureDevOpsSubscriptionProvider
 	async getSubscriptions(_filter: boolean): Promise<AzureSubscription[]> {
 		// ignore the filter setting because not every consumer of this provider will use the Resources extension
 		const results: AzureSubscription[] = [];
+
 		for (const tenant of await this.getTenants()) {
 			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			const tenantId = tenant.tenantId!;
@@ -119,6 +121,7 @@ export class AzureDevOpsSubscriptionProvider
 			this._DOMAIN,
 			this._CLIENT_ID,
 		);
+
 		return !!this._tokenCredential;
 	}
 
@@ -146,6 +149,7 @@ export class AzureDevOpsSubscriptionProvider
 	): Promise<AzureSubscription[]> {
 		const { client, credential, authentication } =
 			await this.getSubscriptionClient(tenantId);
+
 		const environment = getConfiguredAzureEnv();
 
 		const subscriptions: AzureSubscription[] = [];
@@ -187,6 +191,7 @@ export class AzureDevOpsSubscriptionProvider
 		authentication: AzureAuthentication;
 	}> {
 		const armSubs = await import("@azure/arm-resources-subscriptions");
+
 		if (!this._tokenCredential) {
 			throw new Error("Not signed in");
 		}
@@ -197,6 +202,7 @@ export class AzureDevOpsSubscriptionProvider
 					"https://management.azure.com/.default",
 				)
 			)?.token || "";
+
 		const getSession = () => {
 			return {
 				accessToken,
@@ -209,6 +215,7 @@ export class AzureDevOpsSubscriptionProvider
 				scopes: scopes || [],
 			};
 		};
+
 		return {
 			client: new armSubs.SubscriptionClient(this._tokenCredential),
 			credential: this._tokenCredential,
@@ -255,10 +262,14 @@ async function getTokenCredential(
 
 		// Pre-defined DevOps variable reference: https://learn.microsoft.com/en-us/azure/devops/pipelines/build/variables?view=azure-devops
 		const systemAccessToken = process.env.SYSTEM_ACCESSTOKEN;
+
 		const teamFoundationCollectionUri =
 			process.env.SYSTEM_TEAMFOUNDATIONCOLLECTIONURI;
+
 		const teamProjectId = process.env.SYSTEM_TEAMPROJECTID;
+
 		const planId = process.env.SYSTEM_PLANID;
+
 		const jobId = process.env.SYSTEM_JOBID;
 
 		if (
@@ -282,6 +293,7 @@ async function getTokenCredential(
 		const oidcRequestUrl = `${teamFoundationCollectionUri}${teamProjectId}/_apis/distributedtask/hubs/build/plans/${planId}/jobs/${jobId}/oidctoken?api-version=7.1-preview.1&serviceConnectionId=${serviceConnectionId}`;
 
 		const { ClientAssertionCredential } = await import("@azure/identity");
+
 		return new ClientAssertionCredential(
 			domain,
 			clientId,
@@ -299,10 +311,13 @@ async function requestOidcToken(
 	systemAccessToken: string,
 ): Promise<string> {
 	const { ServiceClient } = await import("@azure/core-client");
+
 	const { createHttpHeaders, createPipelineRequest } = await import(
 		"@azure/core-rest-pipeline"
 	);
+
 	const genericClient = new ServiceClient();
+
 	const request: PipelineRequest = createPipelineRequest({
 		url: oidcRequestUrl,
 		method: "POST",
@@ -313,7 +328,9 @@ async function requestOidcToken(
 	});
 
 	const response = await genericClient.sendRequest(request);
+
 	const body: string = response.bodyAsText?.toString() || "";
+
 	if (response.status !== 200) {
 		throw new Error(`Failed to get OIDC token:\n
             Response status: ${response.status}\n

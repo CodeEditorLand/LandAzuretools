@@ -40,6 +40,7 @@ export class ConfirmPreviousInputStep extends AzureWizardPromptStep<types.IActio
 		const valueMismatch: string = vscode.l10n.t(
 			"The entered value does not match the original.",
 		);
+
 		return context[this.key] === value?.trim() ? undefined : valueMismatch;
 	}
 }

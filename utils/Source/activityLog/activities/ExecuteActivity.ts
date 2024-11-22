@@ -33,10 +33,12 @@ export class ExecuteActivity<
 
 	public successState(): hTypes.ActivityTreeItemOptions {
 		const activityResult = this.context.activityResult;
+
 		const resourceId: string | undefined =
 			typeof activityResult === "string"
 				? activityResult
 				: activityResult?.id;
+
 		return {
 			label: this.label,
 			getChildren:
@@ -75,6 +77,7 @@ export class ExecuteActivity<
 				if (this.context.activityChildren) {
 					parent.compareChildrenImpl = () => 0; // Don't sort
 					this.appendErrorItemToActivityChildren(errorItem);
+
 					return this.context.activityChildren;
 				}
 
@@ -106,6 +109,7 @@ export class ExecuteActivity<
 
 		// Check if the last activity child was a parent fail item; if so, attach the actual error to it for additional user context
 		const lastActivityChild = this.context.activityChildren?.at(-1);
+
 		if (
 			isAzExtParentTreeItem(lastActivityChild) &&
 			new RegExp(activityFailContext).test(
@@ -128,6 +132,7 @@ export class ExecuteActivity<
 					errorItem,
 				];
 			};
+
 			return;
 		}
 

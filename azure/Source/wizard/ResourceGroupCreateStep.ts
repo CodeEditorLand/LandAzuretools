@@ -35,18 +35,23 @@ export class ResourceGroupCreateStep<
 	): Promise<void> {
 		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 		const newName: string = wizardContext.newResourceGroupName!;
+
 		const newLocation = await LocationListStep.getLocation(
 			wizardContext,
 			resourcesProvider,
 			false,
 		);
+
 		const newLocationName: string = newLocation.name;
+
 		const resourceClient: ResourceManagementClient =
 			await createResourcesClient(wizardContext);
+
 		try {
 			const rgExists: boolean = (
 				await resourceClient.resourceGroups.checkExistence(newName)
 			).body;
+
 			if (rgExists) {
 				ext.outputChannel.appendLog(
 					l10n.t('Using existing resource group "{0}".', newName),
@@ -85,6 +90,7 @@ export class ResourceGroupCreateStep<
 					const rgs: ResourceGroup[] = await uiUtils.listAllIterator(
 						resourceClient.resourceGroups.list(),
 					);
+
 					if (
 						rgs.length === 1 &&
 						rgs[0].name &&
@@ -101,6 +107,7 @@ export class ResourceGroupCreateStep<
 								wizardContext.resourceGroup!.name!,
 							),
 						);
+
 						return undefined;
 					}
 				}
@@ -109,6 +116,7 @@ export class ResourceGroupCreateStep<
 					'You do not have permission to create a resource group in subscription "{0}".',
 					wizardContext.subscriptionDisplayName,
 				);
+
 				const selectExisting: MessageItem = {
 					title: l10n.t("Select Existing"),
 				};
@@ -120,6 +128,7 @@ export class ResourceGroupCreateStep<
 
 				wizardContext.telemetry.properties.forbiddenResponse =
 					"SelectExistingRg";
+
 				const step: ResourceGroupListStep<T> =
 					new ResourceGroupListStep(true /* suppressCreate */);
 				await step.prompt(wizardContext);

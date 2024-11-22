@@ -37,12 +37,14 @@ export class LinkerCreateStep extends AzureWizardExecuteStep<ICreateLinkerContex
 			nonNullProp(context, "linkerName"),
 			context.linker,
 		);
+
 		const config = await client.linker.listConfigurations(
 			nonNullProp(context, "sourceResourceUri"),
 			nonNullProp(context, "linkerName"),
 		);
 
 		context.activityChildren = [];
+
 		for (const item of nonNullProp(config, "configurations")) {
 			context.activityChildren.push(
 				new GenericTreeItem(undefined, {
@@ -62,10 +64,13 @@ export class LinkerCreateStep extends AzureWizardExecuteStep<ICreateLinkerContex
 		switch (context.targetService?.group) {
 			case TargetServiceTypeName.Storage:
 				return nonNullValueAndProp(context.storageAccount, "id");
+
 			case TargetServiceTypeName.CosmosDB:
 				return nonNullValueAndProp(context.databaseAccount, "id");
+
 			case TargetServiceTypeName.KeyVault:
 				return nonNullValueAndProp(context.keyVaultAccount, "id");
+
 			default:
 				throw new Error(vscode.l10n.t("No target type found"));
 		}

@@ -45,8 +45,10 @@ export function excludeNodeModulesAndDependencies(
 		packageLockJson,
 		moduleNames,
 	);
+
 	const excludeEntries: { [moduleName: string]: string } =
 		getExternalsEntries(externalModulesClosure);
+
 	const copyEntries: CopyEntry[] = getNodeModuleCopyEntries(
 		projectRoot,
 		externalModulesClosure,
@@ -76,6 +78,7 @@ export function excludeNodeModulesAndDependencies(
 				await Promise.all(
 					copyEntries.map(async (ce) => {
 						const entryName = path.basename(ce.source);
+
 						if (await fse.pathExists(ce.source)) {
 							log(`${pluginName}: Copying "${entryName}"...`);
 							await fse.copy(ce.source, ce.destination);
@@ -99,6 +102,7 @@ export function getNodeModulesDependencyClosure(
 	moduleNames: string[],
 ): string[] {
 	const closure: Set<string> = new Set<string>();
+
 	const dependencies: { [key: string]: DependencyEntry | undefined } =
 		packageLock.dependencies ||
 		packageLock.packages ||
@@ -120,6 +124,7 @@ export function getNodeModulesDependencyClosure(
 				getDependency(moduleName)!,
 				packageLock,
 			);
+
 			for (const subdep of subdeps) {
 				closure.add(subdep);
 			}
@@ -159,6 +164,7 @@ function getDependenciesFromEntry(
 
 	const dependencies: { [key: string]: DependencyEntry | undefined } =
 		depEntry.dependencies || <{ [key: string]: DependencyEntry }>{};
+
 	const requires: { [key: string]: string } =
 		depEntry.requires || <{ [key: string]: string }>{};
 
@@ -169,6 +175,7 @@ function getDependenciesFromEntry(
 			dependencies[moduleName]!,
 			packageLock,
 		);
+
 		for (const subdep of dependenciesSubdeps) {
 			closure.add(subdep);
 		}
@@ -178,10 +185,12 @@ function getDependenciesFromEntry(
 	const requiredModules: string[] = Object.getOwnPropertyNames(
 		requires,
 	).filter((m: string) => !(m in dependencies));
+
 	const requiresSubdeps: string[] = getNodeModulesDependencyClosure(
 		packageLock,
 		requiredModules,
 	);
+
 	for (const subdep of requiresSubdeps) {
 		closure.add(subdep);
 	}
@@ -213,6 +222,7 @@ export function getNodeModuleCopyEntries(
 	moduleNames: string[],
 ): CopyEntry[] {
 	const copyEntries: CopyEntry[] = [];
+
 	for (const moduleName of moduleNames) {
 		copyEntries.push({
 			source: path.join(projectRoot, "node_modules", moduleName),

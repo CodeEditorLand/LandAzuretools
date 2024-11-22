@@ -14,7 +14,9 @@ export async function getUnauthenticatedTenants(
 	subscriptionProvider: AzureSubscriptionProvider,
 ): Promise<TenantIdDescription[]> {
 	const tenants = await subscriptionProvider.getTenants();
+
 	const unauthenticatedTenants: TenantIdDescription[] = [];
+
 	for await (const tenant of tenants) {
 		if (!(await subscriptionProvider.isSignedIn(tenant.tenantId))) {
 			unauthenticatedTenants.push(tenant);

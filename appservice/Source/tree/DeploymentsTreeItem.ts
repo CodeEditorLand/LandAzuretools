@@ -62,11 +62,13 @@ export class DeploymentsTreeItem extends AzExtParentTreeItem {
 		switch (this._scmType) {
 			case ScmType.LocalGit:
 				return l10n.t("Git");
+
 			case ScmType.GitHub:
 				// remove github from the repoUrl which leaves only the org/repo names
 				return this._repoUrl
 					? this._repoUrl.substring("https://github.com/".length)
 					: l10n.t("GitHub");
+
 			case ScmType.None:
 			default:
 				return "";
@@ -91,7 +93,9 @@ export class DeploymentsTreeItem extends AzExtParentTreeItem {
 		context: IActionContext,
 	): Promise<AzExtTreeItem[]> {
 		const client = await this.site.createClient(context);
+
 		const siteConfig: SiteConfig = await client.getSiteConfig();
+
 		const deployments: KuduModels.DeployResult[] = await retryKuduCall(
 			context,
 			"getDeployResults",
@@ -140,7 +144,9 @@ export class DeploymentsTreeItem extends AzExtParentTreeItem {
 
 	public async refreshImpl(context: IActionContext): Promise<void> {
 		const client = await this.site.createClient(context);
+
 		const siteConfig: SiteConfig = await client.getSiteConfig();
+
 		const sourceControl: SiteSourceControl =
 			await client.getSourceControl();
 		this._scmType = siteConfig.scmType;

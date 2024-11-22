@@ -17,6 +17,7 @@ export async function signInToTenant(
 	subscriptionProvider: AzureSubscriptionProvider,
 ): Promise<void> {
 	const tenantId = await pickTenant(subscriptionProvider);
+
 	if (tenantId) {
 		await subscriptionProvider.signIn(tenantId);
 	}
@@ -33,6 +34,7 @@ async function pickTenant(
 			ignoreFocusOut: true,
 		},
 	);
+
 	return pick?.tenant.tenantId;
 }
 
@@ -45,6 +47,7 @@ async function getPicks(
 ): Promise<TenantQuickPickItem[]> {
 	const unauthenticatedTenants =
 		await getUnauthenticatedTenants(subscriptionProvider);
+
 	const picks: TenantQuickPickItem[] = unauthenticatedTenants.map(
 		(tenant) => ({
 			label: tenant.displayName ?? "",

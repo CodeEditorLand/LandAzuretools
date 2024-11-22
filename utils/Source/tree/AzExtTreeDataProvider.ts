@@ -129,6 +129,7 @@ export class AzExtTreeDataProvider
 							true;
 
 						let treeItem: AzExtParentTreeItem;
+
 						if (arg) {
 							treeItem = arg;
 						} else {
@@ -149,6 +150,7 @@ export class AzExtTreeDataProvider
 							...treeItem.creatingTreeItems,
 							...(await treeItem.getCachedChildren(context)),
 						];
+
 						const hasMoreChildren: boolean =
 							treeItem.hasMoreChildrenImpl();
 						context.telemetry.properties.hasMoreChildren =
@@ -156,7 +158,9 @@ export class AzExtTreeDataProvider
 
 						// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 						const resultMap: Map<string, AzExtTreeItem> = new Map();
+
 						const duplicateChildren: AzExtTreeItem[] = [];
+
 						for (const child of children) {
 							this.isDuplicateChild(child, resultMap)
 								? duplicateChildren.push(child)
@@ -175,6 +179,7 @@ export class AzExtTreeDataProvider
 									"An element with the following id already exists: {0}",
 									c.fullId,
 								);
+
 								return new InvalidTreeItem(
 									treeItem,
 									new Error(message),
@@ -201,6 +206,7 @@ export class AzExtTreeDataProvider
 
 						context.telemetry.measurements.childCount =
 							result.length;
+
 						return result;
 					},
 				)
@@ -241,6 +247,7 @@ export class AzExtTreeDataProvider
 		context: types.IActionContext,
 	): Promise<void> {
 		treeItem.isLoadingMore = true;
+
 		try {
 			this.refreshUIOnly(treeItem);
 			await treeItem.loadMoreChildren(context);
@@ -276,6 +283,7 @@ export class AzExtTreeDataProvider
 				const pickedItems: AzExtTreeItem | AzExtTreeItem[] = await (<
 					AzExtParentTreeItem
 				>treeItem).pickChildTreeItem(expectedContextValues, context);
+
 				if (Array.isArray(pickedItems)) {
 					// canPickMany is only supported at the last stage of the picker, so automatically return if this is an array
 					return <T[]>(<unknown>pickedItems);
@@ -288,6 +296,7 @@ export class AzExtTreeDataProvider
 		}
 
 		addTreeItemValuesToMask(context, treeItem, "treeItemPicker");
+
 		return <T>(<unknown>treeItem);
 	}
 
@@ -308,6 +317,7 @@ export class AzExtTreeDataProvider
 		const existingTask:
 			| Promise<types.AzExtTreeItem | undefined>
 			| undefined = this._findTreeItemTasks.get(fullId);
+
 		if (existingTask) {
 			result = await existingTask;
 		} else {
@@ -322,6 +332,7 @@ export class AzExtTreeDataProvider
 						)
 					: this.findTreeItemInternal(fullId, context);
 			this._findTreeItemTasks.set(fullId, newTask);
+
 			try {
 				result = await newTask;
 			} finally {
@@ -359,11 +370,13 @@ export class AzExtTreeDataProvider
 
 			const children: AzExtTreeItem[] =
 				await treeItem.getCachedChildren(context);
+
 			for (const child of children) {
 				if (child.fullId === fullId) {
 					return child;
 				} else if (isAncestor(child, fullId)) {
 					treeItem = <AzExtParentTreeItem>child;
+
 					continue outerLoop;
 				}
 			}
@@ -383,11 +396,13 @@ export class AzExtTreeDataProvider
 		const existingChild: AzExtTreeItem | undefined = children.get(
 			child.fullId,
 		);
+
 		if (existingChild) {
 			if (existingChild.contextValue === child.contextValue) {
 				return true;
 			} else {
 				const fullIdWithContext: string = `${child.fullId}-${child.contextValue}`;
+
 				if (children.has(fullIdWithContext)) {
 					return true;
 				}

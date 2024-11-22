@@ -89,6 +89,7 @@ export abstract class AzExtTreeFileSystem<
 					context.telemetry.suppressIfSuccessful = true;
 
 					const item: TItem = await this.lookup(context, uri);
+
 					return await this.statImpl(context, item, uri);
 				},
 			)) || { type: FileType.Unknown, ctime: 0, mtime: 0, size: 0 }
@@ -105,6 +106,7 @@ export abstract class AzExtTreeFileSystem<
 					context.telemetry.eventVersion = 2;
 
 					const item: TItem = await this.lookup(context, uri);
+
 					return await this.readFileImpl(context, item, uri);
 				},
 			)) || Buffer.from("")
@@ -173,8 +175,11 @@ export abstract class AzExtTreeFileSystem<
 				id: item.id,
 			},
 		};
+
 		const query: string = stringifyQuery(data.query);
+
 		const filePath: string = encodeURIComponent(data.filePath);
+
 		return Uri.parse(`${this.scheme}:///${filePath}?${query}`);
 	}
 
@@ -185,10 +190,12 @@ export abstract class AzExtTreeFileSystem<
 		const item: TItem | undefined = this.findItem(
 			this.getQueryFromUri(uri),
 		);
+
 		if (!item) {
 			context.telemetry.suppressAll = true;
 			context.errorHandling.rethrow = true;
 			context.errorHandling.suppressDisplay = true;
+
 			throw FileSystemError.FileNotFound(uri);
 		} else {
 			return item;
@@ -197,7 +204,9 @@ export abstract class AzExtTreeFileSystem<
 
 	private getQueryFromUri(uri: Uri): types.AzExtItemQuery {
 		const query: ParsedUrlQuery = parseQuery(uri.query);
+
 		const id: string | string[] = nonNullProp(query, "id");
+
 		if (typeof id === "string") {
 			return Object.assign(query, { id }); // Not technically necessary to use `Object.assign`, but it's better than casting which would lose type validation
 		} else {

@@ -16,13 +16,17 @@ export async function verifyNoRunFromPackageSetting(
 	site: ParsedSite,
 ): Promise<void> {
 	let updateSettings: boolean = false;
+
 	const runFromPackageSettings: string[] = [
 		"WEBSITE_RUN_FROM_PACKAGE",
 		"WEBSITE_RUN_FROM_ZIP",
 	];
+
 	const client = await site.createClient(context);
+
 	const applicationSettings: StringDictionary =
 		await client.listApplicationSettings();
+
 	for (const settingName of runFromPackageSettings) {
 		if (
 			applicationSettings.properties &&

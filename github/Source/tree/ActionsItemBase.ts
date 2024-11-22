@@ -69,6 +69,7 @@ export abstract class ActionsItemBase implements TreeElementBase {
 
 	private getContextValue(isConnected: boolean): string {
 		const actionsTreeItemContextValue: string = `${this.contextValueExtensionPrefix}${ActionsItemBase.contextValueSuffix}`;
+
 		const values: string[] = [actionsTreeItemContextValue];
 
 		values.push(
@@ -76,11 +77,13 @@ export abstract class ActionsItemBase implements TreeElementBase {
 				? ActionsItemBase.connectedContextValue
 				: ActionsItemBase.unconnectedContextValue,
 		);
+
 		return createContextValue(values);
 	}
 
 	async getTreeItem(): Promise<TreeItem> {
 		const isConnected: boolean = !!(await this.getSourceControl());
+
 		return {
 			id: this.id,
 			label: this.label,
@@ -105,6 +108,7 @@ export abstract class ActionsItemBase implements TreeElementBase {
 
 					const { ownerOrOrganization, repositoryName } =
 						gitHubUrlParse(sourceControl.repoUrl);
+
 					const actionWorkflowRunsParams: GetActionsListWorkflowRunsParams =
 						{
 							owner: nonNullValue(ownerOrOrganization),
@@ -114,6 +118,7 @@ export abstract class ActionsItemBase implements TreeElementBase {
 						};
 
 					context.errorHandling.suppressDisplay = true;
+
 					return await getActions(context, actionWorkflowRunsParams);
 				},
 			);
@@ -138,6 +143,7 @@ export abstract class ActionsItemBase implements TreeElementBase {
 			];
 		} else {
 			let command: ConnectToGitHubCommand | undefined;
+
 			if (this.getConnectToGitHubCommand) {
 				command = await this.getConnectToGitHubCommand();
 			}

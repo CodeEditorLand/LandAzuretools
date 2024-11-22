@@ -71,6 +71,7 @@ export abstract class AzExtTreeItem implements types.AzExtTreeItem {
 		 */
 		const hasTreeDataProvider: boolean =
 			!!this._treeDataProvider || !!this.parent?.treeDataProvider;
+
 		if (
 			hasTreeDataProvider &&
 			this.treeDataProvider.collapsibleStateTracker
@@ -100,6 +101,7 @@ export abstract class AzExtTreeItem implements types.AzExtTreeItem {
 			return ""; // root tree item should not have an id since it's not actually displayed
 		} else {
 			let id: string = this.id || this.label;
+
 			if (!id.startsWith("/")) {
 				id = `/${id}`;
 			}
@@ -175,6 +177,7 @@ export abstract class AzExtTreeItem implements types.AzExtTreeItem {
 
 	public get subscription(): types.ISubscriptionContext {
 		const result = this._subscription || this.parent?.subscription;
+
 		if (!result) {
 			throw Error(
 				l10n.t("No Azure subscription found for this tree item."),
@@ -231,6 +234,7 @@ export abstract class AzExtTreeItem implements types.AzExtTreeItem {
 			async () => {
 				if (this.deleteTreeItemImpl) {
 					await this.deleteTreeItemImpl(context);
+
 					if (this.parent) {
 						this.parent.removeChildFromCache(this);
 					}
@@ -260,6 +264,7 @@ export abstract class AzExtTreeItem implements types.AzExtTreeItem {
 		options =
 			typeof options === "string" ? { description: options } : options;
 		this._temporaryDescription = options.description;
+
 		try {
 			if (!options.softRefresh) {
 				this.treeDataProvider.refreshUIOnly(this);
@@ -267,6 +272,7 @@ export abstract class AzExtTreeItem implements types.AzExtTreeItem {
 			await callback();
 		} finally {
 			this._temporaryDescription = undefined;
+
 			if (!options.softRefresh) {
 				await this.refresh(context);
 			} else {

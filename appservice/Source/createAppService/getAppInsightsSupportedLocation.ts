@@ -27,10 +27,12 @@ export async function getAppInsightsSupportedLocation(
 	location: AzExtLocation,
 ): Promise<string | undefined> {
 	const locations: string[] = (await getLocations(context)) || [];
+
 	const locationName: string = nonNullProp(location, "name");
 
 	if (locations.some((loc) => areLocationNamesEqual(loc, location.name))) {
 		context.telemetry.properties.aiLocationSupported = "true";
+
 		return locationName;
 	} else {
 		// If there is no exact match, then query the regionMapping.json
@@ -38,13 +40,16 @@ export async function getAppInsightsSupportedLocation(
 			context,
 			locationName,
 		);
+
 		if (pairedRegions.length > 0) {
 			// if there is at least one region listed, return the first
 			context.telemetry.properties.aiLocationSupported = "pairedRegion";
+
 			return pairedRegions[0];
 		}
 
 		context.telemetry.properties.aiLocationSupported = "false";
+
 		return undefined;
 	}
 }
@@ -58,6 +63,7 @@ async function getPairedRegions(
 			context,
 			undefined,
 		);
+
 		const response: AzExtPipelineResponse = await client.sendRequest(
 			createPipelineRequest({
 				method: "GET",
@@ -83,13 +89,16 @@ async function getLocations(
 ): Promise<string[] | undefined> {
 	const resourceClient: ResourceManagementClient =
 		await createResourceClient(context);
+
 	const supportedRegions: Provider =
 		await resourceClient.providers.get("microsoft.insights");
+
 	const componentsResourceType: ProviderResourceType | undefined =
 		supportedRegions.resourceTypes &&
 		supportedRegions.resourceTypes.find(
 			(aiRt) => aiRt.resourceType === "components",
 		);
+
 	if (!!componentsResourceType && !!componentsResourceType.locations) {
 		return componentsResourceType.locations;
 	} else {

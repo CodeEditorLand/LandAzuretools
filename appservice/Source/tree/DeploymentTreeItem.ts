@@ -51,6 +51,7 @@ export class DeploymentTreeItem extends AzExtTreeItem {
 		this._scmType = scmType;
 		this._deployResult = deployResult;
 		this.receivedTime = nonNullProp(deployResult, "receivedTime");
+
 		const message: string = this.getDeploymentMessage(deployResult);
 		this.label = `${this.id.substring(0, 7)} - ${message}`;
 	}
@@ -82,12 +83,16 @@ export class DeploymentTreeItem extends AzExtTreeItem {
 		switch (this._deployResult.status) {
 			case DeployStatus.Building:
 				return l10n.t("Building...");
+
 			case DeployStatus.Deploying:
 				return l10n.t("Deploying...");
+
 			case DeployStatus.Pending:
 				return l10n.t("Pending...");
+
 			case DeployStatus.Failed:
 				return l10n.t("Failed");
+
 			case DeployStatus.Success:
 			default:
 				return;
@@ -110,6 +115,7 @@ export class DeploymentTreeItem extends AzExtTreeItem {
 			this.parent.site.fullName,
 			ext.prefix + ".showOutputChannel",
 		);
+
 		const redeployed: string = l10n.t(
 			'Commit "{0}" has been redeployed to "{1}".',
 			this.id,
@@ -126,6 +132,7 @@ export class DeploymentTreeItem extends AzExtTreeItem {
 					),
 					{ resourceName: this.parent.site.fullName },
 				);
+
 				const kuduClient = await this.parent.site.createClient(context);
 				void kuduClient.deploy(context, this.id);
 
@@ -156,6 +163,7 @@ export class DeploymentTreeItem extends AzExtTreeItem {
 
 	public async getDeploymentLogs(context: IActionContext): Promise<string> {
 		const kuduClient = await this.parent.site.createClient(context);
+
 		let logEntries: KuduModels.LogEntry[] = [];
 		await retryKuduCall(context, "getLogEntry", async () => {
 			await ignore404Error(context, async () => {
@@ -164,8 +172,10 @@ export class DeploymentTreeItem extends AzExtTreeItem {
 		});
 
 		let data: string = "";
+
 		for (const logEntry of logEntries) {
 			data += this.formatLogEntry(logEntry);
+
 			let detailedLogEntries: KuduModels.LogEntry[] = [];
 			await retryKuduCall(context, "getLogEntryDetails", async () => {
 				await ignore404Error(context, async () => {
@@ -201,11 +211,14 @@ export class DeploymentTreeItem extends AzExtTreeItem {
 
 	public async viewCommitInGitHub(context: IActionContext): Promise<void> {
 		const client = await this.parent.site.createClient(context);
+
 		const sourceControl: SiteSourceControl =
 			await client.getSourceControl();
+
 		if (sourceControl.repoUrl) {
 			const gitHubCommitUrl: string = `${sourceControl.repoUrl}/commit/${this._deployResult.id}`;
 			await openUrl(gitHubCommitUrl);
+
 			return;
 		} else {
 			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -235,10 +248,12 @@ export class DeploymentTreeItem extends AzExtTreeItem {
 		deployResult: KuduModels.DeployResult,
 	): string {
 		let message: string = nonNullProp(deployResult, "message");
+
 		try {
 			const messageJSON: { message?: string } = <{ message?: string }>(
 				JSON.parse(message)
 			);
+
 			if (messageJSON.message) {
 				message = messageJSON.message;
 			}
@@ -254,7 +269,9 @@ export class DeploymentTreeItem extends AzExtTreeItem {
 
 	private getFirstLine(message: string): string {
 		const allLineBreaks: RegExp = /\r?\n|\r/;
+
 		const index: number = message.search(allLineBreaks);
+
 		if (index >= 0) {
 			message = message.substring(0, index);
 		}

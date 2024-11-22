@@ -63,6 +63,7 @@ export class AzExtUserInputWithInputQueue
 			"quickPick",
 			options.placeHolder,
 		);
+
 		if (
 			this._context.ui.wizard?.cancellationToken.isCancellationRequested
 		) {
@@ -71,10 +72,12 @@ export class AzExtUserInputWithInputQueue
 		this._isPrompting = true;
 
 		let result: TPick;
+
 		const nextItemInQueue = this._inputsQueue.shift() as
 			| TPick
 			| null
 			| undefined;
+
 		if (!nextItemInQueue) {
 			result = await this._realAzureUserInput.showQuickPick(
 				items,
@@ -82,9 +85,11 @@ export class AzExtUserInputWithInputQueue
 			);
 		} else {
 			const resolvedItems = await Promise.resolve(items);
+
 			const matchingItem = resolvedItems.find(
 				(item) => item.label === nextItemInQueue.label,
 			);
+
 			if (!matchingItem) {
 				throw new Error(
 					`Could not find item with label "${nextItemInQueue.label}" in quick pick items`,
@@ -95,6 +100,7 @@ export class AzExtUserInputWithInputQueue
 		}
 
 		this._isPrompting = false;
+
 		return result;
 	}
 
@@ -105,6 +111,7 @@ export class AzExtUserInputWithInputQueue
 			"inputBox",
 			options.prompt,
 		);
+
 		if (
 			this._context.ui.wizard?.cancellationToken.isCancellationRequested
 		) {
@@ -113,10 +120,12 @@ export class AzExtUserInputWithInputQueue
 		this._isPrompting = true;
 
 		let result: string;
+
 		const nextItemInQueue = this._inputsQueue.shift() as
 			| string
 			| null
 			| undefined;
+
 		if (!nextItemInQueue) {
 			result = await this._realAzureUserInput.showInputBox(options);
 		} else {
@@ -128,6 +137,7 @@ export class AzExtUserInputWithInputQueue
 		}
 
 		this._isPrompting = false;
+
 		return result;
 	}
 
@@ -140,6 +150,7 @@ export class AzExtUserInputWithInputQueue
 			"openDialog",
 			options.title,
 		);
+
 		if (
 			this._context.ui.wizard?.cancellationToken.isCancellationRequested
 		) {
@@ -148,10 +159,12 @@ export class AzExtUserInputWithInputQueue
 		this._isPrompting = true;
 
 		let result: vscode.Uri[];
+
 		const nextItemInQueue = this._inputsQueue.shift() as
 			| vscode.Uri[]
 			| null
 			| undefined;
+
 		if (!nextItemInQueue) {
 			result = await this._realAzureUserInput.showOpenDialog(options);
 		} else {
@@ -160,6 +173,7 @@ export class AzExtUserInputWithInputQueue
 		}
 
 		this._isPrompting = false;
+
 		return result;
 	}
 
@@ -172,6 +186,7 @@ export class AzExtUserInputWithInputQueue
 			"WorkspaceFolderPick",
 			options.placeHolder,
 		);
+
 		if (
 			this._context.ui.wizard?.cancellationToken.isCancellationRequested
 		) {
@@ -180,10 +195,12 @@ export class AzExtUserInputWithInputQueue
 		this._isPrompting = true;
 
 		let result: vscode.WorkspaceFolder;
+
 		const nextItemInQueue = this._inputsQueue.shift() as
 			| vscode.WorkspaceFolder
 			| null
 			| undefined;
+
 		if (!nextItemInQueue) {
 			result =
 				await this._realAzureUserInput.showWorkspaceFolderPick(options);
@@ -193,6 +210,7 @@ export class AzExtUserInputWithInputQueue
 		}
 
 		this._isPrompting = false;
+
 		return result;
 	}
 
@@ -211,7 +229,9 @@ export class AzExtUserInputWithInputQueue
 		...args: any[]
 	): Promise<T> {
 		let stepName: string | undefined;
+
 		const firstArg: unknown = args[0];
+
 		if (
 			typeof firstArg === "object" &&
 			firstArg &&
@@ -229,10 +249,12 @@ export class AzExtUserInputWithInputQueue
 		this._isPrompting = true;
 
 		let result: T;
+
 		const nextItemInQueue = this._inputsQueue.shift() as
 			| T
 			| null
 			| undefined;
+
 		if (!nextItemInQueue) {
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-assignment
 			result = await this._realAzureUserInput.showWarningMessage(
@@ -245,6 +267,7 @@ export class AzExtUserInputWithInputQueue
 		}
 
 		this._isPrompting = false;
+
 		return result;
 	}
 }

@@ -45,15 +45,19 @@ export function getJobBasedDescription(data: Job | JobStep): string {
 		const conclusion: string = convertConclusionToVerb(
 			<Conclusion>nonNullProp(data, "conclusion"),
 		);
+
 		const completedAt: string = dayjs(data.completed_at).fromNow();
+
 		return `${conclusion} ${completedAt}`;
 	} else {
 		const status: string = convertStatusToVerb(
 			<Status>nonNullProp(data, "status"),
 		);
+
 		const startedAt: string = !data.started_at
 			? l10n.t("now")
 			: dayjs(data.started_at).fromNow();
+
 		return `${status} ${startedAt}`;
 	}
 }
@@ -68,24 +72,33 @@ export function getActionBasedIconPath(
 	data: ActionWorkflowRuns | Job | JobStep,
 ): TreeItemIconPath {
 	let id: string;
+
 	let colorId: string | undefined;
+
 	if (data.conclusion !== null) {
 		switch (<Conclusion>nonNullProp(data, "conclusion")) {
 			case Conclusion.Cancelled:
 				id = "circle-slash";
 				colorId = "testing.iconUnset";
+
 				break;
+
 			case Conclusion.Failure:
 				id = "error";
 				colorId = "testing.iconFailed";
+
 				break;
+
 			case Conclusion.Skipped:
 				id = "debug-step-over";
 				colorId = "testing.iconSkipped";
+
 				break;
+
 			case Conclusion.Success:
 				id = "pass";
 				colorId = "testing.iconPassed";
+
 				break;
 		}
 	} else {
@@ -93,14 +106,19 @@ export function getActionBasedIconPath(
 			case Status.Queued:
 				id = "clock";
 				colorId = "testing.iconQueued";
+
 				break;
+
 			case Status.InProgress:
 				id = "play-circle";
 				colorId = "testing.iconUnset";
+
 				break;
+
 			case Status.Completed:
 				id = "pass";
 				colorId = "testing.iconPassed";
+
 				break;
 		}
 	}
@@ -113,12 +131,16 @@ function convertConclusionToVerb(conclusion: Conclusion): string {
 	switch (conclusion) {
 		case Conclusion.Success:
 			return l10n.t("succeeded");
+
 		case Conclusion.Cancelled:
 			return l10n.t("cancelled");
+
 		case Conclusion.Failure:
 			return l10n.t("failed");
+
 		case Conclusion.Skipped:
 			return l10n.t("skipped");
+
 		default:
 			return "";
 	}
@@ -128,10 +150,13 @@ function convertStatusToVerb(status: Status): string {
 	switch (status) {
 		case Status.InProgress:
 			return l10n.t("started");
+
 		case Status.Queued:
 			return l10n.t("queued");
+
 		case Status.Completed:
 			return l10n.t("completed");
+
 		default:
 			return "";
 	}

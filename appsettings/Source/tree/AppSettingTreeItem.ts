@@ -31,6 +31,7 @@ export class AppSettingTreeItem extends AzExtTreeItem {
 		const contextValue = this.parent.supportsSlots
 			? AppSettingTreeItem.contextValue
 			: AppSettingTreeItem.contextValueNoSlots;
+
 		return createContextValue([
 			contextValue,
 			...this.parent.contextValuesToAdd,
@@ -67,6 +68,7 @@ export class AppSettingTreeItem extends AzExtTreeItem {
 		);
 		// check if it's a slot setting
 		await ti.refreshImpl(context);
+
 		return ti;
 	}
 	public get id(): string {
@@ -109,7 +111,9 @@ export class AppSettingTreeItem extends AzExtTreeItem {
 			await this.parent.ensureSettings(context);
 
 		const client = await this.parent.clientProvider.createClient(context);
+
 		const oldKey: string = this._key;
+
 		const newKey: string = await context.ui.showInputBox({
 			prompt: `Enter a new name for "${oldKey}"`,
 			stepName: "appSettingName",
@@ -139,12 +143,14 @@ export class AppSettingTreeItem extends AzExtTreeItem {
 
 	public async toggleSlotSetting(context: IActionContext): Promise<void> {
 		const client = await this.parent.clientProvider.createClient(context);
+
 		if (
 			client.updateSlotConfigurationNames &&
 			client.listSlotConfigurationNames
 		) {
 			const slotSettings: SlotConfigNamesResource =
 				await client.listSlotConfigurationNames();
+
 			if (!slotSettings.appSettingNames) {
 				slotSettings.appSettingNames = [];
 			}
@@ -168,9 +174,11 @@ export class AppSettingTreeItem extends AzExtTreeItem {
 
 	public async refreshImpl(context: IActionContext): Promise<void> {
 		const client = await this.parent.clientProvider.createClient(context);
+
 		if (client.listSlotConfigurationNames) {
 			const slotSettings: SlotConfigNamesResource =
 				await client.listSlotConfigurationNames();
+
 			if (
 				slotSettings.appSettingNames &&
 				slotSettings.appSettingNames.find((value: string) => {

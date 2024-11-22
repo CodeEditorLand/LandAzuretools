@@ -36,12 +36,17 @@ export async function waitForDeploymentToComplete(
 	let fullLog: string = "";
 
 	let lastLogTime: Date = new Date(0);
+
 	let lastErrorLine: string = "";
+
 	let initialStartTime: Date | undefined;
+
 	let deployment: KuduModels.DeployResult | undefined;
+
 	let permanentId: string | undefined;
 	// a 60 second timeout period to let Kudu initialize the deployment
 	const maxTimeToWaitForExpectedId: number = Date.now() + 60 * 1000;
+
 	const kuduClient = await site.createClient(context);
 
 	const { expectedId, token, locationUrl } = options;
@@ -62,6 +67,7 @@ export async function waitForDeploymentToComplete(
 				).parsedBody as KuduModels.DeployResult;
 			} catch (error: unknown) {
 				const parsedError = parseError(error);
+
 				if (parsedError.errorType !== "REQUEST_ABORTED_ERROR") {
 					throw parsedError;
 				}
@@ -83,6 +89,7 @@ export async function waitForDeploymentToComplete(
 				Date.now() < maxTimeToWaitForExpectedId
 			) {
 				await delay(pollingInterval);
+
 				continue;
 			}
 
@@ -90,6 +97,7 @@ export async function waitForDeploymentToComplete(
 		}
 
 		const deploymentId: string = deployment.id;
+
 		let logEntries: KuduModels.LogEntry[] = [];
 		await retryKuduCall(context, "getLogEntry", async () => {
 			await ignore404Error(context, async () => {
@@ -103,6 +111,7 @@ export async function waitForDeploymentToComplete(
 		// eslint-disable-next-line no-constant-condition
 		while (true) {
 			const newEntry: KuduModels.LogEntry | undefined = logEntries.pop();
+
 			if (!newEntry) {
 				break;
 			}
@@ -119,6 +128,7 @@ export async function waitForDeploymentToComplete(
 					resourceName: site.fullName,
 				});
 				lastLogTimeForThisPoll = newEntry.logTime;
+
 				if (/error/i.test(newEntry.message)) {
 					lastErrorLine = newEntry.message;
 				}
@@ -150,6 +160,7 @@ export async function waitForDeploymentToComplete(
 				void showErrorMessageWithOutput(
 					l10n.t('Deployment to "{0}" failed.', site.fullName),
 				);
+
 				const messageWithoutName: string = l10n.t("Deployment failed.");
 				ext.outputChannel.appendLog(messageWithoutName, {
 					resourceName: site.fullName,
@@ -158,6 +169,7 @@ export async function waitForDeploymentToComplete(
 				// Hopefully the last line is enough to give us an idea why deployments are failing without excessively tracking everything
 				context.telemetry.properties.deployErrorLastLine =
 					lastErrorLine;
+
 				throw new Error(messageWithoutName);
 			} else if (deployment.status === 4) {
 				/* Success */
@@ -265,6 +277,7 @@ export async function waitForDeploymentToComplete(
 						nonNullProp(a, "startTime").valueOf(),
 				)
 				.shift();
+
 			if (deployment && !deployment.isTemp) {
 				// Make note of the id once the deplyoment has shifted to the "permanent" phase, so that we can use that to find the deployment going forward
 				permanentId = deployment.id;
@@ -305,10 +318,13 @@ export async function waitForDeploymentToComplete(
  */
 function cleanDetails(entries: KuduModels.LogEntry[]): KuduModels.LogEntry[] {
 	const result: KuduModels.LogEntry[] = [];
+
 	for (const entry of entries) {
 		const oryxEOL: string = "\\n";
+
 		if (entry.message?.includes(oryxEOL)) {
 			const newMessages: string[] = entry.message.split(oryxEOL);
+
 			for (const newMessage of newMessages) {
 				if (!entries.find((d) => d.message === newMessage)) {
 					result.push({ ...entry, message: newMessage });

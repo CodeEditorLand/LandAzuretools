@@ -23,5 +23,6 @@ export async function getActions(
 	params?: GetActionsListWorkflowRunsParams,
 ): Promise<ActionsListWorkflowRuns> {
 	const client: Octokit = await createOctokitClient(context);
+
 	return (await client.actions.listWorkflowRunsForRepo(params)).data;
 }

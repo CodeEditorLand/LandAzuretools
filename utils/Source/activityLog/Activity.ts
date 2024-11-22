@@ -68,17 +68,20 @@ export abstract class ActivityBase<R> implements hTypes.Activity {
 	public async run(): Promise<R> {
 		try {
 			this._onStartEmitter.fire(this.getState());
+
 			const result = await this.task(
 				{ report: this.report.bind(this) as typeof this.report },
 				this.cancellationTokenSource.token,
 			);
 			this.status = ActivityStatus.Succeeded;
 			this._onSuccessEmitter.fire(this.getState());
+
 			return result as R;
 		} catch (e) {
 			this.error = parseError(e);
 			this.status = ActivityStatus.Failed;
 			this._onErrorEmitter.fire({ ...this.getState(), error: e });
+
 			throw e;
 		}
 	}
@@ -87,10 +90,13 @@ export abstract class ActivityBase<R> implements hTypes.Activity {
 		switch (this.status) {
 			case ActivityStatus.Failed:
 				return this.errorState(this.error);
+
 			case ActivityStatus.Succeeded:
 				return this.successState();
+
 			case ActivityStatus.Running:
 				return this.progressState();
+
 			default:
 				return this.initialState();
 		}

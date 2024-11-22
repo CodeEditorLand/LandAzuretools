@@ -48,10 +48,14 @@ export async function openReadOnlyJson(
 	data: {},
 ): Promise<void> {
 	let tab: string = "	";
+
 	const config: WorkspaceConfiguration = workspace.getConfiguration("editor");
+
 	const insertSpaces: boolean = !!config.get<boolean>("insertSpaces");
+
 	if (insertSpaces) {
 		let tabSize: number | undefined = config.get<number>("tabSize");
+
 		if (!isNumber(tabSize) || tabSize < 0) {
 			tabSize = 4;
 		}
@@ -69,6 +73,7 @@ export async function stashReadOnlyContent(
 	fileExtension: string,
 ): Promise<ReadOnlyContent> {
 	const contentProvider = getContentProvider();
+
 	return await contentProvider.stashReadOnlyContent(
 		node,
 		content,
@@ -82,6 +87,7 @@ export function stashReadOnlyContentSync(
 	fileExtension: string,
 ): ReadOnlyContent {
 	const contentProvider = getContentProvider();
+
 	return contentProvider.stashReadOnlyContentSync(
 		node,
 		content,
@@ -96,6 +102,7 @@ export async function openReadOnlyContent(
 	options?: TextDocumentShowOptions,
 ): Promise<ReadOnlyContent> {
 	const contentProvider = getContentProvider();
+
 	return await contentProvider.openReadOnlyContent(
 		node,
 		content,
@@ -160,15 +167,18 @@ class ReadOnlyContentProvider implements TextDocumentContentProvider {
 		const scheme = getScheme();
 		// Remove special characters which may prove troublesome when parsing the uri. We'll allow the same set as `encodeUriComponent`
 		const fileName = label.replace(/[^a-z0-9\-\_\.\!\~\*\'\(\)]/gi, "_");
+
 		const uri: Uri = Uri.parse(
 			`${scheme}:///${fileId}/${fileName}${fileExtension}`,
 		);
+
 		const readOnlyContent: ReadOnlyContent = new ReadOnlyContent(
 			uri,
 			this._onDidChangeEmitter,
 			content,
 		);
 		this._contentMap.set(uri.toString(), readOnlyContent);
+
 		return readOnlyContent;
 	}
 
@@ -180,6 +190,7 @@ class ReadOnlyContentProvider implements TextDocumentContentProvider {
 		const idHash: string = await randomUtils.getPseudononymousStringHash(
 			node.fullId,
 		);
+
 		return this.stashReadOnlyContentCore(
 			node.label,
 			idHash,
@@ -194,6 +205,7 @@ class ReadOnlyContentProvider implements TextDocumentContentProvider {
 		fileExtension: string,
 	): ReadOnlyContent {
 		const randomId: string = randomUtils.getRandomHexString(16);
+
 		return this.stashReadOnlyContentCore(
 			node.label,
 			randomId,
@@ -215,6 +227,7 @@ class ReadOnlyContentProvider implements TextDocumentContentProvider {
 		);
 		await window.showTextDocument(readOnlyContent.uri, options);
 		this._onDidChangeEmitter.fire(readOnlyContent.uri);
+
 		return readOnlyContent;
 	}
 
@@ -226,6 +239,7 @@ class ReadOnlyContentProvider implements TextDocumentContentProvider {
 			this._contentMap.get(uri.toString()),
 			"ReadOnlyContentProvider._contentMap.get",
 		);
+
 		return readOnlyContent.content;
 	}
 

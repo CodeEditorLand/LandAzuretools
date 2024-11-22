@@ -137,7 +137,9 @@ export class LocationListStep<
 		extendedLocation?: ExtendedLocation;
 	} {
 		let locationName: string = location.name;
+
 		let extendedLocation: ExtendedLocation | undefined;
+
 		if (location.type === "EdgeZone") {
 			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			locationName = location.metadata!.homeLocation!;
@@ -180,9 +182,12 @@ export class LocationListStep<
 					nonNullProp(location, "metadata"),
 					"homeLocation",
 				);
+
 				const [allLocationsTask] =
 					this.getInternalVariables(wizardContext);
+
 				const allLocations = await allLocationsTask;
+
 				const homeLocation = nonNullValue(
 					allLocations.find((l) =>
 						LocationListStep.locationMatchesName(l, homeLocName),
@@ -205,9 +210,11 @@ export class LocationListStep<
 		if (provider) {
 			const [allLocationsTask, providerLocationsMap] =
 				this.getInternalVariables(wizardContext);
+
 			const providerLocations = await providerLocationsMap.get(
 				provider.toLowerCase(),
 			);
+
 			if (providerLocations) {
 				function isSupportedByProvider(
 					loc: types.AzExtLocation,
@@ -240,6 +247,7 @@ export class LocationListStep<
 				}
 
 				const allLocations = await allLocationsTask;
+
 				if (location.metadata?.pairedRegion) {
 					const pairedLocation: types.AzExtLocation | undefined =
 						location.metadata?.pairedRegion
@@ -258,19 +266,23 @@ export class LocationListStep<
 									pairedLoc &&
 									isSupportedByProvider(pairedLoc),
 							);
+
 					if (pairedLocation) {
 						wizardContext.telemetry.properties.relatedLocationSource =
 							"paired";
 						warnAboutRelatedLocation(pairedLocation);
+
 						return useProviderName(pairedLocation);
 					}
 				}
 
 				if (location.name.toLowerCase().endsWith("stage")) {
 					const nonStageName = location.name.replace(/stage/i, "");
+
 					const nonStageLocation = allLocations.find((l) =>
 						LocationListStep.locationMatchesName(l, nonStageName),
 					);
+
 					if (
 						nonStageLocation &&
 						isSupportedByProvider(nonStageLocation)
@@ -278,6 +290,7 @@ export class LocationListStep<
 						wizardContext.telemetry.properties.relatedLocationSource =
 							"nonStage";
 						warnAboutRelatedLocation(nonStageLocation);
+
 						return useProviderName(nonStageLocation);
 					}
 				}
@@ -296,6 +309,7 @@ export class LocationListStep<
 	): Promise<types.AzExtLocation[]> {
 		const [allLocationsTask, providerLocationsMap] =
 			this.getInternalVariables(wizardContext);
+
 		const locationSubsets: string[][] = await Promise.all(
 			providerLocationsMap.values(),
 		);
@@ -319,6 +333,7 @@ export class LocationListStep<
 		name: string,
 	): boolean {
 		name = LocationListStep.generalizeLocationName(name);
+
 		return (
 			name === LocationListStep.generalizeLocationName(location.name) ||
 			name ===
@@ -383,11 +398,13 @@ async function getAllLocations(
 	wizardContext: types.ILocationWizardContext,
 ): Promise<types.AzExtLocation[]> {
 	const client = await createSubscriptionsClient(wizardContext);
+
 	const locations = await uiUtils.listAllIterator<Location>(
 		client.subscriptions.listLocations(wizardContext.subscriptionId, {
 			includeExtendedLocations: wizardContext.includeExtendedLocations,
 		}),
 	);
+
 	return locations.filter(
 		(l): l is types.AzExtLocation => !!(l.id && l.name && l.displayName),
 	);
@@ -399,10 +416,13 @@ async function getProviderLocations(
 	resourceType: string,
 ): Promise<string[]> {
 	const rgClient = await createResourcesClient(wizardContext);
+
 	const providerData = await rgClient.providers.get(provider);
+
 	const resourceTypeData = providerData.resourceTypes?.find(
 		(rt) => rt.resourceType?.toLowerCase() === resourceType.toLowerCase(),
 	);
+
 	if (!resourceTypeData) {
 		throw new ProviderResourceTypeNotFoundError(providerData, resourceType);
 	}

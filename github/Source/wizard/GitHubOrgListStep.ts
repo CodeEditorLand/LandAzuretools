@@ -42,7 +42,9 @@ export class GitHubOrgListStep extends AzureWizardPromptStep<GitHubContext> {
 		context: GitHubContext,
 	): Promise<IAzureQuickPickItem<string | undefined>[]> {
 		const user: AuthenticatedUser = await getAuthenticatedUser(context);
+
 		const orgs: Orgs = await getOrgs(context);
+
 		return [
 			{ label: user.login, data: undefined },
 			...orgs.map((org) => {

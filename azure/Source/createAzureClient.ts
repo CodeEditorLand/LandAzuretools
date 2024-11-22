@@ -67,11 +67,13 @@ export function createAzureClient<T extends ServiceClient>(
 	clientType: types.AzExtClientType<T>,
 ): T {
 	const context = parseClientContext(clientContext);
+
 	const client = new clientType(context.credentials, context.subscriptionId, {
 		endpoint: context.environment.resourceManagerEndpointUrl,
 	});
 
 	addAzExtPipeline(context, client.pipeline);
+
 	return client;
 }
 
@@ -80,11 +82,13 @@ export function createAzureSubscriptionClient<T extends ServiceClient>(
 	clientType: types.AzExtSubscriptionClientType<T>,
 ): T {
 	const context = parseClientContext(clientContext);
+
 	const client = new clientType(context.credentials, {
 		endpoint: context.environment.resourceManagerEndpointUrl,
 	});
 
 	addAzExtPipeline(context, client.pipeline);
+
 	return client;
 }
 
@@ -109,6 +113,7 @@ export async function sendRequestWithTimeout(
 		noRetryPolicy: true,
 		addStatusCodePolicy: true,
 	});
+
 	return await client.sendRequest(request);
 }
 
@@ -118,7 +123,9 @@ export async function createGenericClient(
 	options?: types.IGenericClientOptions,
 ): Promise<ServiceClient> {
 	let credentials: types.AzExtGenericCredentials | undefined;
+
 	let endpoint: string | undefined;
+
 	if (clientInfo && "credentials" in clientInfo) {
 		credentials = clientInfo.credentials;
 		endpoint = clientInfo.environment.resourceManagerEndpointUrl;
@@ -130,6 +137,7 @@ export async function createGenericClient(
 		? { maxRetries: 0 }
 		: undefined;
 	endpoint = options?.endpoint ?? endpoint;
+
 	const client = new ServiceClient({
 		credential: credentials,
 		endpoint,
@@ -142,6 +150,7 @@ export async function createGenericClient(
 		{ retryOptions },
 		options?.addStatusCodePolicy,
 	);
+
 	return client;
 }
 
@@ -169,6 +178,7 @@ function addAzExtPipeline(
 
 	// Policies to apply before the request
 	pipeline.addPolicy(new AcceptLanguagePolicy(), { phase: "Serialize" });
+
 	if (vscode.env.isTelemetryEnabled) {
 		pipeline.addPolicy(new CorrelationIdPolicy(context), {
 			phase: "Serialize",
@@ -188,6 +198,7 @@ function addAzExtPipeline(
 		phase: "Deserialize",
 		beforePolicies: [MissingContentTypePolicy.Name],
 	});
+
 	if (addStatusCodePolicy) {
 		pipeline.addPolicy(
 			new StatusCodePolicy() /*intentionally not in a phase*/,
@@ -223,9 +234,11 @@ export class CorrelationIdPolicy implements PipelinePolicy {
 		next: SendRequest,
 	): Promise<PipelineResponse> {
 		const headerName = "x-ms-correlation-request-id";
+
 		const id: string = (this.context.telemetry.properties[headerName] ||=
 			uuidv4());
 		request.headers.set(headerName, id);
+
 		return await next(request);
 	}
 }
@@ -241,8 +254,10 @@ class RemoveBOMPolicy implements PipelinePolicy {
 		next: SendRequest,
 	): Promise<PipelineResponse> {
 		const response: PipelineResponse = await next(request);
+
 		const contentType: string | undefined =
 			response.headers.get(contentTypeName);
+
 		if (contentType && /json/i.test(contentType) && response.bodyAsText) {
 			response.bodyAsText = removeBom(response.bodyAsText);
 		}
@@ -265,6 +280,7 @@ class MissingContentTypePolicy implements PipelinePolicy {
 		next: SendRequest,
 	): Promise<PipelineResponse> {
 		const response: PipelineResponse = await next(request);
+
 		if (!response.headers.get(contentTypeName) && response.bodyAsText) {
 			try {
 				parseJson(response.bodyAsText);
@@ -289,6 +305,7 @@ class AcceptLanguagePolicy implements PipelinePolicy {
 		next: SendRequest,
 	): Promise<PipelineResponse> {
 		request.headers.set("Accept-Language", vscode.env.language);
+
 		return await next(request);
 	}
 }
@@ -328,11 +345,13 @@ class StatusCodePolicy implements PipelinePolicy {
 		next: SendRequest,
 	): Promise<types.AzExtPipelineResponse> {
 		const response: types.AzExtPipelineResponse = await next(request);
+
 		if (response.status < 200 || response.status >= 300) {
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 			const errorMessage: string = response.bodyAsText
 				? parseError(response.parsedBody || response.bodyAsText).message
 				: vscode.l10n.t("Unexpected status code: {0}", response.status);
+
 			throw new RestError(errorMessage, {
 				code: String(response.status) || response.bodyAsText || "",
 				statusCode: response.status,
@@ -363,8 +382,11 @@ class BasicAuthenticationCredentialsPolicy implements PipelinePolicy {
 		next: SendRequest,
 	): Promise<PipelineResponse> {
 		const credentials = `${this.userName}:${this.password}`;
+
 		const DEFAULT_AUTHORIZATION_SCHEME = "Basic";
+
 		const encodedCredentials = `${DEFAULT_AUTHORIZATION_SCHEME} ${Buffer.from(credentials).toString("base64")}`;
+
 		if (!request.headers) request.headers = createHttpHeaders();
 		request.headers.set("authorization", encodedCredentials);
 

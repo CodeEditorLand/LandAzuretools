@@ -18,5 +18,6 @@ export async function getAuthenticatedUser(
 	context: GitHubContext,
 ): Promise<AuthenticatedUser> {
 	const client: Octokit = await createOctokitClient(context);
+
 	return (await client.users.getAuthenticated()).data;
 }

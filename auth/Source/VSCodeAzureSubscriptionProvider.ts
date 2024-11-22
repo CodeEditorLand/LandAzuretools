@@ -92,6 +92,7 @@ export class VSCodeAzureSubscriptionProvider extends vscode.Disposable implement
      */
     public async getSubscriptions(filter: boolean = true): Promise<AzureSubscription[]> {
         const tenantIds = await this.getTenantFilters();
+
         const shouldFilterTenants = filter && !!tenantIds.length; // If the list is empty it is treated as "no filter"
 
         const results: AzureSubscription[] = [];
@@ -101,6 +102,7 @@ export class VSCodeAzureSubscriptionProvider extends vscode.Disposable implement
 
             // Get the list of tenants from each account
             const accounts = await vscode.authentication.getAccounts(getConfiguredAuthProviderId());
+
             for (const account of accounts) {
                 for (const tenant of await this.getTenants(account)) {
                     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -128,6 +130,7 @@ export class VSCodeAzureSubscriptionProvider extends vscode.Disposable implement
             subscriptions.sort((a, b) => a.name.localeCompare(b.name));
 
         const subscriptionIds = await this.getSubscriptionFilters();
+
         if (filter && !!subscriptionIds.length) { // If the list is empty it is treated as "no filter"
             return sortSubscriptions(
                 results.filter(sub => subscriptionIds.includes(sub.subscriptionId))
@@ -146,6 +149,7 @@ export class VSCodeAzureSubscriptionProvider extends vscode.Disposable implement
      */
     public async isSignedIn(tenantId?: string, account?: vscode.AuthenticationSessionAccountInformation): Promise<boolean> {
         const session = await getSessionFromVSCode([], tenantId, { createIfNone: false, silent: true, account });
+
         return !!session;
     }
 
@@ -158,6 +162,7 @@ export class VSCodeAzureSubscriptionProvider extends vscode.Disposable implement
      */
     public async signIn(tenantId?: string): Promise<boolean> {
         const session = await getSessionFromVSCode([], tenantId, { createIfNone: true, clearSessionPreference: true });
+
         return !!session;
     }
 
@@ -191,6 +196,7 @@ export class VSCodeAzureSubscriptionProvider extends vscode.Disposable implement
      */
     protected async getTenantFilters(): Promise<TenantId[]> {
         const config = vscode.workspace.getConfiguration('azureResourceGroups');
+
         const fullSubscriptionIds = config.get<string[]>('selectedSubscriptions', []);
 
         return fullSubscriptionIds.map(id => id.split('/')[0]);
@@ -207,7 +213,9 @@ export class VSCodeAzureSubscriptionProvider extends vscode.Disposable implement
      */
     protected async getSubscriptionFilters(): Promise<SubscriptionId[]> {
         const config = vscode.workspace.getConfiguration('azureResourceGroups');
+
         const fullSubscriptionIds = config.get<string[]>('selectedSubscriptions', []);
+
         return fullSubscriptionIds.map(id => id.split('/')[1]);
     }
 
@@ -221,6 +229,7 @@ export class VSCodeAzureSubscriptionProvider extends vscode.Disposable implement
      */
     private async getSubscriptionsForTenant(tenantId: string, account: vscode.AuthenticationSessionAccountInformation): Promise<AzureSubscription[]> {
         const { client, credential, authentication } = await this.getSubscriptionClient(account, tenantId, undefined);
+
         const environment = getConfiguredAzureEnv();
 
         const subscriptions: AzureSubscription[] = [];
@@ -270,6 +279,7 @@ export class VSCodeAzureSubscriptionProvider extends vscode.Disposable implement
         }
 
         const configuredAzureEnv = getConfiguredAzureEnv();
+
         const endpoint = configuredAzureEnv.resourceManagerEndpointUrl;
 
         return {

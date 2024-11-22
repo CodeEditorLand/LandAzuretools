@@ -47,6 +47,7 @@ export async function rejectOnTimeout<T>(
 		}, timeoutMs);
 
 		let value: T;
+
 		let error: unknown;
 
 		try {

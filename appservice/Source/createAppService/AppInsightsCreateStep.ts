@@ -34,17 +34,23 @@ export class AppInsightsCreateStep extends AzureWizardExecuteStep<IAppServiceWiz
 			"Verifying that Application Insights is available for this location...",
 		);
 		ext.outputChannel.appendLog(verifyingAppInsightsAvailable);
+
 		const resourceLocation: AzExtLocation =
 			await LocationListStep.getLocation(context);
+
 		const appInsightsLocation = await getAppInsightsSupportedLocation(
 			context,
 			resourceLocation,
 		);
+
 		if (appInsightsLocation) {
 			const client: ApplicationInsightsManagementClient =
 				await createAppInsightsClient(context);
+
 			const rg: ResourceGroup = nonNullProp(context, "resourceGroup");
+
 			const rgName: string = nonNullProp(rg, "name");
+
 			const aiName: string = nonNullProp(context, "newAppInsightsName");
 
 			try {
@@ -77,6 +83,7 @@ export class AppInsightsCreateStep extends AzureWizardExecuteStep<IAppServiceWiz
 							workspaceResourceId:
 								context.logAnalyticsWorkspace?.id,
 						});
+
 					const createdNewAppInsights: string = l10n.t(
 						'Successfully created Application Insights resource "{0}".',
 						aiName,
@@ -110,16 +117,20 @@ export class AppInsightsCreateStep extends AzureWizardExecuteStep<IAppServiceWiz
 			'You do not have permission to create an app insights resource in subscription "{0}".',
 			context.subscriptionDisplayName,
 		);
+
 		const selectExisting: MessageItem = {
 			title: l10n.t("Select Existing"),
 		};
+
 		const skipForNow: MessageItem = { title: l10n.t("Skip for Now") };
+
 		const result = await context.ui.showWarningMessage(
 			message,
 			{ modal: true, stepName: "AppInsightsNoPermissions" },
 			selectExisting,
 			skipForNow,
 		);
+
 		if (result === skipForNow) {
 			context.telemetry.properties.aiSkipForNow = "true";
 			context.appInsightsSkip = true;
@@ -127,6 +138,7 @@ export class AppInsightsCreateStep extends AzureWizardExecuteStep<IAppServiceWiz
 		} else {
 			context.telemetry.properties.forbiddenResponse =
 				"SelectExistingAppInsights";
+
 			const step: AppInsightsListStep = new AppInsightsListStep(
 				true /* suppressCreate */,
 			);

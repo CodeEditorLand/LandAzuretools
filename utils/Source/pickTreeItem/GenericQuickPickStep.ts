@@ -49,6 +49,7 @@ export abstract class GenericQuickPickStep<
 
 		if (picks.length === 1 && this.pickOptions.skipIfOne) {
 			const ti = await this.treeDataProvider.getTreeItem(picks[0].data);
+
 			if (!ti.command) {
 				return picks[0].data;
 			}
@@ -69,12 +70,14 @@ export abstract class GenericQuickPickStep<
 		// TODO: if `lastPickedItem` is an `AzExtParentTreeItem`, should we clear its cache?
 		const childElements =
 			(await this.treeDataProvider.getChildren(lastPickedItem)) || [];
+
 		const childItems = await Promise.all(
 			childElements.map(
 				async (childElement: unknown) =>
 					await this.treeDataProvider.getTreeItem(childElement),
 			),
 		);
+
 		const childPairs: [unknown, vscode.TreeItem][] = childElements.map(
 			(childElement: unknown, i: number) => [childElement, childItems[i]],
 		);
@@ -82,11 +85,13 @@ export abstract class GenericQuickPickStep<
 		const finalChoices = childPairs.filter(([el, ti]) =>
 			this.pickFilter.isFinalPick(ti, el),
 		);
+
 		const ancestorChoices = childPairs.filter(([el, ti]) =>
 			this.pickFilter.isAncestorPick(ti, el),
 		);
 
 		let promptChoices: [unknown, vscode.TreeItem][] = [];
+
 		if (finalChoices.length === 0) {
 			if (ancestorChoices.length === 0) {
 				// Don't throw and end the wizard, let user use back button instead
@@ -98,6 +103,7 @@ export abstract class GenericQuickPickStep<
 		}
 
 		const picks: types.IAzureQuickPickItem<unknown>[] = [];
+
 		for (const choice of promptChoices) {
 			picks.push(await this.getQuickPickItem(...choice));
 		}

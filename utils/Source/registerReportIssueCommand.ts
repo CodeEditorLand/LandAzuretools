@@ -30,6 +30,7 @@ export function cacheIssueForCommand(issue: IReportableIssue): void {
 		});
 
 		const maxIssues: number = 50;
+
 		if (cachedIssues.length > maxIssues) {
 			cachedIssues.shift();
 		}
@@ -43,6 +44,7 @@ export function registerReportIssueCommand(commandId: string): void {
 		context.errorHandling.suppressReportIssue = true;
 
 		cachedIssues = nonNullValue(cachedIssues, "cachedIssues");
+
 		if (cachedIssues.length === 0) {
 			await reportAnIssue(undefined);
 		} else {
@@ -60,9 +62,11 @@ export function registerReportIssueCommand(commandId: string): void {
 				label: vscode.l10n.t("$(keyboard) Manually enter error"),
 				data: undefined,
 			});
+
 			const placeHolder: string = vscode.l10n.t(
 				"Select the error you would like to report",
 			);
+
 			const issue: IReportableIssue | undefined = (
 				await context.ui.showQuickPick(picks, {
 					placeHolder,

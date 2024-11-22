@@ -30,6 +30,7 @@ export async function runWithZipStream(
 ): Promise<AzExtPipelineResponse | void> {
 	function onFileSize(size: number): void {
 		context.telemetry.measurements.zipFileSize = size;
+
 		const zipFileSize = vscode.l10n.t(
 			"Zip package size: {0}",
 			prettybytes(size),
@@ -41,7 +42,9 @@ export async function runWithZipStream(
 	}
 
 	let zipStream: Readable;
+
 	const { site, pathFileMap, callback } = options;
+
 	let { fsPath } = options;
 
 	if (getFileExtension(fsPath) === "zip") {
@@ -60,10 +63,13 @@ export async function runWithZipStream(
 		options.progress?.report({ message: creatingZip });
 
 		const zipFile: yazl.ZipFile = new yazl.ZipFile();
+
 		let filesToZip: string[] = [];
+
 		let sizeOfZipFile: number = 0;
 
 		const zipByteCounter = new PassThrough();
+
 		const outputStream = new PassThrough();
 		zipFile.outputStream.pipe(zipByteCounter);
 		zipFile.outputStream.pipe(outputStream);
@@ -98,6 +104,7 @@ export async function runWithZipStream(
 				),
 				{ resourceName: site.fullName },
 			);
+
 			for (const file of filesToZip) {
 				ext.outputChannel.appendLog(path.join(fsPath, file), {
 					resourceName: site.fullName,
@@ -142,12 +149,16 @@ export async function getFilesFromGlob(
 			ext.prefix ?? "appService",
 			vscode.Uri.file(folderPath),
 		);
+
 	const globPattern: string =
 		zipDeployConfig.get<string>("zipGlobPattern") || "**/*";
+
 	const zipIgnorePatternStr = "zipIgnorePattern";
+
 	const zipIgnorePattern: string[] | string | undefined = zipDeployConfig.get<
 		string | string[]
 	>(zipIgnorePatternStr);
+
 	const ignorePatternList: string[] | undefined =
 		typeof zipIgnorePattern === "string"
 			? [zipIgnorePattern]
@@ -157,11 +168,13 @@ export async function getFilesFromGlob(
 	let files: vscode.Uri[] = await vscode.workspace.findFiles(
 		new vscode.RelativePattern(folderPath, globPattern),
 	);
+
 	const ignoringFiles = vscode.l10n.t(
 		`Ignoring files from \"{0}.{1}\"`,
 		ext.prefix,
 		zipIgnorePatternStr,
 	);
+
 	if (ignorePatternList) {
 		try {
 			// not all ouptut channels _have_ to support appendLog, so catch the error
@@ -193,7 +206,9 @@ export async function getFilesFromGitignore(
 	gitignoreName: string,
 ): Promise<string[]> {
 	let ignore: string[] = [];
+
 	const gitignorePath: string = path.join(folderPath, gitignoreName);
+
 	if (await AzExtFsExtra.pathExists(gitignorePath)) {
 		const funcIgnoreContents: string =
 			await AzExtFsExtra.readFile(gitignorePath);
@@ -205,6 +220,7 @@ export async function getFilesFromGitignore(
 
 	const exclude: vscode.GlobPattern | null =
 		ignore.length > 0 ? `{${ignore.join(",")}}` : null;
+
 	return (
 		await vscode.workspace.findFiles(
 			new vscode.RelativePattern(folderPath, "**/*"),

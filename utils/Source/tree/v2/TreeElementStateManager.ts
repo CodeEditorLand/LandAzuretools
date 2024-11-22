@@ -34,6 +34,7 @@ export class TreeElementStateManager<
 			temporaryDescription: description,
 			spinner: true,
 		});
+
 		try {
 			result = await callback();
 		} finally {
@@ -89,6 +90,7 @@ export class TreeElementStateManager<
 		refresh: (item: TElement) => void,
 	): TElement {
 		const wrapKey = "_xWrappedInStateHandling";
+
 		if (wrapKey in item && item[wrapKey]) {
 			throw new Error("Element is already wrapped in state handling");
 		} else {
@@ -100,6 +102,7 @@ export class TreeElementStateManager<
 		) as typeof item.getTreeItem;
 		item.getTreeItem = async () => {
 			const treeItem = await getTreeItem();
+
 			if (item.id) {
 				return this.applyToTreeItem({ ...treeItem, id: item.id });
 			}
@@ -112,7 +115,9 @@ export class TreeElementStateManager<
 			) as typeof item.getChildren;
 			item.getChildren = async () => {
 				const children = (await getChildren()) ?? [];
+
 				const state = this.getState(item.id);
+
 				if (state.temporaryChildren) {
 					children.unshift(...state.temporaryChildren);
 				}
@@ -146,6 +151,7 @@ export class TreeElementStateManager<
 		});
 
 		let result: T;
+
 		try {
 			result = await callback();
 		} finally {
@@ -188,6 +194,7 @@ export class TreeElementStateManager<
 		treeItem: vscode.TreeItem & { id: string },
 	): vscode.TreeItem {
 		const state = this.getState(treeItem.id);
+
 		return this.applyStateToTreeItem(state, { ...treeItem });
 	}
 
@@ -204,6 +211,7 @@ export class TreeElementStateManager<
 		suppressRefresh?: boolean,
 	): void {
 		this.store[id] = { ...this.getState(id), ...state };
+
 		if (!suppressRefresh) {
 			this.onDidUpdateStateEmitter.fire(id);
 		}

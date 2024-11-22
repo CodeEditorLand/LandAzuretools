@@ -29,6 +29,7 @@ export class ServiceConnectorGroupTreeItem extends AzExtParentTreeItem {
 		const client = new (
 			await import("@azure/arm-servicelinker")
 		).ServiceLinkerManagementClient(this.subscription.credentials);
+
 		const linkers = await uiUtils.listAllIterator(
 			client.linker.list(nonNullProp(this, "resourceId")),
 		);
@@ -47,6 +48,7 @@ export class ServiceConnectorGroupTreeItem extends AzExtParentTreeItem {
 				return l.name;
 			},
 		);
+
 		return children;
 	}
 

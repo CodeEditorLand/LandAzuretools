@@ -11,6 +11,7 @@ const DefaultTimeout = 500; // Spend at most 500 ms
 const DefaultMaxAttempts = 25; // On at most 25 attempts
 
 const MinRandomPort = 10000;
+
 const MaxRandomPort = 64000;
 
 /**
@@ -31,14 +32,19 @@ export async function findFreePort(
 	startPort ||= randomUtils.getRandomInteger(MinRandomPort, MaxRandomPort);
 
 	let resolved: boolean = false;
+
 	let timeoutHandle: NodeJS.Timeout | undefined = undefined;
+
 	let countTried: number = 1;
+
 	const server = net.createServer({ pauseOnConnect: true });
+
 	function doResolve(port: number, resolve: (port: number) => void) {
 		if (!resolved) {
 			resolved = true;
 			server.removeAllListeners();
 			server.close();
+
 			if (timeoutHandle) {
 				clearTimeout(timeoutHandle);
 			}

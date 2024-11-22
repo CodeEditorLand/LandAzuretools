@@ -41,6 +41,7 @@ export function createSiteFilesUrl(
 	// For Linux consumption function apps, the href doesn't work. So we build the url manually
 	if (site.isFunctionApp && site.isLinux) {
 		path = path.replace(/^\/home\//, "");
+
 		return `${site.id}/hostruntime/admin/vfs/home/${path}/?api-version=2022-03-01`;
 	}
 	return href ?? `${site.kuduUrl}/api/vfs/${path}`;
@@ -52,6 +53,7 @@ export async function getFile(
 	url: string,
 ): Promise<ISiteFile> {
 	let response: AzExtPipelineResponse;
+
 	try {
 		response = await getFsResponse(context, site, url);
 	} catch (error) {
@@ -98,13 +100,16 @@ export async function putFile(
 	etag: string | undefined,
 ): Promise<string> {
 	const options: {} = etag ? { ["If-Match"]: etag } : {};
+
 	const kuduClient = await site.createClient(context);
+
 	const result: AzExtPipelineResponse = await kuduClient.vfsPutItem(
 		context,
 		data,
 		url,
 		options,
 	);
+
 	return <string>result.headers.get("etag");
 }
 
@@ -124,8 +129,11 @@ async function getFsResponse(
                 Under these circumstances, we will attempt to do the call 3 times during warmup before throwing the error.
             */
 			const retries = 3;
+
 			const badGateway: RegExp = /BadGateway/i;
+
 			const serviceUnavailable: RegExp = /ServiceUnavailable/i;
+
 			const client: ServiceClient = await createGenericClient(
 				context,
 				site.subscription,
@@ -142,6 +150,7 @@ async function getFsResponse(
 						);
 					} catch (error) {
 						const parsedError: IParsedError = parseError(error);
+
 						if (
 							!(
 								badGateway.test(parsedError.message) ||
@@ -158,6 +167,7 @@ async function getFsResponse(
 			);
 		} else {
 			const kuduClient = await site.createClient(context);
+
 			return await kuduClient.vfsGetItem(context, url);
 		}
 	} catch (error) {

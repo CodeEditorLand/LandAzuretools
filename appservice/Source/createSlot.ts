@@ -35,7 +35,9 @@ export async function createSlot(
 		context,
 		site.subscription,
 	]);
+
 	const gClient = await createGenericClient(context, site.subscription);
+
 	const slotName: string = (
 		await context.ui.showInputBox({
 			prompt: l10n.t("Enter a unique name for the new deployment slot"),
@@ -60,6 +62,7 @@ export async function createSlot(
 		site,
 		existingSlots,
 	);
+
 	if (configurationSource) {
 		const appSettings: NameValuePair[] = await parseAppSettings(
 			context,
@@ -73,6 +76,7 @@ export async function createSlot(
 
 	const creatingSlot: string = l10n.t('Creating slot "{0}"...', slotName);
 	ext.outputChannel.appendLog(creatingSlot);
+
 	return await window.withProgress(
 		{ location: ProgressLocation.Notification, title: creatingSlot },
 		async () => {
@@ -126,6 +130,7 @@ async function validateSlotName(
 				`${site.siteName}-${value}`,
 				"Slot",
 			);
+
 		if (!nameAvailability.nameAvailable) {
 			return nameAvailability.message;
 		} else {
@@ -169,6 +174,7 @@ async function chooseConfigurationSource(
 		}
 
 		const placeHolder: string = l10n.t("Choose a configuration source.");
+
 		return (
 			await context.ui.showQuickPick(configurationSources, {
 				placeHolder,
@@ -183,9 +189,12 @@ async function parseAppSettings(
 	site: ParsedSite,
 ): Promise<NameValuePair[]> {
 	const client = await site.createClient(context);
+
 	const appSettings: StringDictionary =
 		await client.listApplicationSettings();
+
 	const appSettingPairs: NameValuePair[] = [];
+
 	if (appSettings.properties) {
 		// iterate String Dictionary to parse into NameValuePair[]
 		for (const key of Object.keys(appSettings.properties)) {

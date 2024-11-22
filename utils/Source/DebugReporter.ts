@@ -22,6 +22,7 @@ export class DebugReporter implements IInternalTelemetryReporter {
 	): void {
 		try {
 			const propertiesString: string = JSON.stringify(properties || {});
+
 			const measuresString: string = JSON.stringify(measures || {});
 
 			if (this._verbose) {

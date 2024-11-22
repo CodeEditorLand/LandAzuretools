@@ -31,7 +31,9 @@ export interface DatabaseAccountJsonResponse {
 export class CosmosDBAccountListStep extends AzureWizardPromptStep<ICreateLinkerContext> {
 	public async prompt(context: ICreateLinkerContext): Promise<void> {
 		const placeHolder: string = vscode.l10n.t("Select a database account");
+
 		const accounts = await getCosmosDBDatabaseAccounts(context);
+
 		const filteredAccounts = filterDatabaseAccounts(
 			accounts.value,
 			context.targetServiceType?.type,
@@ -60,6 +62,7 @@ async function getCosmosDBDatabaseAccounts(
 	context: ICreateLinkerContext,
 ): Promise<DatabaseJsonResponse> {
 	const url = `${context.environment.resourceManagerEndpointUrl}subscriptions/${context.subscriptionId}/providers/Microsoft.DocumentDB/databaseAccounts?api-version=2023-03-15`;
+
 	return (<AzExtPipelineResponse>(
 		await sendRequestWithTimeout(
 			context,

@@ -35,6 +35,7 @@ export class AppServicePlanCreateStep extends AzureWizardExecuteStep<IAppService
 		progress: Progress<{ message?: string; increment?: number }>,
 	): Promise<void> {
 		const newPlanName: string = nonNullProp(context, "newPlanName");
+
 		const rgName: string = nonNullProp(
 			nonNullValue(context.resourceGroup, "name"),
 			"name",
@@ -44,14 +45,17 @@ export class AppServicePlanCreateStep extends AzureWizardExecuteStep<IAppService
 			'Ensuring App Service plan "{0}" exists...',
 			newPlanName,
 		);
+
 		const creatingAppServicePlan: string = l10n.t(
 			'Creating App Service plan "{0}"...',
 			newPlanName,
 		);
+
 		const foundAppServicePlan: string = l10n.t(
 			'Successfully found App Service plan "{0}".',
 			newPlanName,
 		);
+
 		const createdAppServicePlan: string = l10n.t(
 			'Successfully created App Service plan "{0}".',
 			newPlanName,
@@ -61,6 +65,7 @@ export class AppServicePlanCreateStep extends AzureWizardExecuteStep<IAppService
 		try {
 			const client: WebSiteManagementClient =
 				await createWebSiteClient(context);
+
 			const existingPlan: AppServicePlan | undefined =
 				await tryGetAppServicePlan(client, rgName, newPlanName);
 
@@ -95,6 +100,7 @@ export class AppServicePlanCreateStep extends AzureWizardExecuteStep<IAppService
 			'You do not have permission to create an app service plan in subscription "{0}".',
 			context.subscriptionDisplayName,
 		);
+
 		const selectExisting: MessageItem = {
 			title: l10n.t("Select Existing"),
 		};
@@ -105,6 +111,7 @@ export class AppServicePlanCreateStep extends AzureWizardExecuteStep<IAppService
 		);
 
 		context.telemetry.properties.forbiddenResponse = "SelectExistingAsp";
+
 		const step: AppServicePlanListStep = new AppServicePlanListStep(
 			true /* suppressCreate */,
 		);
@@ -123,6 +130,7 @@ async function getNewPlan(
 		context,
 		webProvider,
 	);
+
 	const plan: AppServicePlan = {
 		kind: getPlanKind(context),
 		sku: nonNullProp(context, "newPlanSku"),
@@ -134,6 +142,7 @@ async function getNewPlan(
 	const skuFamily = context.newPlanSku?.family
 		? context.newPlanSku?.family.toLowerCase()
 		: "";
+
 	if (skuFamily === "ep" || skuFamily === "ws") {
 		plan.maximumElasticWorkerCount = 20;
 	}

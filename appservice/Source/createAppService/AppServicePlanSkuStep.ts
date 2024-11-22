@@ -27,6 +27,7 @@ export class AppServicePlanSkuStep extends AzureWizardPromptStep<IAppServiceWiza
 		let skus: ExtendedSkuDescription[] = context.advancedCreation
 			? this.getRecommendedSkus().concat(this.getAdvancedSkus())
 			: this.getRecommendedSkus();
+
 		if (context.newSiteKind === AppKind.functionapp) {
 			skus.push(...this.getElasticPremiumSkus());
 		} else if (context.newSiteKind?.includes(AppKind.workflowapp)) {
@@ -40,6 +41,7 @@ export class AppServicePlanSkuStep extends AzureWizardPromptStep<IAppServiceWiza
 		}
 
 		const regExp: RegExp | undefined = context.planSkuFamilyFilter;
+
 		if (regExp) {
 			skus = skus.filter((s) => !s.family || regExp.test(s.family));
 		}
@@ -90,6 +92,7 @@ export class AppServicePlanSkuStep extends AzureWizardPromptStep<IAppServiceWiza
 
 	private getRecommendedSkus(): ExtendedSkuDescription[] {
 		const recommendedGroup: string = vscode.l10n.t("Recommended");
+
 		return [
 			{
 				name: "F1",

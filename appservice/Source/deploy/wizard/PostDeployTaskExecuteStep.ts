@@ -23,6 +23,7 @@ export class PostDeployTaskExecuteStep extends AzureWizardExecuteStep<InnerDeplo
 		progress: Progress<{ message?: string; increment?: number }>,
 	): Promise<void> {
 		const settingKey: string = "postDeployTask";
+
 		const taskName: string | undefined = workspace
 			.getConfiguration(ext.prefix, Uri.file(context.fsPath))
 			.get(settingKey);
@@ -42,8 +43,10 @@ export class PostDeployTaskExecuteStep extends AzureWizardExecuteStep<InnerDeplo
 				taskName,
 			);
 			context.telemetry.properties.foundPostDeployTask = String(!!task);
+
 			if (task) {
 				await taskUtils.executeIfNotActive(task);
+
 				const startedTask = l10n.t(
 					'Started {0} "{1}".',
 					settingKey,

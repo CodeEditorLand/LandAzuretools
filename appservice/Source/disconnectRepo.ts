@@ -20,7 +20,9 @@ export async function disconnectRepo(
 	subscriptionContext: ISubscriptionContext,
 ): Promise<void> {
 	const client = await site.createClient(context);
+
 	const sourceControl: SiteSourceControl = await client.getSourceControl();
+
 	const disconnectButton: MessageItem = { title: l10n.t("Disconnect") };
 	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 	const disconnect: string = l10n.t(

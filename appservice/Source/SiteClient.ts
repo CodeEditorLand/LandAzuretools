@@ -128,12 +128,14 @@ export class ParsedSite implements AppSettingsClientProvider {
 
 		this.defaultHostName = nonNullProp(site, "defaultHostName");
 		this.defaultHostUrl = `https://${this.defaultHostName}`;
+
 		const kuduRepositoryUrl: HostNameSslState | undefined = nonNullProp(
 			site,
 			"hostNameSslStates",
 		).find(
 			(h) => !!h.hostType && h.hostType.toLowerCase() === "repository",
 		);
+
 		if (kuduRepositoryUrl) {
 			this.kuduHostName = kuduRepositoryUrl.name;
 			this.kuduUrl = `https://${this.kuduHostName}`;
@@ -149,6 +151,7 @@ export class ParsedSite implements AppSettingsClientProvider {
 		},
 	): Promise<SiteClient> {
 		let client = context._parsedSiteClients?.[this.id];
+
 		if (!client) {
 			const internalClient = await createWebSiteClient([
 				context,
@@ -189,6 +192,7 @@ export class SiteClient implements IAppSettingsClient {
 	public async getIsConsumption(context: IActionContext): Promise<boolean> {
 		if (this._site.isFunctionApp) {
 			const sku: string | undefined = await this.getCachedSku(context);
+
 			return !!sku && sku.toLowerCase() === "dynamic";
 		} else {
 			return false;
@@ -198,6 +202,7 @@ export class SiteClient implements IAppSettingsClient {
 	public async getIsConsumptionV2(context: IActionContext): Promise<boolean> {
 		if (this._site.isFunctionApp) {
 			const sku: string | undefined = await this.getCachedSku(context);
+
 			return !!sku && sku.toLowerCase() === "flexconsumption";
 		} else {
 			return false;
@@ -611,9 +616,12 @@ export class SiteClient implements IAppSettingsClient {
 			context,
 			this._site.subscription,
 		);
+
 		const queryParameters =
 			convertQueryParamsValuesToString(rawQueryParameters);
+
 		const queryString = new URLSearchParams(queryParameters).toString();
+
 		const request = createPipelineRequest({
 			method: "POST",
 			url: `${this._site.kuduUrl}/api/zipdeploy?${queryString}`,
@@ -632,9 +640,12 @@ export class SiteClient implements IAppSettingsClient {
 			context,
 			this._site.subscription,
 		);
+
 		const queryParameters =
 			convertQueryParamsValuesToString(rawQueryParameters);
+
 		const queryString = new URLSearchParams(queryParameters).toString();
+
 		const request = createPipelineRequest({
 			method: "POST",
 			url: `${this._site.kuduUrl}/api/wardeploy?${queryString}`,
@@ -654,13 +665,17 @@ export class SiteClient implements IAppSettingsClient {
 			context,
 			this._site.subscription,
 		);
+
 		const queryParameters =
 			convertQueryParamsValuesToString(rawQueryParameters);
+
 		const queryString = new URLSearchParams(queryParameters).toString();
+
 		const headers = createHttpHeaders({
 			"Content-Type": "application/zip",
 			"Cache-Control": "no-cache",
 		});
+
 		const request = createPipelineRequest({
 			headers,
 			method: "POST",
@@ -679,6 +694,7 @@ export class SiteClient implements IAppSettingsClient {
 			context,
 			this._site.subscription,
 		);
+
 		return await client.sendRequest(
 			createPipelineRequest({
 				method: "PUT",
@@ -698,6 +714,7 @@ export class SiteClient implements IAppSettingsClient {
 				addStatusCodePolicy: true,
 			},
 		);
+
 		const response: AzExtPipelineResponse = await client.sendRequest(
 			createPipelineRequest({
 				method: "GET",
@@ -712,6 +729,7 @@ export class SiteClient implements IAppSettingsClient {
 		return results.map((r) => {
 			const dr = { ...r };
 			dr.receivedTime = new Date(r.received_time);
+
 			return dr;
 		}) as KuduModels.DeployResult[];
 	}
@@ -728,12 +746,14 @@ export class SiteClient implements IAppSettingsClient {
 				addStatusCodePolicy: true,
 			},
 		);
+
 		const response: AzExtPipelineResponse = await client.sendRequest(
 			createPipelineRequest({
 				method: "GET",
 				url: `${this._site.kuduUrl}/api/deployments/${deployId}`,
 			}),
 		);
+
 		return response.parsedBody as KuduModels.DeployResult;
 	}
 
@@ -749,6 +769,7 @@ export class SiteClient implements IAppSettingsClient {
 				addStatusCodePolicy: true,
 			},
 		);
+
 		const response: AzExtPipelineResponse = await client.sendRequest(
 			createPipelineRequest({
 				method: "GET",
@@ -765,6 +786,7 @@ export class SiteClient implements IAppSettingsClient {
 			const le = { ...obj };
 			le.logTime = new Date(obj.log_time);
 			le.detailsUrl = obj.details_url;
+
 			return le;
 		}) as KuduModels.LogEntry[];
 	}
@@ -782,6 +804,7 @@ export class SiteClient implements IAppSettingsClient {
 				addStatusCodePolicy: true,
 			},
 		);
+
 		const response: AzExtPipelineResponse = await client.sendRequest(
 			createPipelineRequest({
 				method: "GET",
@@ -793,10 +816,12 @@ export class SiteClient implements IAppSettingsClient {
 			log_time: string;
 			details_url: string;
 		})[];
+
 		return entries.map((e) => {
 			const le = { ...e };
 			le.logTime = new Date(e.log_time);
 			le.detailsUrl = e.details_url;
+
 			return le;
 		}) as KuduModels.LogEntry[];
 	}
@@ -809,6 +834,7 @@ export class SiteClient implements IAppSettingsClient {
 			context,
 			this._site.subscription,
 		);
+
 		return await client.sendRequest(
 			createPipelineRequest({
 				method: "GET",
@@ -827,7 +853,9 @@ export class SiteClient implements IAppSettingsClient {
 			context,
 			this._site.subscription,
 		);
+
 		const headers = createHttpHeaders(rawHeaders);
+
 		return await client.sendRequest(
 			createPipelineRequest({
 				method: "PUT",
@@ -851,6 +879,7 @@ export class SiteClient implements IAppSettingsClient {
 				context,
 				this._site.subscription,
 			);
+
 			const response: AzExtPipelineResponse = await client.sendRequest(
 				createPipelineRequest({
 					method: "GET",

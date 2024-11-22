@@ -28,6 +28,7 @@ export function createAzExtOutputChannel(
 ): types.IAzExtOutputChannel {
 	const outputChannel = new AzExtOutputChannel(name);
 	outputChannel.extensionPrefix = extensionPrefix;
+
 	return outputChannel;
 }
 
@@ -55,8 +56,10 @@ class AzExtOutputChannel implements types.IAzExtOutputChannel {
 
 	protected shouldIncludeTimestamps(): boolean {
 		const enableOutputTimestampsSetting: string = "enableOutputTimestamps";
+
 		const projectConfiguration: WorkspaceConfiguration =
 			workspace.getConfiguration(this.extensionPrefix);
+
 		return !!projectConfiguration.get<boolean>(
 			enableOutputTimestampsSetting,
 		);
@@ -70,6 +73,7 @@ class AzExtOutputChannel implements types.IAzExtOutputChannel {
 			this.appendLine(value);
 		} else {
 			options ||= {};
+
 			const date: Date = options.date || new Date();
 			this.appendLine(
 				`${date.toLocaleTimeString()}${options.resourceName ? " ".concat(options.resourceName) : ""}: ${value}`,

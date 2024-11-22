@@ -55,6 +55,7 @@ export class LogFilesTreeItem extends FolderTreeItem {
 		context: IActionContext,
 	): Promise<AzExtTreeItem[]> {
 		let children: AzExtTreeItem[];
+
 		try {
 			children = await super.loadMoreChildrenImpl(clearCache, context);
 		} catch (error) {

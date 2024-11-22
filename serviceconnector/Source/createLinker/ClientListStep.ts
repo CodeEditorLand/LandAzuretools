@@ -15,6 +15,7 @@ import { ICreateLinkerContext } from "./ICreateLinkerContext";
 export class ClientListStep extends AzureWizardPromptStep<ICreateLinkerContext> {
 	public async prompt(context: ICreateLinkerContext): Promise<void> {
 		const placeHolder = vscode.l10n.t("Select Language/Framework");
+
 		const picks: IAzureQuickPickItem<KnownClientType>[] = [
 			{ label: vscode.l10n.t("None"), data: KnownClientType.None },
 			{ label: vscode.l10n.t("Node.js"), data: KnownClientType.Nodejs },
@@ -48,8 +49,10 @@ export class ClientListStep extends AzureWizardPromptStep<ICreateLinkerContext> 
 		types: IAzureQuickPickItem<KnownClientType>[],
 	): IAzureQuickPickItem<KnownClientType>[] {
 		const recommendedTypes: KnownClientType[] = context.runtime || [];
+
 		function getPriority(type: KnownClientType): number {
 			const index: number = recommendedTypes.findIndex((t) => t === type);
+
 			return index === -1 ? recommendedTypes.length : index;
 		}
 		return types.sort(

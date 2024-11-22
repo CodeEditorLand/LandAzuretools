@@ -18,13 +18,16 @@ export abstract class GenericQuickPickStepWithCommands<
 		wizardContext: TContext,
 	): Promise<types.IWizardOptions<TContext> | undefined> {
 		const lastPick = getLastNode(wizardContext);
+
 		const treeItem = await this.treeDataProvider.getTreeItem(lastPick);
+
 		if (treeItem.command) {
 			await vscode.commands.executeCommand(
 				treeItem.command.command,
 				...((treeItem.command.arguments as unknown[]) ?? []),
 			);
 			wizardContext.pickedNodes.pop();
+
 			return {
 				// rerun current step after command is executed
 				promptSteps: [this],

@@ -40,11 +40,14 @@ export class UserAssignedIdentityCreateStep<
 		const newLocation: string = (
 			await LocationListStep.getLocation(wizardContext, storageProvider)
 		).name;
+
 		const rgName: string = nonNullValueAndProp(
 			wizardContext.resourceGroup,
 			"name",
 		);
+
 		const newName: string = `${rgName}-identities`;
+
 		const creatingUserAssignedIdentity: string = l10n.t(
 			'Creating user assigned identity "{0}" in location "{1}""...',
 			newName,
@@ -52,6 +55,7 @@ export class UserAssignedIdentityCreateStep<
 		);
 		ext.outputChannel.appendLog(creatingUserAssignedIdentity);
 		progress.report({ message: creatingUserAssignedIdentity });
+
 		const msiClient: ManagedServiceIdentityClient =
 			await createManagedServiceIdentityClient(wizardContext);
 		wizardContext.managedIdentity =
@@ -62,6 +66,7 @@ export class UserAssignedIdentityCreateStep<
 					location: newLocation,
 				},
 			);
+
 		const createdUserAssignedIdentity: string = l10n.t(
 			'Successfully created user assigned identity "{0}".',
 			newName,

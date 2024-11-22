@@ -19,6 +19,7 @@ export class ValidateLinkerStep extends AzureWizardExecuteStep<IPickLinkerContex
 
 	public async execute(context: IPickLinkerContext): Promise<void> {
 		const client = await createLinkerClient(context);
+
 		const response = await client.linker.beginValidateAndWait(
 			nonNullProp(context, "sourceResourceUri"),
 			nonNullProp(context, "linkerName"),
@@ -40,6 +41,7 @@ export class ValidateLinkerStep extends AzureWizardExecuteStep<IPickLinkerContex
 						),
 					}),
 				);
+
 				throw new Error(detail.description);
 			} else {
 				context.activityChildren.push(

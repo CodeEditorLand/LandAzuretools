@@ -53,6 +53,7 @@ export declare abstract class SubscriptionTreeItemBase extends AzExtParentTreeIt
 	public static readonly contextValue: string;
 	public readonly contextValue: string;
 	public readonly label: string;
+
 	constructor(
 		parent: AzExtParentTreeItem,
 		subscription: ISubscriptionContext,

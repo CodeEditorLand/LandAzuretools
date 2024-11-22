@@ -36,11 +36,14 @@ export async function localGitDeploy(
 	context: IActionContext,
 ): Promise<void> {
 	const client = await site.createClient(context);
+
 	const publishCredentials: User = await client.getWebAppPublishCredential();
+
 	const publishingPassword: string = nonNullProp(
 		publishCredentials,
 		"publishingPassword",
 	);
+
 	const publishingUserName: string = nonNullProp(
 		publishCredentials,
 		"publishingUserName",
@@ -48,16 +51,21 @@ export async function localGitDeploy(
 
 	await callWithMaskHandling(async (): Promise<void> => {
 		const remote: string = `https://${encodeURIComponent(publishingUserName)}:${encodeURIComponent(publishingPassword)}@${site.gitUrl}`;
+
 		const localGit: SimpleGit = simpleGit(options.fsPath);
+
 		let status: StatusResult;
+
 		try {
 			status = await localGit.status();
+
 			if (status.files.length > 0 && !options.commit) {
 				const message: string = vscode.l10n.t(
 					'{0} uncommitted change(s) in local repo "{1}"',
 					status.files.length,
 					options.fsPath,
 				);
+
 				const deployAnyway: vscode.MessageItem = {
 					title: vscode.l10n.t("Deploy Anyway"),
 				};
@@ -80,6 +88,7 @@ export async function localGitDeploy(
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
 			if (err.message.indexOf("spawn git ENOENT") >= 0) {
 				const installString: string = vscode.l10n.t("Install");
+
 				const input: string | undefined =
 					await vscode.window.showErrorMessage(
 						vscode.l10n.t(
@@ -87,16 +96,19 @@ export async function localGitDeploy(
 						),
 						installString,
 					);
+
 				if (input === installString) {
 					await openUrl("https://git-scm.com/downloads");
 				}
 				context.telemetry.properties.gitNotInstalled = "true";
+
 				return undefined;
 				// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
 			} else if (err.message.indexOf("error: failed to push") >= 0) {
 				const forcePushMessage: vscode.MessageItem = {
 					title: vscode.l10n.t("Force Push"),
 				};
+
 				const pushReject: string = vscode.l10n.t(
 					"Push rejected due to Git history diverging.",
 				);
@@ -118,7 +130,9 @@ export async function localGitDeploy(
 		): Promise<void> {
 			const tokenSource: vscode.CancellationTokenSource =
 				new vscode.CancellationTokenSource();
+
 			const token: vscode.CancellationToken = tokenSource.token;
+
 			try {
 				if (options.commit) {
 					const commitOptions: Options = { "-a": null };

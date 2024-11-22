@@ -19,6 +19,7 @@ const maxStackLines: number = 3;
 
 function initContext(callbackId: string): [number, types.IActionContext] {
 	const start: number = Date.now();
+
 	const context: types.IActionContext = {
 		telemetry: {
 			properties: {
@@ -48,6 +49,7 @@ function initContext(callbackId: string): [number, types.IActionContext] {
 	const handlerContext: types.IHandlerContext = Object.assign(context, {
 		callbackId,
 	});
+
 	for (const handler of Object.values(onActionStartHandlers)) {
 		try {
 			handler(handlerContext);
@@ -69,6 +71,7 @@ export function callWithTelemetryAndErrorHandlingSync<T>(
 		return callback(context);
 	} catch (error) {
 		handleError(context, callbackId, error);
+
 		return undefined;
 	} finally {
 		handleTelemetry(context, callbackId, start);
@@ -85,6 +88,7 @@ export async function callWithTelemetryAndErrorHandling<T>(
 		return await Promise.resolve(callback(context));
 	} catch (error) {
 		handleError(context, callbackId, error);
+
 		return undefined;
 	} finally {
 		handleTelemetry(context, callbackId, start);
@@ -92,7 +96,9 @@ export async function callWithTelemetryAndErrorHandling<T>(
 }
 
 const onActionStartHandlers: { [id: number]: types.OnActionStartHandler } = {};
+
 const errorHandlers: { [id: number]: types.ErrorHandler } = {};
+
 const telemetryHandlers: { [id: number]: types.TelemetryHandler } = {};
 
 export function registerOnActionStartHandler(
@@ -117,8 +123,10 @@ function registerHandler<T>(
 	handlers: { [id: string]: T },
 ): Disposable {
 	handlerCount += 1;
+
 	const id: number = handlerCount;
 	handlers[id] = handler;
+
 	return {
 		dispose: (): void => {
 			delete handlers[id];
@@ -132,10 +140,12 @@ function handleError(
 	error: unknown,
 ): void {
 	let rethrow: boolean = false;
+
 	const errorContext: types.IErrorHandlerContext = Object.assign(context, {
 		error,
 		callbackId,
 	});
+
 	try {
 		for (const handler of Object.values(errorHandlers)) {
 			try {
@@ -146,11 +156,13 @@ function handleError(
 		}
 
 		const errorData: types.IParsedError = parseError(errorContext.error);
+
 		const unMaskedMessage: string = errorData.message;
 		errorData.message = maskUserInfo(
 			errorData.message,
 			context.valuesToMask,
 		);
+
 		if (errorData.stepName) {
 			context.telemetry.properties.lastStep = errorData.stepName;
 		}
@@ -177,6 +189,7 @@ function handleError(
 			context.telemetry.properties.stack = errorData.stack
 				? limitLines(errorData.stack, maxStackLines)
 				: undefined;
+
 			if (
 				context.telemetry.suppressIfSuccessful ||
 				context.telemetry.suppressAll
@@ -204,6 +217,7 @@ function handleError(
 			ext.outputChannel.appendLog(l10n.t("Error: {0}", unMaskedMessage));
 
 			let message: string;
+
 			if (unMaskedMessage.includes("\n")) {
 				ext.outputChannel.show();
 				message = l10n.t(
@@ -214,6 +228,7 @@ function handleError(
 			}
 
 			const items: MessageItem[] = [];
+
 			if (!context.errorHandling.suppressReportIssue) {
 				items.push(DialogResponses.reportAnIssue);
 			}
@@ -243,6 +258,7 @@ function handleError(
 
 		if (context.errorHandling.rethrow) {
 			rethrow = true;
+
 			throw errorContext.error;
 		}
 	} catch (internalError) {
@@ -263,6 +279,7 @@ function handleTelemetry(
 	const handlerContext: types.IHandlerContext = Object.assign(context, {
 		callbackId,
 	});
+
 	try {
 		for (const handler of Object.values(telemetryHandlers)) {
 			try {
@@ -279,6 +296,7 @@ function handleTelemetry(
 			context.valuesToMask = context.valuesToMask.filter(
 				(v, index) => context.valuesToMask.indexOf(v) === index,
 			);
+
 			for (const [key, value] of Object.entries(
 				context.telemetry.properties,
 			)) {

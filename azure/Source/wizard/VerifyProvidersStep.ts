@@ -42,6 +42,7 @@ export class VerifyProvidersStep<T extends ISubscriptionActionContext>
 				try {
 					let provider: Provider =
 						await client.providers.get(providerName);
+
 					if (
 						provider.registrationState?.toLowerCase() !==
 						"registered"
@@ -51,6 +52,7 @@ export class VerifyProvidersStep<T extends ISubscriptionActionContext>
 						// The register call doesn't actually wait for register to finish, so we will poll for state
 						// Also, creating a resource seems to work even if it's in the 'registering' state (which can last several minutes), so we won't wait longer than 30 seconds
 						const maxTime: number = Date.now() + 30 * 1000;
+
 						do {
 							await delay(2 * 1000);
 							provider = await client.providers.get(providerName);
@@ -63,6 +65,7 @@ export class VerifyProvidersStep<T extends ISubscriptionActionContext>
 				} catch (error) {
 					// ignore and continue with wizard. An error here would likely be confusing and un-actionable
 					const perror: IParsedError = parseError(error);
+
 					const maskedErrorMessage: string = maskUserInfo(
 						perror.message,
 						[],

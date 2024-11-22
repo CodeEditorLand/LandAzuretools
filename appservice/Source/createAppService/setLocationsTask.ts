@@ -42,6 +42,7 @@ export async function getWebLocations(
 ): Promise<string[]> {
 	const options: ListGeoRegionsOptionalParams = {};
 	options["api-version"] = "2020-09-01";
+
 	if (context.newSiteOS === WebsiteOS.linux) {
 		if (
 			context.newSiteKind === AppKind.functionapp &&
@@ -62,6 +63,7 @@ export async function getWebLocations(
 		.join("&");
 	// Temporary fix for https://github.com/Azure/azure-rest-api-specs/issues/18071
 	const genericClient = await createGenericClient(context, context);
+
 	const result: AzExtPipelineResponse = await genericClient.sendRequest(
 		createPipelineRequest({
 			method: "GET",

@@ -17,6 +17,7 @@ export abstract class DeployZipBaseExecuteStep extends DeployExecuteStepBase {
 
 	public async deployCore(context: InnerDeployContext): Promise<void> {
 		const fsPath = context.fsPath;
+
 		if (!(await AzExtFsExtra.pathExists(fsPath))) {
 			throw new Error(
 				l10n.t(
@@ -26,6 +27,7 @@ export abstract class DeployZipBaseExecuteStep extends DeployExecuteStepBase {
 			);
 		}
 		const response = await this.deployZip(context);
+
 		try {
 			if (response) {
 				context.telemetry.properties.deploymentId =

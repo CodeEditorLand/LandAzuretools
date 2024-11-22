@@ -36,18 +36,24 @@ export class RoleAssignmentExecuteStep<
 	): Promise<void> {
 		const amClient =
 			await createAuthorizationManagementClient(wizardContext);
+
 		const scope = this.getScopeId();
+
 		if (!scope) {
 			throw new Error(
 				l10n.t("No scope was provided for the role assignment."),
 			);
 		}
 		const scopeSplitArr = scope.split("/");
+
 		const resourceName = scopeSplitArr[scopeSplitArr.length - 1] ?? "";
+
 		const resourceType = scopeSplitArr[scopeSplitArr.length - 2] ?? "";
 
 		const guid = randomUUID();
+
 		const roleDefinitionId = this._roleDefinition.id as string;
+
 		const principalId = nonNullValueAndProp(
 			wizardContext.managedIdentity,
 			"principalId",
@@ -57,6 +63,7 @@ export class RoleAssignmentExecuteStep<
 			roleDefinitionId,
 			principalId,
 		});
+
 		const roleAssignmentCreated = l10n.t(
 			'Role assignment "{0}" created for the {2} resource "{1}".',
 			this._roleDefinition.roleName ?? "",

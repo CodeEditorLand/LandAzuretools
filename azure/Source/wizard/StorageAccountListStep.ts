@@ -92,6 +92,7 @@ export class StorageAccountListStep<
 	>(wizardContext: T, name: string): Promise<boolean> {
 		const storageClient: StorageManagementClient =
 			await createStorageClient(wizardContext);
+
 		return !!(
 			await storageClient.storageAccounts.checkNameAvailability({
 				name,
@@ -108,6 +109,7 @@ export class StorageAccountListStep<
 			placeHolder: "Select a storage account.",
 			id: `StorageAccountListStep/${wizardContext.subscriptionId}`,
 		};
+
 		const picksTask: Promise<
 			IAzureQuickPickItem<StorageAccount | undefined>[]
 		> = this.getQuickPicks(
@@ -119,6 +121,7 @@ export class StorageAccountListStep<
 			await wizardContext.ui.showQuickPick(picksTask, quickPickOptions)
 		).data;
 		wizardContext.storageAccount = result;
+
 		if (wizardContext.storageAccount) {
 			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			await LocationListStep.setLocation(
@@ -137,6 +140,7 @@ export class StorageAccountListStep<
 				new ResourceGroupListStep(),
 			];
 			LocationListStep.addStep(wizardContext, promptSteps);
+
 			return {
 				promptSteps: promptSteps,
 				executeSteps: [
@@ -147,6 +151,7 @@ export class StorageAccountListStep<
 			wizardContext.valuesToMask.push(
 				nonNullProp(wizardContext.storageAccount, "name"),
 			);
+
 			return undefined;
 		}
 	}
@@ -174,16 +179,19 @@ export class StorageAccountListStep<
 			`^${convertFilterToPattern(this._filters.kind)}$`,
 			"i",
 		);
+
 		const performanceRegExp: RegExp = new RegExp(
 			`^${convertFilterToPattern(this._filters.performance)}_.*$`,
 			"i",
 		);
+
 		const replicationRegExp: RegExp = new RegExp(
 			`^.*_${convertFilterToPattern(this._filters.replication)}$`,
 			"i",
 		);
 
 		let location: types.AzExtLocation | undefined;
+
 		if (LocationListStep.hasLocation(wizardContext)) {
 			location = await LocationListStep.getLocation(
 				wizardContext,
@@ -192,14 +200,18 @@ export class StorageAccountListStep<
 		}
 
 		let hasFilteredAccountsBySku: boolean = false;
+
 		let hasFilteredAccountsByLocation: boolean = false;
+
 		let hasFilteredAccountsByNetwork = false;
+
 		const storageAccounts: (StorageAccount & {
 			networkAcls?: NetworkRuleSet;
 		})[] = (await storageAccountsTask).sort(
 			(a: StorageAccount, b: StorageAccount) =>
 				nonNullProp(a, "name").localeCompare(nonNullProp(b, "name")),
 		);
+
 		for (const sa of storageAccounts) {
 			if (
 				!sa.kind ||
@@ -209,6 +221,7 @@ export class StorageAccountListStep<
 				sa.sku.name.match(replicationRegExp)
 			) {
 				hasFilteredAccountsBySku = true;
+
 				continue;
 			}
 
@@ -217,6 +230,7 @@ export class StorageAccountListStep<
 				!LocationListStep.locationMatchesName(location, sa.location)
 			) {
 				hasFilteredAccountsByLocation = true;
+
 				continue;
 			}
 
@@ -224,12 +238,14 @@ export class StorageAccountListStep<
 			const networkDefaultAction =
 				sa.networkRuleSet?.defaultAction ??
 				sa.networkAcls?.defaultAction;
+
 			if (
 				sa.publicNetworkAccess?.toLocaleLowerCase() === "disabled" ||
 				(sa.publicNetworkAccess?.toLocaleLowerCase() === "enabled" &&
 					networkDefaultAction === "Deny")
 			) {
 				hasFilteredAccountsByNetwork = true;
+
 				continue;
 			}
 
@@ -286,5 +302,6 @@ export class StorageAccountListStep<
 
 function convertFilterToPattern(values?: string[]): string {
 	values ||= [];
+
 	return `(${values.join("|")})`;
 }

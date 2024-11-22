@@ -19,6 +19,7 @@ export class SiteOSStep extends AzureWizardPromptStep<IAppServiceWizardContext> 
 			WebsiteOS,
 		).map((key: string) => {
 			const os: WebsiteOS = <WebsiteOS>WebsiteOS[key];
+
 			return {
 				label: getWebsiteOSDisplayName(os),
 				description: "",

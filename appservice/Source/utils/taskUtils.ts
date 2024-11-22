@@ -11,6 +11,7 @@ export namespace taskUtils {
 	export function getFsPathFromTask(task: Task): string | undefined {
 		if (typeof task.scope === "object") {
 			const workspaceFolder: Partial<WorkspaceFolder> = task.scope;
+
 			return workspaceFolder.uri?.fsPath;
 		} else {
 			return undefined;
@@ -28,6 +29,7 @@ export namespace taskUtils {
 			return true;
 		} else {
 			const taskPath: string | undefined = getFsPathFromTask(task);
+
 			return (
 				!!taskPath &&
 				(isPathEqual(taskPath, fsPath) || isSubpath(taskPath, fsPath))
@@ -41,7 +43,9 @@ export namespace taskUtils {
 			return true;
 		} else {
 			const task1Path: string | undefined = getFsPathFromTask(task1);
+
 			const task2Path: string | undefined = getFsPathFromTask(task2);
+
 			return (
 				!!task1Path && !!task2Path && isPathEqual(task1Path, task2Path)
 			);
@@ -64,6 +68,7 @@ export namespace taskUtils {
 	): Promise<Task | undefined> {
 		tasks = tasks || (await codeTasks.fetchTasks());
 		taskName = taskName.toLowerCase();
+
 		return tasks.find((t) => {
 			return (
 				isTaskInScopeOfPath(t, deployFsPath) &&

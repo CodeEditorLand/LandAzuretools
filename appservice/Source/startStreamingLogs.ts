@@ -44,7 +44,9 @@ export async function startStreamingLogs(
 	logsPath: string = "",
 ): Promise<ILogStream> {
 	const logStreamId: string = getLogStreamId(site, logsPath);
+
 	const logStream: ILogStream | undefined = logStreams.get(logStreamId);
+
 	if (logStream && logStream.isConnected) {
 		logStream.outputChannel.show();
 		void context.ui.showWarningMessage(
@@ -53,6 +55,7 @@ export async function startStreamingLogs(
 				logStreamLabel,
 			),
 		);
+
 		return logStream;
 	} else {
 		await verifyLoggingEnabled();
@@ -67,6 +70,7 @@ export async function startStreamingLogs(
 		outputChannel.appendLine(vscode.l10n.t("Connecting to log stream..."));
 
 		const credentials = site.subscription.credentials;
+
 		const bearerToken = (
 			(await credentials.getToken()) as { token: string }
 		).token;
@@ -78,7 +82,9 @@ export async function startStreamingLogs(
 					"appService.streamingLogs",
 					async (streamContext: IActionContext) => {
 						streamContext.errorHandling.suppressDisplay = true;
+
 						let timerId: NodeJS.Timer | undefined;
+
 						if (site.isFunctionApp) {
 							// For Function Apps, we have to ping "/admin/host/status" every minute for logging to work
 							// https://github.com/Microsoft/vscode-azurefunctions/issues/227
@@ -96,9 +102,11 @@ export async function startStreamingLogs(
 
 						const abortController: AbortController =
 							new AbortController();
+
 						const headers = createHttpHeaders({
 							Authorization: `Bearer ${bearerToken}`,
 						});
+
 						const logsResponse: AzExtPipelineResponse =
 							await genericClient.sendRequest(
 								createPipelineRequest({
@@ -122,6 +130,7 @@ export async function startStreamingLogs(
 										logsResponse.readableStreamBody?.removeAllListeners();
 										abortController.abort();
 										outputChannel.show();
+
 										if (timerId) {
 											clearInterval(timerId);
 										}
@@ -177,7 +186,9 @@ export async function stopStreamingLogs(
 	logsPath: string = "",
 ): Promise<void> {
 	const logStreamId: string = getLogStreamId(site, logsPath);
+
 	const logStream: ILogStream | undefined = logStreams.get(logStreamId);
+
 	if (logStream && logStream.isConnected) {
 		logStream.dispose();
 	} else {

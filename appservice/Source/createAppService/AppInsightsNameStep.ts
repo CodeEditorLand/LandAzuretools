@@ -20,6 +20,7 @@ export class AppInsightsNameStep extends AzureWizardPromptStep<IAppServiceWizard
 	): Promise<boolean> {
 		const appInsightsComponents: ApplicationInsightsComponent[] =
 			await AppInsightsListStep.getAppInsightsComponents(context);
+
 		return !appInsightsComponents.some(
 			(ai: ApplicationInsightsComponent) =>
 				ai.name !== undefined &&

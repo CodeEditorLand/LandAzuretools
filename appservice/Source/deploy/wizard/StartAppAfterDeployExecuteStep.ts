@@ -18,6 +18,7 @@ export class StartAppAfterDeployExecuteStep extends AzureWizardExecuteStep<Inner
 		const site = context.site;
 
 		const client = await site.createClient(context);
+
 		const startingApp = l10n.t("Starting app...");
 		progress.report({ message: startingApp });
 		ext.outputChannel.appendLog(startingApp, {
