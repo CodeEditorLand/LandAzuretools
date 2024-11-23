@@ -206,7 +206,6 @@ async function getDebugPath(): Promise<string> {
 			const root = await vscode.window.showWorkspaceFolderPick();
 
 			if (root) return root.uri.fsPath;
-
 			else
 				throw new Error(
 					vscode.l10n.t(

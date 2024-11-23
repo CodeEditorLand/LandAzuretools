@@ -3,22 +3,27 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { CancellationToken } from 'vscode';
-import * as types from '../../index';
+import { CancellationToken } from "vscode";
+
+import * as types from "../../index";
 
 export interface IInternalActionContext extends types.IActionContext {
-    ui: types.IAzureUserInput & { wizard?: IInternalAzureWizard, isPrompting?: boolean, isTesting?: boolean };
+	ui: types.IAzureUserInput & {
+		wizard?: IInternalAzureWizard;
+		isPrompting?: boolean;
+		isTesting?: boolean;
+	};
 }
 
 export interface IInternalAzureWizard {
-    title: string | undefined;
-    currentStep: number;
-    currentStepId: string | undefined;
-    totalSteps: number;
-    hideStepCount: boolean | undefined;
-    showBackButton: boolean;
-    showTitle: boolean;
-    cancellationToken: CancellationToken;
+	title: string | undefined;
+	currentStep: number;
+	currentStepId: string | undefined;
+	totalSteps: number;
+	hideStepCount: boolean | undefined;
+	showBackButton: boolean;
+	showTitle: boolean;
+	cancellationToken: CancellationToken;
 
-    getCachedInputBoxValue(): string | undefined;
+	getCachedInputBoxValue(): string | undefined;
 }
