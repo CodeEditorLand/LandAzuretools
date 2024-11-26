@@ -8,7 +8,7 @@
 	},
 	"description": "Common Azure utils for developing Azure extensions for VS Code",
 	"devDependencies": {
-		"@types/node": "22.9.1",
+		"@types/node": "22.10.0",
 		"@types/semver": "7.5.8",
 		"@types/uuid": "10.0.0",
 		"glob": "11.0.0"
