@@ -16,6 +16,7 @@ export async function showWarningMessage<T extends MessageItem>(
 	message: string,
 	...items: T[]
 ): Promise<T>;
+
 export async function showWarningMessage<T extends MessageItem>(
 	context: IInternalActionContext,
 	message: string,

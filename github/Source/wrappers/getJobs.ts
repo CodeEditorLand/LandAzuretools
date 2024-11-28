@@ -10,7 +10,9 @@ import type { GitHubContext } from "../GitHubContext";
 
 export type Jobs =
 	RestEndpointMethodTypes["actions"]["listJobsForWorkflowRun"]["response"]["data"];
+
 export type Job = Jobs["jobs"][number];
+
 export type JobStep = NonNullable<Job["steps"]>[number];
 
 export type GetJobsParams =

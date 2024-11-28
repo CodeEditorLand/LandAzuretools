@@ -420,6 +420,7 @@ export interface IStorageAccountFilters {
 }
 
 export declare const storageAccountNamingRules: IAzureNamingRules;
+
 export declare class StorageAccountListStep<
 	T extends IStorageAccountWizardContext,
 > extends AzureWizardPromptStep<T> {
@@ -544,6 +545,7 @@ export declare function registerAzureUtilsExtensionVariables(
 export type AzExtGenericCredentials =
 	| AzExtServiceClientCredentialsT2
 	| AzExtServiceClientCredentials;
+
 export type AzExtGenericClientInfo =
 	| AzExtGenericCredentials
 	| { credentials: AzExtGenericCredentials; environment: Environment }
@@ -560,6 +562,7 @@ export declare function createGenericClient(
 	clientInfo: AzExtGenericClientInfo | undefined,
 	options?: IGenericClientOptions,
 ): Promise<ServiceClient>;
+
 export interface IGenericClientOptions {
 	noRetryPolicy?: boolean;
 	addStatusCodePolicy?: boolean;
@@ -569,6 +572,7 @@ export interface IGenericClientOptions {
 export type AzExtRequestPrepareOptions = PipelineRequestOptions & {
 	rejectUnauthorized?: boolean;
 };
+
 export type AzExtPipelineResponse = PipelineResponse & { parsedBody?: any };
 
 /**
@@ -649,9 +653,11 @@ interface ParsedAzureResourceGroupId {
 }
 
 export function parseAzureResourceId(id: string): ParsedAzureResourceId;
+
 export function parseAzureResourceGroupId(
 	id: string,
 ): ParsedAzureResourceGroupId;
+
 export function getResourceGroupFromId(id: string): string;
 
 export declare function createPortalUri(

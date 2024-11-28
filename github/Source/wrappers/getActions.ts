@@ -10,8 +10,10 @@ import type { GitHubContext } from "../GitHubContext";
 
 export type ActionsListWorkflowRuns =
 	RestEndpointMethodTypes["actions"]["listWorkflowRunsForRepo"]["response"]["data"];
+
 export type ActionWorkflowRuns =
 	ActionsListWorkflowRuns["workflow_runs"][number];
+
 export type GetActionsListWorkflowRunsParams =
 	RestEndpointMethodTypes["actions"]["listWorkflowRunsForRepo"]["parameters"];
 

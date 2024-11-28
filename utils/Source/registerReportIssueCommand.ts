@@ -16,6 +16,7 @@ import { nonNullValue } from "./utils/nonNull";
 dayjs.extend(relativeTime);
 
 let cachedIssues: IReportableIssue[] | undefined;
+
 export function cacheIssueForCommand(issue: IReportableIssue): void {
 	if (cachedIssues) {
 		cachedIssues.push(issue);

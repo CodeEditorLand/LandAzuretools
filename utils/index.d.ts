@@ -452,6 +452,7 @@ export declare abstract class AzExtTreeItem implements IAzExtTreeItem {
 }
 
 export declare function isAzExtTreeItem(maybeTreeItem: unknown): maybeTreeItem is AzExtTreeItem;
+
 export declare function isAzExtParentTreeItem(maybeParentTreeItem: unknown): maybeParentTreeItem is AzExtParentTreeItem;
 
 export interface GenericParentTreeItemOptions {
@@ -1161,12 +1162,17 @@ export interface IWizardOptions<T extends IActionContext> {
 }
 
 export const activitySuccessContext: string;
+
 export const activityFailContext: string;
+
 export const activityProgressContext: string;
 
 export const activityInfoIcon: ThemeIcon;
+
 export const activitySuccessIcon: ThemeIcon;
+
 export const activityProgressIcon: ThemeIcon;
+
 export const activityFailIcon: ThemeIcon;
 
 export type ActivityTask<R> = (progress: Progress<{ message?: string, increment?: number }>, cancellationToken: CancellationToken) => Promise<R>;

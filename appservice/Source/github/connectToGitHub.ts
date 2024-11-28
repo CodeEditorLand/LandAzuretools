@@ -24,13 +24,16 @@ import { ParsedSite } from "../SiteClient";
 import { verifyNoRunFromPackageSetting } from "../verifyNoRunFromPackageSetting";
 
 export type gitHubOrgData = { login: string; repos_url: string };
+
 export type gitHubRepoData = {
 	name: string;
 	repos_url: string;
 	url: string;
 	html_url: string;
 };
+
 export type gitHubBranchData = { name: string };
+
 export type gitHubLink = {
 	prev?: string;
 	next?: string;

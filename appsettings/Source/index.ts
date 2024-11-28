@@ -4,5 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 export * from "./IAppSettingsClient";
+
 export * from "./tree/AppSettingTreeItem";
+
 export * from "./tree/AppSettingsTreeItem";

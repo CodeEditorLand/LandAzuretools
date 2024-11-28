@@ -10,6 +10,7 @@ import type { GitHubContext } from "../GitHubContext";
 
 export type UserRepos =
 	RestEndpointMethodTypes["repos"]["listForAuthenticatedUser"]["response"]["data"];
+
 export type GetUserReposReqParams =
 	RestEndpointMethodTypes["repos"]["listForAuthenticatedUser"]["parameters"];
 
@@ -27,6 +28,7 @@ export async function getRepositoriesByUser(
 
 export type OrgRepos =
 	RestEndpointMethodTypes["repos"]["listForOrg"]["response"]["data"];
+
 export type GetOrgReposReqParams =
 	RestEndpointMethodTypes["repos"]["listForOrg"]["parameters"] & {
 		org: string;

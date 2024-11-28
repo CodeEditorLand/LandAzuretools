@@ -10,6 +10,7 @@ import type { GitHubContext } from "../GitHubContext";
 
 export type Branches =
 	RestEndpointMethodTypes["repos"]["listBranches"]["response"]["data"];
+
 export type GetBranchesParams =
 	RestEndpointMethodTypes["repos"]["listBranches"]["parameters"] & {
 		owner: string;

@@ -36,6 +36,7 @@ export interface AzureDevOpsSubscriptionProviderInitializer {
 let azureDevOpsSubscriptionProvider:
 	| AzureDevOpsSubscriptionProvider
 	| undefined;
+
 export function createAzureDevOpsSubscriptionProviderFactory(
 	initializer: AzureDevOpsSubscriptionProviderInitializer,
 ): () => Promise<AzureDevOpsSubscriptionProvider> {
