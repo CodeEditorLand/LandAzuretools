@@ -20,7 +20,9 @@ import {
 
 type RepositoryData = {
 	owner: string;
+
 	repo: string;
+
 	url: string;
 };
 
@@ -44,6 +46,7 @@ export class GitHubRepositoryListStep extends AzureWizardPromptStep<GitHubContex
 
 		while (!repositoryData) {
 			page++;
+
 			repositoryData = (
 				await context.ui.showQuickPick(this.getPicks(context, page), {
 					placeHolder,
@@ -52,11 +55,15 @@ export class GitHubRepositoryListStep extends AzureWizardPromptStep<GitHubContex
 		}
 
 		context.gitHubRepository = repositoryData.repo;
+
 		context.gitHubRepositoryOwner = repositoryData.owner;
+
 		context.gitHubRepositoryUrl = repositoryData.url;
 
 		context.valuesToMask.push(context.gitHubRepository);
+
 		context.valuesToMask.push(context.gitHubRepositoryOwner);
+
 		context.valuesToMask.push(context.gitHubRepositoryUrl);
 	}
 
@@ -113,6 +120,7 @@ export class GitHubRepositoryListStep extends AzureWizardPromptStep<GitHubContex
 						},
 					)),
 		);
+
 		this.picks.sort((a: QuickPickItem, b: QuickPickItem) =>
 			a.label.localeCompare(b.label),
 		);

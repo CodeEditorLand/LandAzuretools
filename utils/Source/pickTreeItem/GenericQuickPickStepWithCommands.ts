@@ -26,6 +26,7 @@ export abstract class GenericQuickPickStepWithCommands<
 				treeItem.command.command,
 				...((treeItem.command.arguments as unknown[]) ?? []),
 			);
+
 			wizardContext.pickedNodes.pop();
 
 			return {
@@ -33,6 +34,7 @@ export abstract class GenericQuickPickStepWithCommands<
 				promptSteps: [this],
 			};
 		}
+
 		return undefined;
 	}
 }

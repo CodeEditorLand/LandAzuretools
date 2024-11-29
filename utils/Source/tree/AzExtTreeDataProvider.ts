@@ -36,13 +36,17 @@ export class AzExtTreeDataProvider
 {
 	public _onTreeItemCreateEmitter: EventEmitter<AzExtTreeItem> =
 		new EventEmitter<AzExtTreeItem>();
+
 	private _onDidChangeTreeDataEmitter: EventEmitter<
 		AzExtTreeItem | undefined
 	> = new EventEmitter<AzExtTreeItem | undefined>();
+
 	private _collapsibleStateTracker: CollapsibleStateTracker | undefined;
 
 	private readonly _loadMoreCommandId: string;
+
 	private readonly _rootTreeItem: AzExtParentTreeItem;
+
 	private readonly _findTreeItemTasks: Map<
 		string,
 		Promise<types.AzExtTreeItem | undefined>
@@ -50,7 +54,9 @@ export class AzExtTreeDataProvider
 
 	constructor(rootTreeItem: AzExtParentTreeItem, loadMoreCommandId: string) {
 		this._loadMoreCommandId = loadMoreCommandId;
+
 		this._rootTreeItem = rootTreeItem;
+
 		rootTreeItem.treeDataProvider = <IAzExtTreeDataProviderInternal>this;
 	}
 
@@ -124,7 +130,9 @@ export class AzExtTreeDataProvider
 					"AzureTreeDataProvider.getChildren",
 					async (context: types.IActionContext) => {
 						context.errorHandling.suppressDisplay = true;
+
 						context.errorHandling.rethrow = true;
+
 						context.errorHandling.forceIncludeInReportIssueCommand =
 							true;
 
@@ -135,8 +143,10 @@ export class AzExtTreeDataProvider
 						} else {
 							context.telemetry.properties.isActivationEvent =
 								"true";
+
 							treeItem = this._rootTreeItem;
 						}
+
 						addTreeItemValuesToMask(
 							context,
 							treeItem,
@@ -153,6 +163,7 @@ export class AzExtTreeDataProvider
 
 						const hasMoreChildren: boolean =
 							treeItem.hasMoreChildrenImpl();
+
 						context.telemetry.properties.hasMoreChildren =
 							String(hasMoreChildren);
 
@@ -173,6 +184,7 @@ export class AzExtTreeDataProvider
 						const result: AzExtTreeItem[] = Array.from(
 							resultMap.values(),
 						);
+
 						result.push(
 							...duplicateChildren.map((c) => {
 								const message: string = l10n.t(
@@ -200,7 +212,9 @@ export class AzExtTreeDataProvider
 									contextValue: "azureextensionui.loadMore",
 									commandId: this._loadMoreCommandId,
 								});
+
 							loadMoreTI.commandArgs = [treeItem];
+
 							result.push(loadMoreTI);
 						}
 
@@ -250,9 +264,11 @@ export class AzExtTreeDataProvider
 
 		try {
 			this.refreshUIOnly(treeItem);
+
 			await treeItem.loadMoreChildren(context);
 		} finally {
 			treeItem.isLoadingMore = false;
+
 			this.refreshUIOnly(treeItem);
 		}
 	}
@@ -262,11 +278,13 @@ export class AzExtTreeDataProvider
 		context: types.ITreeItemPickerContext & { canPickMany: true },
 		startingTreeItem?: AzExtTreeItem,
 	): Promise<T[]>;
+
 	public async showTreeItemPicker<T extends types.AzExtTreeItem>(
 		expectedContextValues: string | (string | RegExp)[] | RegExp,
 		context: types.ITreeItemPickerContext,
 		startingTreeItem?: AzExtTreeItem,
 	): Promise<T>;
+
 	public async showTreeItemPicker<T extends types.AzExtTreeItem>(
 		expectedContextValues: string | (string | RegExp)[] | RegExp,
 		context: types.ITreeItemPickerContext,
@@ -331,6 +349,7 @@ export class AzExtTreeDataProvider
 							),
 						)
 					: this.findTreeItemInternal(fullId, context);
+
 			this._findTreeItemTasks.set(fullId, newTask);
 
 			try {
@@ -343,12 +362,15 @@ export class AzExtTreeDataProvider
 		if (result) {
 			addTreeItemValuesToMask(context, result, "findTreeItem");
 		}
+
 		return <T>(<unknown>result);
 	}
 
 	public dispose(): void {
 		this._collapsibleStateTracker?.dispose();
+
 		this._onDidChangeTreeDataEmitter.dispose();
+
 		this._onTreeItemCreateEmitter.dispose();
 	}
 
@@ -406,6 +428,7 @@ export class AzExtTreeDataProvider
 				if (children.has(fullIdWithContext)) {
 					return true;
 				}
+
 				child.fullIdWithContext = fullIdWithContext;
 			}
 		}

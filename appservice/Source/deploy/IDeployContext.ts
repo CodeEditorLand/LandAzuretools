@@ -21,18 +21,24 @@ export enum AppSource {
 
 export interface IDeployContext extends IActionContext {
 	workspaceFolder: WorkspaceFolder;
+
 	originalDeployFsPath: string;
+
 	effectiveDeployFsPath: string;
 
 	defaultAppSetting: string;
+
 	appSource?: AppSource;
+
 	isNewApp?: boolean;
 
 	/**
 	 * Used to overwrite default deploy method based on scm type
 	 */
 	deployMethod?: "zip" | "storage" | "flexconsumption";
+
 	stopAppBeforeDeploy?: boolean;
+
 	syncTriggersPostDeploy?: boolean;
 	/**
 	 * id retrieved from scm-deployment-id header to track deployment
@@ -45,7 +51,10 @@ export interface InnerDeployContext
 	extends IDeployContext,
 		Partial<ExecuteActivityContext> {
 	site: ParsedSite;
+
 	client: SiteClient;
+
 	fsPath: string;
+
 	aspPromise: Promise<AppServicePlan | undefined>;
 }

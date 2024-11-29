@@ -32,6 +32,7 @@ export class AppInsightsNameStep extends AzureWizardPromptStep<IAppServiceWizard
 		const suggestedName: string | undefined = context.relatedNameTask
 			? await context.relatedNameTask
 			: undefined;
+
 		context.newAppInsightsName = (
 			await context.ui.showInputBox({
 				value: suggestedName,
@@ -42,6 +43,7 @@ export class AppInsightsNameStep extends AzureWizardPromptStep<IAppServiceWizard
 					await this.validateApplicationInsightName(context, value),
 			})
 		).trim();
+
 		context.valuesToMask.push(context.newAppInsightsName);
 	}
 

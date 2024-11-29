@@ -22,5 +22,6 @@ export async function getUnauthenticatedTenants(
 			unauthenticatedTenants.push(tenant);
 		}
 	}
+
 	return unauthenticatedTenants;
 }

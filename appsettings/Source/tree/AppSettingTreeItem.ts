@@ -26,7 +26,9 @@ import {
  */
 export class AppSettingTreeItem extends AzExtTreeItem {
 	public static contextValue: string = "applicationSettingItem";
+
 	public static contextValueNoSlots: string = "applicationSettingItemNoSlots";
+
 	public get contextValue(): string {
 		const contextValue = this.parent.supportsSlots
 			? AppSettingTreeItem.contextValue
@@ -37,10 +39,13 @@ export class AppSettingTreeItem extends AzExtTreeItem {
 			...this.parent.contextValuesToAdd,
 		]);
 	}
+
 	public readonly parent: AppSettingsTreeItem;
 
 	private _key: string;
+
 	private _value: string;
+
 	private _hideValue: boolean;
 
 	private constructor(
@@ -49,9 +54,13 @@ export class AppSettingTreeItem extends AzExtTreeItem {
 		value: string,
 	) {
 		super(parent);
+
 		this._key = key;
+
 		this._value = value;
+
 		this._hideValue = true;
+
 		this.valuesToMask.push(key, value);
 	}
 
@@ -71,6 +80,7 @@ export class AppSettingTreeItem extends AzExtTreeItem {
 
 		return ti;
 	}
+
 	public get id(): string {
 		return this._key;
 	}
@@ -102,7 +112,9 @@ export class AppSettingTreeItem extends AzExtTreeItem {
 			newValue,
 			context,
 		);
+
 		this._value = newValue;
+
 		await this.refresh(context);
 	}
 
@@ -123,7 +135,9 @@ export class AppSettingTreeItem extends AzExtTreeItem {
 		});
 
 		await this.parent.editSettingItem(oldKey, newKey, this._value, context);
+
 		this._key = newKey;
+
 		await this.refresh(context);
 	}
 
@@ -133,11 +147,13 @@ export class AppSettingTreeItem extends AzExtTreeItem {
 			{ modal: true, stepName: "confirmDelete" },
 			DialogResponses.deleteResponse,
 		);
+
 		await this.parent.deleteSettingItem(this._key, context);
 	}
 
 	public async toggleValueVisibility(context: IActionContext): Promise<void> {
 		this._hideValue = !this._hideValue;
+
 		await this.refresh(context);
 	}
 
@@ -154,6 +170,7 @@ export class AppSettingTreeItem extends AzExtTreeItem {
 			if (!slotSettings.appSettingNames) {
 				slotSettings.appSettingNames = [];
 			}
+
 			const slotSettingIndex: number =
 				slotSettings.appSettingNames.findIndex((value: string) => {
 					return value === this._key;
@@ -166,6 +183,7 @@ export class AppSettingTreeItem extends AzExtTreeItem {
 			}
 
 			await client.updateSlotConfigurationNames(slotSettings);
+
 			await this.refresh(context);
 		} else {
 			throw Error(l10n.t("Toggling slot settings is not supported."));

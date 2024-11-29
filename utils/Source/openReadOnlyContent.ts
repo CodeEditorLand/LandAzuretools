@@ -26,6 +26,7 @@ function getScheme(): string {
 		// Generate a unique scheme so that multiple extensions using this same code don't conflict with each other
 		_cachedScheme = `azuretools${randomUtils.getRandomHexString(6)}`;
 	}
+
 	return _cachedScheme;
 }
 
@@ -33,6 +34,7 @@ let _cachedContentProvider: ReadOnlyContentProvider | undefined;
 function getContentProvider(): ReadOnlyContentProvider {
 	if (!_cachedContentProvider) {
 		_cachedContentProvider = new ReadOnlyContentProvider();
+
 		ext.context.subscriptions.push(
 			workspace.registerTextDocumentContentProvider(
 				getScheme(),
@@ -40,6 +42,7 @@ function getContentProvider(): ReadOnlyContentProvider {
 			),
 		);
 	}
+
 	return _cachedContentProvider;
 }
 
@@ -64,6 +67,7 @@ export async function openReadOnlyJson(
 	}
 
 	const content: string = JSON.stringify(data, undefined, tab);
+
 	await openReadOnlyContent(node, content, ".json");
 }
 
@@ -113,22 +117,28 @@ export async function openReadOnlyContent(
 
 export async function disposeReadOnlyContents(): Promise<void> {
 	const contentProvider = getContentProvider();
+
 	contentProvider.disposeAll();
 }
 
 export async function disposeReadOnlyContent(uri: Uri): Promise<void> {
 	const contentProvider = getContentProvider();
+
 	contentProvider.dispose(uri);
 }
 
 export class ReadOnlyContent {
 	private _emitter: EventEmitter<Uri>;
+
 	private _content: string;
+
 	public uri: Uri;
 
 	constructor(uri: Uri, emitter: EventEmitter<Uri>, content: string) {
 		this._emitter = emitter;
+
 		this._content = content;
+
 		this.uri = uri;
 	}
 
@@ -138,17 +148,20 @@ export class ReadOnlyContent {
 
 	public async append(content: string): Promise<void> {
 		this._content += content;
+
 		this._emitter.fire(this.uri);
 	}
 
 	public clear(): void {
 		this._content = "";
+
 		this._emitter.fire(this.uri);
 	}
 }
 
 class ReadOnlyContentProvider implements TextDocumentContentProvider {
 	private _onDidChangeEmitter: EventEmitter<Uri> = new EventEmitter<Uri>();
+
 	private _contentMap: Map<string, ReadOnlyContent> = new Map<
 		string,
 		ReadOnlyContent
@@ -177,6 +190,7 @@ class ReadOnlyContentProvider implements TextDocumentContentProvider {
 			this._onDidChangeEmitter,
 			content,
 		);
+
 		this._contentMap.set(uri.toString(), readOnlyContent);
 
 		return readOnlyContent;
@@ -225,7 +239,9 @@ class ReadOnlyContentProvider implements TextDocumentContentProvider {
 			content,
 			fileExtension,
 		);
+
 		await window.showTextDocument(readOnlyContent.uri, options);
+
 		this._onDidChangeEmitter.fire(readOnlyContent.uri);
 
 		return readOnlyContent;

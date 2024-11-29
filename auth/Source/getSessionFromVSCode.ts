@@ -20,6 +20,7 @@ function getResourceScopes(scopes?: string | string[]): string[] {
 			getConfiguredAzureEnv().managementEndpointUrl,
 		);
 	}
+
 	const arrScopes = (Array.isArray(scopes) ? scopes : [scopes]).map(
 		(scope) => {
 			if (scope.endsWith(".default")) {
@@ -35,6 +36,7 @@ function getResourceScopes(scopes?: string | string[]): string[] {
 
 function addTenantIdScope(scopes: string[], tenantId: string): string[] {
 	const scopeSet = new Set<string>(scopes);
+
 	scopeSet.add(`VSCODE_TENANT:${tenantId}`);
 
 	return Array.from(scopeSet);
@@ -49,6 +51,7 @@ function getScopes(
 	if (tenantId) {
 		scopeArr = addTenantIdScope(scopeArr, tenantId);
 	}
+
 	return scopeArr;
 }
 

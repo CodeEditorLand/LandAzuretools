@@ -28,16 +28,22 @@ export interface ICreateLinkerContext
 	scope?: string;
 	/** This is only assigned when the source resource is a web app */
 	runtime?: KnownClientType[];
+
 	clientType?: KnownClientType;
 
 	//Target service
 	targetServiceType?: TargetServiceType;
+
 	targetService?: IAzureQuickPickItem<TargetServiceType>;
+
 	databaseAccount?: DatabaseAccountJsonResponse;
+
 	keyVaultAccount?: KeyVaultAccountJsonResponse;
 
 	//Service connector
 	authType?: AuthInfoBase;
+
 	linkerName?: string;
+
 	linker?: LinkerResource;
 }

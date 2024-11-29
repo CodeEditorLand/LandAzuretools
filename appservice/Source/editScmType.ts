@@ -39,6 +39,7 @@ export async function editScmType(
 	}
 
 	const config: SiteConfigResource = await client.getSiteConfig();
+
 	newScmType = newScmType
 		? newScmType
 		: await showScmPrompt(context, nonNullProp(config, "scmType"));
@@ -54,19 +55,23 @@ export async function editScmType(
 				false,
 			);
 		}
+
 		await connectToGitHub(context, site);
 	} else {
 		config.scmType = newScmType;
 		// to update one property, a complete config file must be sent
 		await client.updateConfiguration(config);
 	}
+
 	if (showToast) {
 		const scmTypeUpdated: string = l10n.t(
 			'Deployment source for "{0}" has been updated to "{1}".',
 			site.fullName,
 			newScmType,
 		);
+
 		ext.outputChannel.appendLog(scmTypeUpdated);
+
 		void window.showInformationMessage(scmTypeUpdated);
 	}
 
@@ -76,6 +81,7 @@ export async function editScmType(
 		if (user.publishingUserName) {
 			// first time users must set up deployment credentials via the Portal or they will not have a UserName
 			const gitCloneUri: string = `https://${user.publishingUserName}@${site.gitUrl}`;
+
 			ext.outputChannel.appendLog(
 				l10n.t(
 					'Git Clone Uri for "{0}": "{1}"',

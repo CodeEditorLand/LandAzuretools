@@ -14,6 +14,7 @@ export type Branches =
 export type GetBranchesParams =
 	RestEndpointMethodTypes["repos"]["listBranches"]["parameters"] & {
 		owner: string;
+
 		repo: string;
 	}; // Make 'owner' and 'repo' required
 

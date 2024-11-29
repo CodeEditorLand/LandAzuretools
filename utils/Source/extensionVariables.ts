@@ -53,6 +53,7 @@ export function registerUIExtensionVariables(
 	}
 
 	assert(extVars.context, "registerUIExtensionVariables: Missing context");
+
 	assert(
 		extVars.outputChannel,
 		"registerUIExtensionVariables: Missing outputChannel",
@@ -79,7 +80,9 @@ async function handleEntryNotFound(
 				"Your VS Code window must be reloaded to perform this action.",
 			),
 		);
+
 		context.errorHandling.suppressReportIssue = true;
+
 		context.errorHandling.buttons = [
 			{
 				title: l10n.t("Reload Window"),

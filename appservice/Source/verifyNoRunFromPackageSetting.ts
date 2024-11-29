@@ -33,13 +33,16 @@ export async function verifyNoRunFromPackageSetting(
 			applicationSettings.properties[settingName]
 		) {
 			delete applicationSettings.properties[settingName];
+
 			ext.outputChannel.appendLog(
 				vscode.l10n.t('Deleting setting "{0}"...', settingName),
 				{ resourceName: site.fullName },
 			);
+
 			updateSettings = true;
 		}
 	}
+
 	if (updateSettings) {
 		await client.updateApplicationSettings(applicationSettings);
 	}

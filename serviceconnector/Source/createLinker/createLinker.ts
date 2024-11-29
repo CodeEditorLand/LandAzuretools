@@ -25,6 +25,7 @@ import { TargetServiceListStep } from "./TargetServiceListStep";
 
 export interface LinkerItem {
 	subscription: AzureSubscription;
+
 	id: string;
 }
 
@@ -69,6 +70,7 @@ export async function createLinker(
 	);
 
 	await wizard.prompt();
+
 	await wizard.execute();
 }
 

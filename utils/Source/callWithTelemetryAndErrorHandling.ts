@@ -44,6 +44,7 @@ function initContext(callbackId: string): [number, types.IActionContext] {
 		ui: <AzExtUserInput>(<unknown>undefined),
 		valuesToMask: [],
 	};
+
 	context.ui = new AzExtUserInput(context);
 
 	const handlerContext: types.IHandlerContext = Object.assign(context, {
@@ -125,6 +126,7 @@ function registerHandler<T>(
 	handlerCount += 1;
 
 	const id: number = handlerCount;
+
 	handlers[id] = handler;
 
 	return {
@@ -158,6 +160,7 @@ function handleError(
 		const errorData: types.IParsedError = parseError(errorContext.error);
 
 		const unMaskedMessage: string = errorData.message;
+
 		errorData.message = maskUserInfo(
 			errorData.message,
 			context.valuesToMask,
@@ -169,10 +172,13 @@ function handleError(
 
 		if (errorData.isUserCancelledError) {
 			context.telemetry.properties.result = "Canceled";
+
 			context.errorHandling.suppressDisplay = true;
+
 			context.errorHandling.rethrow = false;
 		} else {
 			context.telemetry.properties.result = "Failed";
+
 			context.telemetry.properties.error = errorData.errorType;
 
 			/**
@@ -184,6 +190,7 @@ function handleError(
 			 * A duplicate replacement of the `errorMessage` telemetry property which should be used instead.
 			 */
 			context.telemetry.properties.errorMessage = errorData.message;
+
 			context.telemetry.properties.errorMessageV2 = errorData.message;
 
 			context.telemetry.properties.stack = errorData.stack
@@ -220,6 +227,7 @@ function handleError(
 
 			if (unMaskedMessage.includes("\n")) {
 				ext.outputChannel.show();
+
 				message = l10n.t(
 					"An error has occured. Check output window for more details.",
 				);
@@ -291,6 +299,7 @@ function handleTelemetry(
 
 		if (shouldSendTelemtry(context)) {
 			const end: number = Date.now();
+
 			context.telemetry.measurements.duration = (end - start) / 1000;
 			// de-dupe
 			context.valuesToMask = context.valuesToMask.filter(

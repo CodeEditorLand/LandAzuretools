@@ -22,6 +22,7 @@ type CreateCallback<TNode = unknown> = (
 
 type CreateOptions<TNode = unknown> = {
 	label?: string;
+
 	callback: CreateCallback<TNode>;
 };
 
@@ -55,10 +56,13 @@ export class CompatibilityRecursiveQuickPickStep<
 				"Select {0}",
 				lastPickedItemTi.childTypeLabel!,
 			);
+
 			this.promptOptions.stepName = `treeItemPicker|${lastPickedItemTi.contextValue}`;
+
 			this.promptOptions.noPicksMessage =
 				wizardContext.noItemFoundErrorMessage ??
 				this.promptOptions.noPicksMessage;
+
 			this.promptOptions.ignoreFocusOut = wizardContext.ignoreFocusOut;
 		}
 

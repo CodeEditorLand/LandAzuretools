@@ -9,10 +9,12 @@ import { ITreeItemPickerContext } from "..";
 
 export class UserCancelledError extends Error {
 	_isUserCancelledError = true;
+
 	public stepName: string | undefined;
 
 	constructor(stepName?: string) {
 		super(vscode.l10n.t("Operation cancelled."));
+
 		this.stepName = stepName;
 	}
 }
@@ -50,6 +52,7 @@ export class NoResourceFoundError extends Error {
 	constructor(context?: ITreeItemPickerContext) {
 		if (context && context.noItemFoundErrorMessage) {
 			super(context.noItemFoundErrorMessage);
+
 			context.errorHandling.suppressReportIssue = true;
 		} else {
 			super(vscode.l10n.t("No matching resources found."));

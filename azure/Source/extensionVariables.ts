@@ -57,5 +57,6 @@ export function registerAzureUtilsExtensionVariables(
 	}
 
 	ext = extVars;
+
 	registerUIExtensionVariables(extVars);
 }

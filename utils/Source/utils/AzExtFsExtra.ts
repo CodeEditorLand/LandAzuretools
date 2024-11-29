@@ -67,6 +67,7 @@ export namespace AzExtFsExtra {
 
 			if (pError && pError.errorType === "FileNotFound") {
 				const dir: string = path.dirname(uri.fsPath);
+
 				await ensureDir(dir);
 			} else {
 				throw err;
@@ -87,6 +88,7 @@ export namespace AzExtFsExtra {
 		contents: string,
 	): Promise<void> {
 		const uri = convertToUri(resource);
+
 		await workspace.fs.writeFile(uri, Buffer.from(contents));
 	}
 
@@ -98,6 +100,7 @@ export namespace AzExtFsExtra {
 		const uri = convertToUri(resource);
 
 		const existingContent = await AzExtFsExtra.readFile(uri);
+
 		await AzExtFsExtra.writeFile(
 			uri,
 			existingContent + separator + contents,
@@ -114,6 +117,7 @@ export namespace AzExtFsExtra {
 		} catch {
 			/*ignore*/
 		}
+
 		return !!stats;
 	}
 
@@ -146,6 +150,7 @@ export namespace AzExtFsExtra {
 		}
 
 		const stringified = JSON.stringify(contents, undefined, space);
+
 		await writeFile(resource, stringified);
 	}
 
@@ -198,6 +203,7 @@ export namespace AzExtFsExtra {
 		options?: { recursive?: boolean; useTrash?: boolean },
 	): Promise<void> {
 		const uri = convertToUri(resource);
+
 		await workspace.fs.delete(uri, options);
 	}
 

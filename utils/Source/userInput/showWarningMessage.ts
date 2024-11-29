@@ -51,6 +51,7 @@ export async function showWarningMessage<T extends MessageItem>(
 		if (learnMoreLink && result === DialogResponses.learnMore) {
 			context.telemetry.properties.learnMoreStep =
 				context.telemetry.properties.lastStep;
+
 			await openUrl(learnMoreLink);
 		} else if (result === undefined || result === DialogResponses.cancel) {
 			throw new UserCancelledError();

@@ -55,6 +55,7 @@ export class ClientListStep extends AzureWizardPromptStep<ICreateLinkerContext> 
 
 			return index === -1 ? recommendedTypes.length : index;
 		}
+
 		return types.sort(
 			(s1, s2) => getPriority(s1.data) - getPriority(s2.data),
 		);

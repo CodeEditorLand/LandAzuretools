@@ -39,7 +39,9 @@ export async function getDeployFsPath(
 
 	if (target instanceof vscode.Uri) {
 		originalDeployFsPath = target.fsPath;
+
 		workspaceFolder = vscode.workspace.getWorkspaceFolder(target);
+
 		effectiveDeployFsPath = await appendDeploySubpathSetting(
 			context,
 			workspaceFolder,
@@ -47,9 +49,11 @@ export async function getDeployFsPath(
 		);
 	} else if (typeof target === "string") {
 		originalDeployFsPath = target;
+
 		workspaceFolder = vscode.workspace.getWorkspaceFolder(
 			vscode.Uri.file(target),
 		);
+
 		effectiveDeployFsPath = await appendDeploySubpathSetting(
 			context,
 			workspaceFolder,
@@ -70,11 +74,14 @@ export async function getDeployFsPath(
 
 		if (deploySubpath) {
 			context.telemetry.properties.hasDeploySubpathSetting = "true";
+
 			originalDeployFsPath = singleWorkspace.uri.fsPath;
+
 			effectiveDeployFsPath = path.join(
 				singleWorkspace.uri.fsPath,
 				deploySubpath,
 			);
+
 			workspaceFolder = singleWorkspace;
 		}
 	}
@@ -103,9 +110,11 @@ export async function getDeployFsPath(
 
 		if (selectedItem instanceof vscode.Uri) {
 			originalDeployFsPath = selectedItem.fsPath;
+
 			workspaceFolder = vscode.workspace.getWorkspaceFolder(selectedItem);
 		} else {
 			originalDeployFsPath = selectedItem.uri.fsPath;
+
 			workspaceFolder = selectedItem;
 		}
 
@@ -143,6 +152,7 @@ async function addRuntimeFileTelemetry(
 			checkRuntimeExtension(runtimeFiles, effectiveDeployFsPath, e),
 		),
 	];
+
 	await Promise.all(tasks);
 
 	context.telemetry.properties.runtimeFiles = runtimeFiles.sort().join("|");

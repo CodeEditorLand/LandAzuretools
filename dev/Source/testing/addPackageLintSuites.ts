@@ -9,30 +9,40 @@ import { IPackageLintOptions } from "../..";
 
 interface IMenu {
 	command: string;
+
 	when?: string;
+
 	group?: string;
 }
 
 interface IPackage {
 	name?: string;
+
 	activationEvents?: string[];
+
 	contributes?: {
 		views?: {
 			[viewContainerName: string]: {
 				id: string;
+
 				name: string;
+
 				when?: string;
 			}[];
 		};
+
 		commands?: {
 			command: string;
 		}[];
+
 		menus?: {
 			"view/title": IMenu[];
 			"explorer/context": IMenu[];
 			"view/item/context": IMenu[];
+
 			commandPalette: {
 				command: string;
+
 				when?: string;
 			}[];
 		};
@@ -74,6 +84,7 @@ export function addPackageLintSuites(
 			// Remove predefined IDs
 			const predefinedCommandIds: string[] =
 				getPredefinedCommandIdsForExtension();
+
 			_registeredCommands = registeredCommands.filter(
 				(cmdId: string) =>
 					!predefinedCommandIds.some((c: string) => c === cmdId),
@@ -127,6 +138,7 @@ export function addPackageLintSuites(
 
 			for (const view of viewContainer) {
 				const activationEvent: string = `onView:${view.id}`;
+
 				test(view.id, () => {
 					assert(
 						activationEvents.some(
@@ -150,10 +162,12 @@ export function addPackageLintSuites(
 
 				const registeredCommands: string[] =
 					await getRegisteredCommands();
+
 				assert(
 					registeredCommands.some((c: string) => c === cmdId),
 					`${cmdId} is in package.json but wasn't registered with vscode`,
 				);
+
 				assert(
 					activationEvents.some(
 						(evt: string) => evt === activationEvent,
@@ -172,10 +186,12 @@ export function addPackageLintSuites(
 				test(event, async () => {
 					const registeredCommands: string[] =
 						await getRegisteredCommands();
+
 					assert(
 						registeredCommands.some((c: string) => c === cmdId),
 						`${event} is in package.json but ${cmdId} wasn't registered with vscode`,
 					);
+
 					assert(
 						commands.some((cmd) => cmd.command === cmdId),
 						`${event} is in package.json but ${cmdId} wasn't a command in package.json`,
@@ -207,6 +223,7 @@ export function addPackageLintSuites(
 						!isInPackage,
 						`${cmdId} is in commandsRegisteredButNotInPackage but was found in package.json`,
 					);
+
 					assert(
 						!activationEvents.some(
 							(evt: string) => evt === activationEvent,
@@ -218,6 +235,7 @@ export function addPackageLintSuites(
 						isInPackage,
 						`${cmdId} was registered as a command during extension activation but is not in package.json`,
 					);
+
 					assert(
 						activationEvents.some(
 							(evt: string) => evt === activationEvent,

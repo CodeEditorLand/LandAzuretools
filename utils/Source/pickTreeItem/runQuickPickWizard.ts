@@ -19,6 +19,7 @@ export async function runQuickPickWizard<TPick>(
 	const wizardContext = {
 		...context,
 	} as types.AzureResourceQuickPickWizardContext;
+
 	wizardContext.pickedNodes = startingNode ? [startingNode] : [];
 
 	const wizard = new AzureWizard(wizardContext, {

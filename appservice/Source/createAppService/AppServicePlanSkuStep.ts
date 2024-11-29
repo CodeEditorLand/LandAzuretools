@@ -18,7 +18,9 @@ import { setLocationsTask } from "./setLocationsTask";
 
 type ExtendedSkuDescription = SkuDescription & {
 	label?: string;
+
 	description?: string;
+
 	group?: string;
 };
 
@@ -66,6 +68,7 @@ export class AppServicePlanSkuStep extends AzureWizardPromptStep<IAppServiceWiza
 
 		while (!context.newPlanSku) {
 			const placeHolder = vscode.l10n.t("Select a pricing tier");
+
 			context.newPlanSku = (
 				await context.ui.showQuickPick(pricingTiers, {
 					placeHolder,

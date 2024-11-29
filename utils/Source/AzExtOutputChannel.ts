@@ -27,6 +27,7 @@ export function createAzExtOutputChannel(
 	extensionPrefix: string,
 ): types.IAzExtOutputChannel {
 	const outputChannel = new AzExtOutputChannel(name);
+
 	outputChannel.extensionPrefix = extensionPrefix;
 
 	return outputChannel;
@@ -34,11 +35,14 @@ export function createAzExtOutputChannel(
 
 class AzExtOutputChannel implements types.IAzExtOutputChannel {
 	public readonly name: string;
+
 	public extensionPrefix!: string;
+
 	protected _outputChannel: OutputChannel | LogOutputChannel;
 
 	constructor(name: string) {
 		this.name = name;
+
 		this._outputChannel = this.createOutputChannel(name);
 	}
 
@@ -75,6 +79,7 @@ class AzExtOutputChannel implements types.IAzExtOutputChannel {
 			options ||= {};
 
 			const date: Date = options.date || new Date();
+
 			this.appendLine(
 				`${date.toLocaleTimeString()}${options.resourceName ? " ".concat(options.resourceName) : ""}: ${value}`,
 			);
@@ -90,6 +95,7 @@ class AzExtOutputChannel implements types.IAzExtOutputChannel {
 	}
 
 	public show(preserveFocus?: boolean | undefined): void;
+
 	public show(
 		column?: ViewColumn | undefined,
 		preserveFocus?: boolean | undefined,
@@ -114,10 +120,12 @@ class AzExtLogOutputChannel
 {
 	// assigned in AzExtOutputChannel constructor
 	protected override _outputChannel!: LogOutputChannel;
+
 	readonly onDidChangeLogLevel: Event<LogLevel>;
 
 	constructor(name: string) {
 		super(name);
+
 		this.onDidChangeLogLevel = this._outputChannel.onDidChangeLogLevel;
 	}
 

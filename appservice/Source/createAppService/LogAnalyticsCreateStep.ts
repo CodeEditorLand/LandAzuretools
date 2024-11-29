@@ -28,6 +28,7 @@ export class LogAnalyticsCreateStep extends AzureWizardExecuteStep<IAppServiceWi
 		context: IAppServiceWizardContext,
 		progress: Progress<{
 			message?: string | undefined;
+
 			increment?: number | undefined;
 		}>,
 	): Promise<void> {
@@ -70,13 +71,17 @@ export class LogAnalyticsCreateStep extends AzureWizardExecuteStep<IAppServiceWi
 				'Using existing Log Analytics workspace "{0}"',
 				context.logAnalyticsWorkspace.name!,
 			);
+
 			progress.report({ message: usingLaw });
+
 			ext.outputChannel.appendLog(usingLaw);
 		} else {
 			const creatingLaw: string = l10n.t(
 				"Creating new Log Analytics workspace...",
 			);
+
 			progress.report({ message: creatingLaw });
+
 			ext.outputChannel.appendLog(creatingLaw);
 
 			const workspaceName = `workspace-${context.newAppInsightsName}`;
@@ -85,8 +90,11 @@ export class LogAnalyticsCreateStep extends AzureWizardExecuteStep<IAppServiceWi
 				'Successfully created new Log Analytics workspace "{0}".',
 				workspaceName,
 			);
+
 			ext.outputChannel.appendLog(createdLaw);
+
 			progress.report({ message: createdLaw });
+
 			context.logAnalyticsWorkspace =
 				await opClient.workspaces.beginCreateOrUpdateAndWait(
 					rgName,

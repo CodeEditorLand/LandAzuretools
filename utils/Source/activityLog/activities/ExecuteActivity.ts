@@ -120,6 +120,7 @@ export class ExecuteActivity<
 				lastActivityChild.loadMoreChildrenImpl.bind(
 					lastActivityChild,
 				) as typeof lastActivityChild.loadMoreChildrenImpl;
+
 			lastActivityChild.loadMoreChildrenImpl = async (
 				clearCache: boolean,
 				context: types.IActionContext,
@@ -138,6 +139,7 @@ export class ExecuteActivity<
 
 		// Otherwise append error item to the end of the list
 		errorItem.iconPath = activityFailIcon;
+
 		this.context.activityChildren?.push(errorItem);
 	}
 

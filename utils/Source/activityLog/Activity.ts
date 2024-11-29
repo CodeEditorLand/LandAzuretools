@@ -20,40 +20,57 @@ export enum ActivityStatus {
 
 export abstract class ActivityBase<R> implements hTypes.Activity {
 	public readonly onStart: typeof this._onStartEmitter.event;
+
 	public readonly onProgress: typeof this._onProgressEmitter.event;
+
 	public readonly onSuccess: typeof this._onSuccessEmitter.event;
+
 	public readonly onError: typeof this._onErrorEmitter.event;
 
 	private readonly _onStartEmitter =
 		new EventEmitter<hTypes.OnStartActivityData>();
+
 	private readonly _onProgressEmitter =
 		new EventEmitter<hTypes.OnProgressActivityData>();
+
 	private readonly _onSuccessEmitter =
 		new EventEmitter<hTypes.OnSuccessActivityData>();
+
 	private readonly _onErrorEmitter =
 		new EventEmitter<hTypes.OnErrorActivityData>();
 
 	private status: ActivityStatus = ActivityStatus.NotStarted;
+
 	public error?: types.IParsedError;
+
 	public readonly task: types.ActivityTask<R>;
+
 	public readonly id: string;
+
 	public readonly cancellationTokenSource: CancellationTokenSource =
 		new CancellationTokenSource();
 
 	abstract initialState(): hTypes.ActivityTreeItemOptions;
+
 	abstract successState(): hTypes.ActivityTreeItemOptions;
+
 	abstract progressState(): hTypes.ActivityTreeItemOptions;
+
 	abstract errorState(
 		error?: types.IParsedError,
 	): hTypes.ActivityTreeItemOptions;
 
 	public constructor(task: types.ActivityTask<R>) {
 		this.id = uuidv4();
+
 		this.task = task;
 
 		this.onStart = this._onStartEmitter.event;
+
 		this.onProgress = this._onProgressEmitter.event;
+
 		this.onSuccess = this._onSuccessEmitter.event;
+
 		this.onError = this._onErrorEmitter.event;
 	}
 
@@ -62,6 +79,7 @@ export abstract class ActivityBase<R> implements hTypes.Activity {
 			...this.getState(),
 			message: progress.message,
 		});
+
 		this.status = ActivityStatus.Running;
 	}
 
@@ -73,13 +91,17 @@ export abstract class ActivityBase<R> implements hTypes.Activity {
 				{ report: this.report.bind(this) as typeof this.report },
 				this.cancellationTokenSource.token,
 			);
+
 			this.status = ActivityStatus.Succeeded;
+
 			this._onSuccessEmitter.fire(this.getState());
 
 			return result as R;
 		} catch (e) {
 			this.error = parseError(e);
+
 			this.status = ActivityStatus.Failed;
+
 			this._onErrorEmitter.fire({ ...this.getState(), error: e });
 
 			throw e;

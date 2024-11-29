@@ -24,6 +24,7 @@ export function reportMessage(
 	}
 
 	ext.outputChannel.appendLog(message);
+
 	progress.report({ message: message });
 }
 
@@ -61,7 +62,9 @@ export async function setRemoteDebug(
 			{ modal: true, learnMoreLink },
 			confirmButton,
 		);
+
 		siteConfig.remoteDebuggingEnabled = isRemoteDebuggingToBeEnabled;
+
 		reportMessage(
 			vscode.l10n.t(
 				"Updating site configuration to set remote debugging...",
@@ -74,7 +77,9 @@ export async function setRemoteDebug(
 			"appService.remoteDebugUpdateConfiguration",
 			async (updateContext: IActionContext) => {
 				updateContext.errorHandling.suppressDisplay = true;
+
 				updateContext.errorHandling.rethrow = true;
+
 				await client.updateConfiguration(siteConfig);
 			},
 		);

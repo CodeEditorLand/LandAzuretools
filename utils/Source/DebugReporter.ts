@@ -27,6 +27,7 @@ export class DebugReporter implements IInternalTelemetryReporter {
 
 			if (this._verbose) {
 				const msg: string = `** TELEMETRY("${this._extensionName}/${eventName}", ${this._extensionVersion}) properties=${propertiesString}, measures=${measuresString}`;
+
 				console.log(msg);
 			}
 		} catch (error) {

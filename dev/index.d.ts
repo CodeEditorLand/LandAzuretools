@@ -46,23 +46,38 @@ export interface IPackageLintOptions {
  */
 export class TestOutputChannel implements LogOutputChannel {
 	public name: string;
+
 	public append(value: string): void;
+
 	public appendLine(value: string): void;
+
 	public appendLog(
 		value: string,
 		options?: { resourceName?: string; date?: Date },
 	): void;
+
 	public replace(value: string): void;
+
 	public clear(): void;
+
 	public show(): void;
+
 	public hide(): void;
+
 	public dispose(): void;
+
 	logLevel: LogLevel;
+
 	onDidChangeLogLevel: Event<LogLevel>;
+
 	trace(message: string, ...args: any[]): void;
+
 	debug(message: string, ...args: any[]): void;
+
 	info(message: string, ...args: any[]): void;
+
 	warn(message: string, ...args: any[]): void;
+
 	error(error: string | Error, ...args: any[]): void;
 }
 
@@ -190,12 +205,19 @@ export interface AzExtServiceClientCredentialsT2 {
  */
 export interface ISubscriptionContext {
 	credentials: AzExtServiceClientCredentials;
+
 	subscriptionDisplayName: string;
+
 	subscriptionId: string;
+
 	subscriptionPath: string;
+
 	tenantId: string;
+
 	userId: string;
+
 	environment: Environment;
+
 	isCustomCloud: boolean;
 }
 
@@ -212,7 +234,9 @@ export declare class TestAzureAccount {
 	 * Requires the following environment variables to be set: SERVICE_PRINCIPAL_CLIENT_ID, SERVICE_PRINCIPAL_SECRET, SERVICE_PRINCIPAL_DOMAIN
 	 */
 	public signIn(): Promise<void>;
+
 	public signOut(): void;
+
 	public getSubscriptionContext(): ISubscriptionContext;
 }
 
@@ -270,21 +294,27 @@ export declare class TestUserInput {
 		items: T[] | Thenable<T[]>,
 		options: QuickPickOptions,
 	): Promise<T>;
+
 	public showQuickPick<T extends QuickPickItem>(
 		items: T[] | Thenable<T[]>,
 		options: QuickPickOptions & { canPickMany: true },
 	): Promise<T[]>;
+
 	public showInputBox(options: InputBoxOptions): Promise<string>;
+
 	public showWarningMessage<T extends MessageItem>(
 		message: string,
 		...items: T[]
 	): Promise<T>;
+
 	public showWarningMessage<T extends MessageItem>(
 		message: string,
 		options: MessageOptions,
 		...items: T[]
 	): Promise<MessageItem>;
+
 	public showOpenDialog(options: OpenDialogOptions): Promise<Uri[]>;
+
 	public showWorkspaceFolderPick(
 		options: WorkspaceFolderPickOptions,
 	): Promise<WorkspaceFolder>;
@@ -293,12 +323,16 @@ export declare class TestUserInput {
 export interface TestActionContext {
 	telemetry: {
 		properties: { [key: string]: string | undefined };
+
 		measurements: { [key: string]: number | undefined };
 	};
+
 	errorHandling: {
 		issueProperties: {};
 	};
+
 	valuesToMask: string[];
+
 	ui: TestUserInput;
 }
 
@@ -315,6 +349,7 @@ export declare function runWithTestActionContext(
 type registerOnActionStartHandlerType = (
 	handler: (context: {
 		callbackId: string;
+
 		ui: Partial<TestUserInput>;
 	}) => void,
 ) => Disposable;

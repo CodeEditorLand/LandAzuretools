@@ -19,6 +19,7 @@ export class DeleteSiteStep extends AzureWizardExecuteStep<IDeleteSiteWizardCont
 		context: IDeleteSiteWizardContext,
 		progress: Progress<{
 			message?: string | undefined;
+
 			increment?: number | undefined;
 		}>,
 	): Promise<void> {
@@ -30,18 +31,21 @@ export class DeleteSiteStep extends AzureWizardExecuteStep<IDeleteSiteWizardCont
 
 		if (site.isSlot) {
 			deleting = l10n.t('Deleting slot "{0}"...', site.fullName);
+
 			deleteSucceeded = l10n.t(
 				'Successfully deleted slot "{0}".',
 				site.fullName,
 			);
 		} else if (site.isFunctionApp) {
 			deleting = l10n.t('Deleting function app "{0}"...', site.fullName);
+
 			deleteSucceeded = l10n.t(
 				'Successfully deleted function app "{0}".',
 				site.fullName,
 			);
 		} else {
 			deleting = l10n.t('Deleting web app "{0}"...', site.fullName);
+
 			deleteSucceeded = l10n.t(
 				'Successfully deleted web app "{0}".',
 				site.fullName,
@@ -49,12 +53,15 @@ export class DeleteSiteStep extends AzureWizardExecuteStep<IDeleteSiteWizardCont
 		}
 
 		ext.outputChannel.appendLog(deleting);
+
 		progress.report({ message: deleting });
 
 		const client = await site.createClient(context);
+
 		await client.deleteMethod({
 			deleteEmptyServerFarm: context.deletePlan,
 		});
+
 		ext.outputChannel.appendLog(deleteSucceeded);
 	}
 

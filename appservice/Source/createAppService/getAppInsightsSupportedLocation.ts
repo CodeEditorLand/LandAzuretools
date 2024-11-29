@@ -81,6 +81,7 @@ async function getPairedRegions(
 	} catch (error) {
 		// ignore the error
 	}
+
 	return [];
 }
 
@@ -114,5 +115,6 @@ type RegionMappingJsonResponse = {
 
 type RegionMap = {
 	geo: string;
+
 	pairedRegions: string[];
 };

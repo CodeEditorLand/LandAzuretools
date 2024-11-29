@@ -31,6 +31,7 @@ export class DeployFlexExecuteStep extends DeployZipBaseExecuteStep {
 			context.site.resourceGroup,
 			context.site.siteName,
 		);
+
 		await this.tryCreateStorageContainer(context, site);
 
 		const kuduClient = await context.site.createClient(context);
@@ -134,22 +135,32 @@ type FunctionAppConfig = {
 	deployment: {
 		storage: {
 			type: string;
+
 			value: string;
+
 			authentication: {
 				type: string;
+
 				userAssignedIdentityResourceId: string | null;
+
 				storageAccountConnectionStringName: string | null;
 			};
 		};
 	};
+
 	runtime: {
 		name: string;
+
 		version: string;
 	};
+
 	scaleAndConcurrency: {
 		alwaysReady: number[];
+
 		maximumInstanceCount: number;
+
 		instanceMemoryMB: number;
+
 		triggers: null;
 	};
 };

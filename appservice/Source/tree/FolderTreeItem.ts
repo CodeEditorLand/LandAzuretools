@@ -19,30 +19,44 @@ import { FileTreeItem } from "./FileTreeItem";
 
 export interface FolderTreeItemOptions {
 	site: ParsedSite;
+
 	label: string;
+
 	url: string;
+
 	isReadOnly: boolean;
+
 	contextValuesToAdd?: string[];
 }
 
 export class FolderTreeItem extends AzExtParentTreeItem {
 	public static contextValue: string = "folder";
+
 	public readonly childTypeLabel: string = l10n.t("file or folder");
+
 	public readonly label: string;
+
 	public readonly url: string;
+
 	public readonly isReadOnly: boolean;
 
 	public readonly contextValuesToAdd: string[];
 
 	public readonly site: ParsedSite;
+
 	protected readonly _isRoot: boolean = false;
 
 	constructor(parent: AzExtParentTreeItem, options: FolderTreeItemOptions) {
 		super(parent);
+
 		this.site = options.site;
+
 		this.label = options.label;
+
 		this.url = options.url;
+
 		this.isReadOnly = options.isReadOnly;
+
 		this.contextValuesToAdd = options.contextValuesToAdd || [];
 	}
 

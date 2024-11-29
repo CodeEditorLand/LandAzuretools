@@ -35,6 +35,7 @@ export class LinkerNameStep extends AzureWizardPromptStep<ICreateLinkerContext> 
 				`Connection names can only consist of alphanumeric characters, periods ('.'), or underscores ('_').`,
 			);
 		}
+
 		return undefined;
 	}
 }

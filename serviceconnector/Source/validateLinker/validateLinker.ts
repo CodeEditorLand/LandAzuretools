@@ -59,5 +59,6 @@ export async function validateLinker(
 	);
 
 	await wizard.prompt();
+
 	await wizard.execute();
 }

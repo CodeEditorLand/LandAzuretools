@@ -17,8 +17,10 @@ export abstract class SubscriptionTreeItemBase
 {
 	public static readonly contextValue: string =
 		"azureextensionui.azureSubscription";
+
 	public readonly contextValue: string =
 		SubscriptionTreeItemBase.contextValue;
+
 	public readonly label: string;
 
 	public constructor(
@@ -29,8 +31,11 @@ export abstract class SubscriptionTreeItemBase
 		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 		// @ts-ignore
 		this._subscription = subscription;
+
 		this.label = subscription.subscriptionDisplayName;
+
 		this.id = subscription.subscriptionPath;
+
 		this.iconPath = getIconPath("azureSubscription");
 	}
 }

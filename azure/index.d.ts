@@ -51,7 +51,9 @@ export type OpenInPortalOptions = {
  */
 export declare abstract class SubscriptionTreeItemBase extends AzExtParentTreeItem {
 	public static readonly contextValue: string;
+
 	public readonly contextValue: string;
+
 	public readonly label: string;
 
 	constructor(
@@ -68,10 +70,15 @@ export declare abstract class AzureAccountTreeItemBase
 	implements Disposable
 {
 	public static readonly contextValue: string;
+
 	public contextValue: string;
+
 	public label: string;
+
 	public disposables: Disposable[];
+
 	public childTypeLabel: string;
+
 	public autoSelectInTreeItemPicker: boolean;
 
 	//#region Methods implemented by base class
@@ -102,13 +109,16 @@ export declare abstract class AzureAccountTreeItemBase
 	): Promise<AzureWizardPromptStep<ISubscriptionActionContext> | undefined>;
 
 	public hasMoreChildrenImpl(): boolean;
+
 	public loadMoreChildrenImpl(
 		clearCache: boolean,
 		context: IActionContext,
 	): Promise<AzExtTreeItem[]>;
+
 	public pickTreeItemImpl(
 		expectedContextValues: (string | RegExp)[],
 	): Promise<AzExtTreeItem | undefined>;
+
 	public getIsLoggedIn(): Promise<boolean>;
 }
 
@@ -125,7 +135,9 @@ export declare function openInPortal(
 
 export type AzExtLocation = Location & {
 	id: string;
+
 	name: string;
+
 	displayName: string;
 };
 
@@ -198,6 +210,7 @@ export declare class LocationListStep<
 	 */
 	public static getExtendedLocation(location: AzExtLocation): {
 		location: string;
+
 		extendedLocation?: ExtendedLocation;
 	};
 
@@ -237,6 +250,7 @@ export declare class LocationListStep<
 	): boolean;
 
 	public prompt(wizardContext: T): Promise<void>;
+
 	public shouldPrompt(wizardContext: T): boolean;
 
 	protected getQuickPicks(
@@ -273,6 +287,7 @@ export declare class VerifyProvidersStep<
 		wizardContext: T,
 		progress: Progress<{ message?: string; increment?: number }>,
 	): Promise<void>;
+
 	public shouldExecute(wizardContext: T): boolean;
 }
 
@@ -332,9 +347,11 @@ export declare class ResourceGroupListStep<
 	): Promise<boolean>;
 
 	public prompt(wizardContext: T): Promise<void>;
+
 	public getSubWizard(
 		wizardContext: T,
 	): Promise<IWizardOptions<T> | undefined>;
+
 	public shouldPrompt(wizardContext: T): boolean;
 }
 
@@ -342,6 +359,7 @@ export declare class ResourceGroupNameStep<
 	T extends IResourceGroupWizardContext,
 > extends AzureWizardPromptStep<T> {
 	public prompt(wizardContext: T): Promise<void>;
+
 	public shouldPrompt(wizardContext: T): boolean;
 }
 
@@ -352,10 +370,12 @@ export declare class ResourceGroupCreateStep<
 	 * 100
 	 */
 	public priority: number;
+
 	public execute(
 		wizardContext: T,
 		progress: Progress<{ message?: string; increment?: number }>,
 	): Promise<void>;
+
 	public shouldExecute(wizardContext: T): boolean;
 }
 
@@ -404,13 +424,17 @@ export declare enum StorageAccountReplication {
 
 export interface INewStorageAccountDefaults {
 	kind: StorageAccountKind;
+
 	performance: StorageAccountPerformance;
+
 	replication: StorageAccountReplication;
 }
 
 export interface IStorageAccountFilters {
 	kind?: StorageAccountKind[];
+
 	performance?: StorageAccountPerformance[];
+
 	replication?: StorageAccountReplication[];
 
 	/**
@@ -439,9 +463,11 @@ export declare class StorageAccountListStep<
 	): Promise<boolean>;
 
 	public prompt(wizardContext: T): Promise<void>;
+
 	public getSubWizard(
 		wizardContext: T,
 	): Promise<IWizardOptions<T> | undefined>;
+
 	public shouldPrompt(wizardContext: T): boolean;
 }
 
@@ -451,6 +477,7 @@ export declare class StorageAccountNameStep<
 	public constructor();
 
 	public prompt(wizardContext: T): Promise<void>;
+
 	public shouldPrompt(wizardContext: T): boolean;
 
 	protected isRelatedNameAvailable(
@@ -466,12 +493,14 @@ export declare class StorageAccountCreateStep<
 	 * 130
 	 */
 	public priority: number;
+
 	public constructor(defaults: INewStorageAccountDefaults);
 
 	public execute(
 		wizardContext: T,
 		progress: Progress<{ message?: string; increment?: number }>,
 	): Promise<void>;
+
 	public shouldExecute(wizardContext: T): boolean;
 }
 
@@ -481,6 +510,7 @@ export declare class UserAssignedIdentityListStep<
 	public constructor(suppressCreate?: boolean);
 
 	public prompt(wizardContext: T): Promise<void>;
+
 	public shouldPrompt(wizardContext: T): boolean;
 }
 
@@ -491,12 +521,14 @@ export declare class UserAssignedIdentityCreateStep<
 	 * 140
 	 */
 	public priority: number;
+
 	public constructor();
 
 	public execute(
 		wizardContext: T,
 		progress: Progress<{ message?: string; increment?: number }>,
 	): Promise<void>;
+
 	public shouldExecute(wizardContext: T): boolean;
 }
 
@@ -525,6 +557,7 @@ export declare class RoleAssignmentExecuteStep<
 		wizardContext: T,
 		progress: Progress<{ message?: string; increment?: number }>,
 	): Promise<void>;
+
 	public shouldExecute(wizardContext: T): boolean;
 }
 
@@ -565,7 +598,9 @@ export declare function createGenericClient(
 
 export interface IGenericClientOptions {
 	noRetryPolicy?: boolean;
+
 	addStatusCodePolicy?: boolean;
+
 	endpoint?: string;
 }
 
@@ -640,15 +675,21 @@ export declare namespace uiUtils {
 
 interface ParsedAzureResourceId {
 	rawId: string;
+
 	subscriptionId: string;
+
 	resourceGroup: string;
+
 	provider: string;
+
 	resourceName: string;
 }
 
 interface ParsedAzureResourceGroupId {
 	rawId: string;
+
 	subscriptionId: string;
+
 	resourceGroup: string;
 }
 
@@ -691,10 +732,15 @@ export function addBasicAuthenticationCredentialsToClient(
 export declare const CommonRoleDefinitions: {
 	readonly storageBlobDataContributor: {
 		readonly id: "/subscriptions/9b5c7ccb-9857-4307-843b-8875e83f65e9/providers/Microsoft.Authorization/roleDefinitions/ba92f5b4-2d11-453d-a403-e96b0029c9fe";
+
 		readonly name: "ba92f5b4-2d11-453d-a403-e96b0029c9fe";
+
 		readonly type: "Microsoft.Authorization/roleDefinitions";
+
 		readonly roleName: "Storage Blob Data Contributor";
+
 		readonly description: "Allows for read, write and delete access to Azure Storage blob containers and data";
+
 		readonly roleType: "BuiltInRole";
 	};
 };

@@ -26,12 +26,14 @@ export abstract class DeployZipBaseExecuteStep extends DeployExecuteStepBase {
 				),
 			);
 		}
+
 		const response = await this.deployZip(context);
 
 		try {
 			if (response) {
 				context.telemetry.properties.deploymentId =
 					response.headers.get("scm-deployment-id");
+
 				context.locationUrl = response.headers.get("location");
 			}
 		} catch (e) {

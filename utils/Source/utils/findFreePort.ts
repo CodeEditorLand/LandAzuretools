@@ -42,15 +42,19 @@ export async function findFreePort(
 	function doResolve(port: number, resolve: (port: number) => void) {
 		if (!resolved) {
 			resolved = true;
+
 			server.removeAllListeners();
+
 			server.close();
 
 			if (timeoutHandle) {
 				clearTimeout(timeoutHandle);
 			}
+
 			resolve(port);
 		}
 	}
+
 	return new Promise<number>((resolve) => {
 		timeoutHandle = setTimeout(() => {
 			doResolve(0, resolve);
@@ -59,6 +63,7 @@ export async function findFreePort(
 		server.on("listening", () => {
 			doResolve(startPort, resolve);
 		});
+
 		server.on("error", (err) => {
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any
 			if (
@@ -68,15 +73,19 @@ export async function findFreePort(
 				countTried < maxAttempts
 			) {
 				startPort += countTried;
+
 				countTried++;
+
 				server.listen(startPort, "127.0.0.1");
 			} else {
 				doResolve(0, resolve);
 			}
 		});
+
 		server.on("close", () => {
 			doResolve(0, resolve);
 		});
+
 		server.listen(startPort, "127.0.0.1");
 	});
 }

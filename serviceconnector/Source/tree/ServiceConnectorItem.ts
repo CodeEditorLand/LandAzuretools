@@ -21,7 +21,9 @@ import { getTreeId } from "./treeUtils";
 
 export interface ServiceConnectorItem extends TreeElementBase {
 	linker: LinkerResource;
+
 	subscription: ISubscriptionContext;
+
 	item: LinkerItem;
 }
 

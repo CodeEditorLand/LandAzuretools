@@ -60,6 +60,7 @@ export class AppServicePlanCreateStep extends AzureWizardExecuteStep<IAppService
 			'Successfully created App Service plan "{0}".',
 			newPlanName,
 		);
+
 		ext.outputChannel.appendLog(findingAppServicePlan);
 
 		try {
@@ -71,9 +72,11 @@ export class AppServicePlanCreateStep extends AzureWizardExecuteStep<IAppService
 
 			if (existingPlan) {
 				context.plan = existingPlan;
+
 				ext.outputChannel.appendLog(foundAppServicePlan);
 			} else {
 				ext.outputChannel.appendLog(creatingAppServicePlan);
+
 				progress.report({ message: creatingAppServicePlan });
 
 				context.plan =
@@ -82,6 +85,7 @@ export class AppServicePlanCreateStep extends AzureWizardExecuteStep<IAppService
 						newPlanName,
 						await getNewPlan(context),
 					);
+
 				ext.outputChannel.appendLog(createdAppServicePlan);
 			}
 		} catch (e) {
@@ -104,6 +108,7 @@ export class AppServicePlanCreateStep extends AzureWizardExecuteStep<IAppService
 		const selectExisting: MessageItem = {
 			title: l10n.t("Select Existing"),
 		};
+
 		await context.ui.showWarningMessage(
 			message,
 			{ modal: true, stepName: "AspNoPermissions" },
@@ -115,6 +120,7 @@ export class AppServicePlanCreateStep extends AzureWizardExecuteStep<IAppService
 		const step: AppServicePlanListStep = new AppServicePlanListStep(
 			true /* suppressCreate */,
 		);
+
 		await step.prompt(context);
 	}
 
@@ -161,6 +167,7 @@ function addCustomLocationProperties(
 	plan.perSiteScaling = true;
 
 	plan.kubeEnvironmentProfile = { id: customLocation.kubeEnvironment.id };
+
 	plan.extendedLocation = { name: customLocation.id, type: "customLocation" };
 }
 

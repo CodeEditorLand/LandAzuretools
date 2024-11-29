@@ -32,6 +32,7 @@ export async function showInputBox(
 
 	try {
 		const inputBox: InputBox = createInputBox(context, options);
+
 		disposables.push(inputBox);
 
 		let latestValidation: Promise<InputBoxValidationResult> =
@@ -45,6 +46,7 @@ export async function showInputBox(
 					if (options.validateInput) {
 						const validation: Promise<InputBoxValidationResult> =
 							Promise.resolve(options.validateInput(text));
+
 						latestValidation = validation;
 
 						const message: InputBoxValidationResult =
@@ -58,6 +60,7 @@ export async function showInputBox(
 				inputBox.onDidAccept(async () => {
 					// Run final validation and resolve if value passes
 					inputBox.enabled = false;
+
 					inputBox.busy = true;
 
 					const validateInputResult: InputBoxValidationResult =
@@ -77,6 +80,7 @@ export async function showInputBox(
 					}
 
 					inputBox.enabled = true;
+
 					inputBox.busy = false;
 				}),
 				inputBox.onDidTriggerButton(async (btn) => {
@@ -84,6 +88,7 @@ export async function showInputBox(
 						reject(new GoBackError());
 					} else if (btn === AzExtQuickInputButtons.LearnMore) {
 						await openUrl(nonNullProp(options, "learnMoreLink"));
+
 						context.telemetry.properties.learnMoreStep =
 							context.telemetry.properties.lastStep;
 					}
@@ -92,6 +97,7 @@ export async function showInputBox(
 					reject(new UserCancelledError());
 				}),
 			);
+
 			inputBox.show();
 		});
 	} finally {
@@ -114,6 +120,7 @@ function createInputBox(
 
 		if (!wizard.hideStepCount && wizard.title) {
 			inputBox.step = wizard.currentStep;
+
 			inputBox.totalSteps = wizard.totalSteps;
 		}
 	}
@@ -148,9 +155,13 @@ function createInputBox(
 
 	// Copy settings that are common between options and inputBox
 	inputBox.ignoreFocusOut = !!options.ignoreFocusOut;
+
 	inputBox.password = !!options.password;
+
 	inputBox.placeholder = options.placeHolder;
+
 	inputBox.prompt = options.prompt;
+
 	inputBox.title ??= options.title;
 
 	return inputBox;

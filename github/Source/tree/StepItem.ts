@@ -23,6 +23,7 @@ export class StepItem implements TreeElementBase {
 	) {}
 
 	id: string = `${this.parentResourceId}/steps/${this.step.number}`;
+
 	label: string = this.step.name;
 
 	viewProperties: ViewPropertiesModel = {

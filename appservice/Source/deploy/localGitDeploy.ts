@@ -69,20 +69,25 @@ export async function localGitDeploy(
 				const deployAnyway: vscode.MessageItem = {
 					title: vscode.l10n.t("Deploy Anyway"),
 				};
+
 				await context.ui.showWarningMessage(
 					message,
 					{ modal: true, stepName: "pushWithUncommitChanges" },
 					deployAnyway,
 				);
+
 				context.telemetry.properties.pushWithUncommitChanges = "true";
 			}
+
 			await verifyNoRunFromPackageSetting(context, site);
+
 			ext.outputChannel.appendLog(
 				vscode.l10n.t(
 					`Deploying Local Git repository to "${site.fullName}"...`,
 				),
 				{ resourceName: site.fullName },
 			);
+
 			await tryPushAndWaitForDeploymentToComplete();
 		} catch (err) {
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
@@ -100,6 +105,7 @@ export async function localGitDeploy(
 				if (input === installString) {
 					await openUrl("https://git-scm.com/downloads");
 				}
+
 				context.telemetry.properties.gitNotInstalled = "true";
 
 				return undefined;
@@ -118,7 +124,9 @@ export async function localGitDeploy(
 					{ modal: true, stepName: "forcePush" },
 					forcePushMessage,
 				);
+
 				context.telemetry.properties.forcePush = "true";
+
 				await tryPushAndWaitForDeploymentToComplete(true);
 			} else {
 				throw err;
@@ -136,12 +144,14 @@ export async function localGitDeploy(
 			try {
 				if (options.commit) {
 					const commitOptions: Options = { "-a": null };
+
 					await localGit.commit(
 						"Deployed via Azure App Service Extension",
 						undefined,
 						commitOptions,
 					);
 				}
+
 				const commitId: string | undefined = (await localGit.log())
 					.latest?.hash;
 
@@ -163,6 +173,7 @@ export async function localGitDeploy(
 							.catch((error) => {
 								// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 								reject(error);
+
 								tokenSource.cancel();
 							});
 

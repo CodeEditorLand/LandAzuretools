@@ -21,6 +21,7 @@ export interface KeyVaultJsonResponse {
 
 export interface KeyVaultAccountJsonResponse {
 	id: string;
+
 	name: string;
 }
 
@@ -29,6 +30,7 @@ export class KeyVaultListStep extends AzureWizardPromptStep<ICreateLinkerContext
 		const placeHolder: string = vscode.l10n.t("Select a key vault");
 
 		const accounts = await getKeyVaultAccounts(context);
+
 		context.keyVaultAccount = (
 			await context.ui.showQuickPick(this.getPicks(accounts.value), {
 				placeHolder,

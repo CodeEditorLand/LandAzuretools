@@ -12,7 +12,9 @@ export class GenericTreeItem
 	implements types.GenericTreeItem
 {
 	public readonly _isGenericTreeItem = true;
+
 	public label: string;
+
 	public contextValue: string;
 
 	private _includeInTreeItemPicker: boolean;
@@ -22,12 +24,19 @@ export class GenericTreeItem
 		options: types.IGenericTreeItemOptions,
 	) {
 		super(parent);
+
 		this.label = options.label;
+
 		this.contextValue = options.contextValue;
+
 		this.id = options.id;
+
 		this.commandId = options.commandId;
+
 		this.iconPath = options.iconPath;
+
 		this.description = options.description;
+
 		this._includeInTreeItemPicker = !!options.includeInTreeItemPicker;
 	}
 

@@ -26,15 +26,23 @@ export abstract class AzExtTreeItem implements types.AzExtTreeItem {
 
 	//#region Properties implemented by base class
 	public abstract label: string;
+
 	public abstract contextValue: string;
+
 	public commandArgs?: unknown[];
+
 	public suppressMaskLabel?: boolean;
+
 	public hasBeenDeleted?: boolean;
 
 	private _id?: string;
+
 	private _description?: string;
+
 	private _iconPath?: types.TreeItemIconPath;
+
 	private _tooltip?: string;
+
 	private _commandId?: string;
 	//#endregion
 
@@ -42,15 +50,21 @@ export abstract class AzExtTreeItem implements types.AzExtTreeItem {
 	 * Used to prevent VS Code from erroring out on nodes with the same label, but different context values (i.e. a folder and file with the same name)
 	 */
 	public fullIdWithContext?: string;
+
 	public readonly initialCollapsibleState:
 		| TreeItemCollapsibleState
 		| undefined;
+
 	public readonly parent: IAzExtParentTreeItemInternal | undefined;
+
 	public isLoadingMore!: boolean;
+
 	public readonly valuesToMask: string[] = [];
+
 	protected _subscription: types.ISubscriptionContext | undefined;
 
 	private _temporaryDescription?: string;
+
 	private _treeDataProvider: IAzExtTreeDataProviderInternal | undefined;
 
 	public constructor(parent: IAzExtParentTreeItemInternal | undefined) {
@@ -189,10 +203,13 @@ export abstract class AzExtTreeItem implements types.AzExtTreeItem {
 
 	//#region Methods implemented by base class
 	public refreshImpl?(context: types.IActionContext): Promise<void>;
+
 	public isAncestorOfImpl?(contextValue: string | RegExp): boolean;
+
 	public deleteTreeItemImpl?(
 		deleteTreeItemImpl: types.IActionContext,
 	): Promise<void>;
+
 	public resolveTooltip?(): Promise<string | MarkdownString>;
 	//#endregion
 
@@ -238,6 +255,7 @@ export abstract class AzExtTreeItem implements types.AzExtTreeItem {
 					if (this.parent) {
 						this.parent.removeChildFromCache(this);
 					}
+
 					this.hasBeenDeleted = true;
 				} else {
 					throw new NotImplementedError("deleteTreeItemImpl", this);
@@ -251,11 +269,13 @@ export abstract class AzExtTreeItem implements types.AzExtTreeItem {
 		description: string,
 		callback: () => Promise<void>,
 	): Promise<void>;
+
 	public async runWithTemporaryDescription(
 		context: types.IActionContext,
 		options: types.RunWithTemporaryDescriptionOptions,
 		callback: () => Promise<void>,
 	): Promise<void>;
+
 	public async runWithTemporaryDescription(
 		context: types.IActionContext,
 		options: string | types.RunWithTemporaryDescriptionOptions,
@@ -263,12 +283,14 @@ export abstract class AzExtTreeItem implements types.AzExtTreeItem {
 	): Promise<void> {
 		options =
 			typeof options === "string" ? { description: options } : options;
+
 		this._temporaryDescription = options.description;
 
 		try {
 			if (!options.softRefresh) {
 				this.treeDataProvider.refreshUIOnly(this);
 			}
+
 			await callback();
 		} finally {
 			this._temporaryDescription = undefined;

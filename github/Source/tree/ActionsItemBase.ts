@@ -23,6 +23,7 @@ import { ActionItem } from "./ActionItem";
 
 export interface GitHubSourceControl {
 	repoUrl: string;
+
 	repoBranch?: string;
 }
 
@@ -46,7 +47,9 @@ export interface ConnectToGitHubCommand {
  */
 export abstract class ActionsItemBase implements TreeElementBase {
 	static readonly contextValueSuffix: string = "ActionsItem";
+
 	static readonly connectedContextValue: string = "actionsConnected:true";
+
 	static readonly unconnectedContextValue: string = "actionsConnected:false";
 
 	static readonly idSuffix: string = "actions";
@@ -65,6 +68,7 @@ export abstract class ActionsItemBase implements TreeElementBase {
 	 * Constructed using the format: `${this.parentId}/${ActionsTreeItemBase.idSuffix}`
 	 */
 	readonly id: string = `${this.parentId}/${ActionsItemBase.idSuffix}`;
+
 	readonly label: string = "Actions";
 
 	private getContextValue(isConnected: boolean): string {

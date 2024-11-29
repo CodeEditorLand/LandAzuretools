@@ -41,6 +41,7 @@ export async function getWebLocations(
 	context: IAppServiceWizardContext,
 ): Promise<string[]> {
 	const options: ListGeoRegionsOptionalParams = {};
+
 	options["api-version"] = "2020-09-01";
 
 	if (context.newSiteOS === WebsiteOS.linux) {

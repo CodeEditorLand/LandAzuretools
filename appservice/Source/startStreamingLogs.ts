@@ -27,6 +27,7 @@ import { ParsedSite } from "./SiteClient";
 
 export interface ILogStream extends vscode.Disposable {
 	isConnected: boolean;
+
 	outputChannel: vscode.OutputChannel;
 }
 
@@ -49,6 +50,7 @@ export async function startStreamingLogs(
 
 	if (logStream && logStream.isConnected) {
 		logStream.outputChannel.show();
+
 		void context.ui.showWarningMessage(
 			vscode.l10n.t(
 				'The log-streaming service for "{0}" is already active.',
@@ -65,8 +67,11 @@ export async function startStreamingLogs(
 			: vscode.window.createOutputChannel(
 					vscode.l10n.t("{0} - Log Stream", logStreamLabel),
 				);
+
 		ext.context.subscriptions.push(outputChannel);
+
 		outputChannel.show();
+
 		outputChannel.appendLine(vscode.l10n.t("Connecting to log stream..."));
 
 		const credentials = site.subscription.credentials;
@@ -128,18 +133,23 @@ export async function startStreamingLogs(
 								const newLogStream: ILogStream = {
 									dispose: (): void => {
 										logsResponse.readableStreamBody?.removeAllListeners();
+
 										abortController.abort();
+
 										outputChannel.show();
 
 										if (timerId) {
 											clearInterval(timerId);
 										}
+
 										outputChannel.appendLine(
 											vscode.l10n.t(
 												"Disconnected from log-streaming service.",
 											),
 										);
+
 										newLogStream.isConnected = false;
+
 										void onLogStreamEnded();
 									},
 									isConnected: true,
@@ -154,16 +164,21 @@ export async function startStreamingLogs(
 										if (timerId) {
 											clearInterval(timerId);
 										}
+
 										newLogStream.isConnected = false;
+
 										outputChannel.show();
+
 										outputChannel.appendLine(
 											vscode.l10n.t(
 												"Error connecting to log-streaming service:",
 											),
 										);
+
 										outputChannel.appendLine(
 											parseError(err).message,
 										);
+
 										reject(err);
 									})
 									.on("complete", () => {
@@ -171,6 +186,7 @@ export async function startStreamingLogs(
 									});
 
 								logStreams.set(logStreamId, newLogStream);
+
 								onLogStreamCreated(newLogStream);
 							},
 						);

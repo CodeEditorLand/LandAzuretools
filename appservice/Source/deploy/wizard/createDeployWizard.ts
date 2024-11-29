@@ -59,17 +59,21 @@ export async function createDeployExecuteSteps(
 			const pathFileMap = new Map<string, string>([
 				[path.basename(context.fsPath), "app.jar"],
 			]);
+
 			executeSteps.push(new DeployZipPushExecuteStep(pathFileMap));
 		} else if (context.deployMethod === "flexconsumption") {
 			executeSteps.push(new DeployFlexExecuteStep());
 		} else {
 			executeSteps.push(new DeployZipPushExecuteStep());
 		}
+
 		executeSteps.push(new WaitForDeploymentToCompleteStep());
+
 		executeSteps.push(new DelayFirstWebAppDeployStep());
 	}
 
 	executeSteps.push(new PostDeployTaskExecuteStep(config));
+
 	executeSteps.push(new PostDeploySyncTriggersExecuteStep());
 
 	return executeSteps;

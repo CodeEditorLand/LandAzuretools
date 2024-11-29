@@ -33,8 +33,10 @@ export function registerCommand(
 					if (debounceCommand(debounce, lastClickTime)) {
 						return;
 					}
+
 					lastClickTime = Date.now();
 				}
+
 				return await callWithTelemetryAndErrorHandling(
 					telemetryId || commandId,
 					async (context: types.IActionContext) => {
@@ -81,5 +83,6 @@ function debounceCommand(debounce: number, lastClickTime?: number): boolean {
 	if (lastClickTime && lastClickTime + debounce > Date.now()) {
 		return true;
 	}
+
 	return false;
 }

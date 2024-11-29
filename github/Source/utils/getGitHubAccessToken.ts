@@ -29,12 +29,14 @@ export async function getGitHubAccessToken(): Promise<string> {
 				)
 			).accessToken;
 		}
+
 		return token;
 	} catch (error) {
 		// The error message is "User did not consent to login"
 		if (/did not consent/i.test(parseError(error).message)) {
 			throw new UserCancelledError("getGitHubToken");
 		}
+
 		throw error;
 	}
 }

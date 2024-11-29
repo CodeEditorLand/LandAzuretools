@@ -38,6 +38,7 @@ export function createTelemetryReporter(
 		console.warn(
 			`${extensionName}: DEBUGTELEMETRY mode enabled (${debugTelemetryVerbose ? "verbose" : "quiet"}) - not sending telemetry`,
 		);
+
 		newReporter = new DebugReporter(
 			extensionName,
 			extensionVersion,
@@ -45,7 +46,9 @@ export function createTelemetryReporter(
 		);
 	} else {
 		const reporter: TelemetryReporter = new TelemetryReporter(aiKey);
+
 		ctx.subscriptions.push(reporter);
+
 		newReporter = reporter;
 	}
 

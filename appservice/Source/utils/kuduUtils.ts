@@ -26,6 +26,7 @@ export async function retryKuduCall<T>(
 					existingAttempt < attempt
 				) {
 					context.telemetry.measurements.kuduMaxRetry = attempt;
+
 					context.telemetry.properties.kuduRetryMethod = methodName;
 				}
 			}

@@ -36,6 +36,7 @@ export class GitHubBranchListStep extends AzureWizardPromptStep<GitHubContext> {
 
 		while (!context.gitHubBranch) {
 			page++;
+
 			context.gitHubBranch = (
 				await context.ui.showQuickPick(this.getPicks(context, page), {
 					placeHolder,

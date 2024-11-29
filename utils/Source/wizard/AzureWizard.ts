@@ -35,16 +35,25 @@ export class AzureWizard<
 	implements types.AzureWizard<T>, IInternalAzureWizard
 {
 	public title: string | undefined;
+
 	private readonly _promptSteps: AzureWizardPromptStep<T>[];
+
 	private readonly _executeSteps: AzureWizardExecuteStep<T>[];
+
 	private readonly _finishedPromptSteps: AzureWizardPromptStep<T>[] = [];
+
 	private readonly _context: T;
+
 	private _stepHideStepCount?: boolean;
+
 	private _wizardHideStepCount?: boolean;
+
 	private _showLoadingPrompt?: boolean;
+
 	private _cancellationTokenSource: vscode.CancellationTokenSource;
 
 	private _cachedInputBoxValues: { [step: string]: string | undefined } = {};
+
 	public currentStepId: string | undefined;
 
 	public constructor(context: T, options: types.IWizardOptions<T>) {
@@ -52,18 +61,26 @@ export class AzureWizard<
 		this._promptSteps = (
 			<AzureWizardPromptStep<T>[]>options.promptSteps || []
 		).reverse();
+
 		this._promptSteps.forEach((s) => {
 			s.effectiveTitle = options.title;
 		});
+
 		this._executeSteps = options.executeSteps || [];
+
 		this._context = context;
+
 		this._wizardHideStepCount = options.hideStepCount;
+
 		this._showLoadingPrompt = options.showLoadingPrompt;
+
 		this._cancellationTokenSource = new vscode.CancellationTokenSource();
 
 		if (options.skipExecute === true) {
 			this._executeSteps.splice(0);
+
 			this._executeSteps.push(new NoExecuteStep());
+
 			this._context = {
 				...this._context,
 				...getSilentExecuteActivityContext(),
@@ -124,7 +141,9 @@ export class AzureWizard<
 				step.reset();
 
 				this._context.telemetry.properties.lastStep = `prompt-${getEffectiveStepId(step)}`;
+
 				this.title = step.effectiveTitle;
+
 				this._stepHideStepCount = step.hideStepCount;
 
 				step.propertiesBeforePrompt = Object.keys(this._context).filter(
@@ -162,6 +181,7 @@ export class AzureWizard<
 						this._context.ui.onDidFinishPrompt((result) => {
 							// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 							step!.prompted = true;
+
 							loadingQuickPick?.show();
 
 							if (
@@ -178,7 +198,9 @@ export class AzureWizard<
 
 					try {
 						this.currentStepId = getEffectiveStepId(step);
+
 						loadingQuickPick?.show();
+
 						await step.prompt(this._context);
 					} catch (err) {
 						const pe: types.IParsedError = parseError(err);
@@ -193,7 +215,9 @@ export class AzureWizard<
 						}
 					} finally {
 						this.currentStepId = undefined;
+
 						vscode.Disposable.from(...disposables).dispose();
+
 						loadingQuickPick?.hide();
 					}
 				}
@@ -205,6 +229,7 @@ export class AzureWizard<
 					) {
 						throw new UserCancelledError();
 					}
+
 					const subWizard: types.IWizardOptions<T> | void =
 						await step.getSubWizard(this._context);
 
@@ -214,10 +239,12 @@ export class AzureWizard<
 				}
 
 				this._finishedPromptSteps.push(step);
+
 				step = this._promptSteps.pop();
 			}
 		} finally {
 			this._context.ui.wizard = undefined;
+
 			this._cancellationTokenSource.dispose();
 		}
 	}
@@ -233,10 +260,12 @@ export class AzureWizard<
 
 				const internalProgress: vscode.Progress<{
 					message?: string;
+
 					increment?: number;
 				}> = {
 					report: (value: {
 						message?: string;
+
 						increment?: number;
 					}): void => {
 						if (value.message) {
@@ -250,6 +279,7 @@ export class AzureWizard<
 								value.message += ` (${currentStep}/${totalSteps})`;
 							}
 						}
+
 						progress.report(value);
 					},
 				};
@@ -280,7 +310,9 @@ export class AzureWizard<
 
 					try {
 						this._context.telemetry.properties.lastStep = `execute-${getEffectiveStepId(step)}`;
+
 						await step.execute(this._context, internalProgress);
+
 						output = step.createSuccessOutput?.(this._context);
 					} catch (e) {
 						output = step.createFailOutput?.(this._context);
@@ -302,6 +334,7 @@ export class AzureWizard<
 						this.displayActivityOutput(output, step.options);
 
 						currentStep += 1;
+
 						step = steps.pop();
 					}
 				}
@@ -357,6 +390,7 @@ export class AzureWizard<
 							async (
 								progress: vscode.Progress<{
 									message?: string;
+
 									increment?: number;
 								}>,
 								token: vscode.CancellationToken,
@@ -367,13 +401,16 @@ export class AzureWizard<
 
 								const internalProgress: vscode.Progress<{
 									message?: string;
+
 									increment?: number;
 								}> = {
 									report: (value: {
 										message?: string;
+
 										increment?: number;
 									}): void => {
 										progress.report(value);
+
 										activityProgress.report(value);
 									},
 								};
@@ -386,6 +423,7 @@ export class AzureWizard<
 			);
 
 			await this._context.registerActivity(activity);
+
 			await activity.run();
 		} else {
 			if (this._context.suppressNotification) {
@@ -394,6 +432,7 @@ export class AzureWizard<
 						return;
 					},
 				};
+
 				await task(
 					internalProgress,
 					this._cancellationTokenSource.token,
@@ -411,7 +450,9 @@ export class AzureWizard<
 
 		do {
 			this._promptSteps.push(step);
+
 			step = this._finishedPromptSteps.pop();
+
 			step?.undo?.(this._context);
 
 			if (!step) {
@@ -420,6 +461,7 @@ export class AzureWizard<
 
 			if (step.hasSubWizard) {
 				removeFromEnd(this._promptSteps, step.numSubPromptSteps);
+
 				removeFromEnd(this._executeSteps, step.numSubExecuteSteps);
 			}
 		} while (!step.prompted);
@@ -452,11 +494,13 @@ export class AzureWizard<
 						)
 				);
 			});
+
 			this._promptSteps.push(
 				...(<AzureWizardPromptStep<T>[]>(
 					subWizard.promptSteps.reverse()
 				)),
 			);
+
 			step.numSubPromptSteps = subWizard.promptSteps.length;
 
 			subWizard.promptSteps.forEach((s) => {
@@ -467,6 +511,7 @@ export class AzureWizard<
 
 		if (subWizard.executeSteps) {
 			this._executeSteps.push(...subWizard.executeSteps);
+
 			step.numSubExecuteSteps = subWizard.executeSteps.length;
 		}
 	}

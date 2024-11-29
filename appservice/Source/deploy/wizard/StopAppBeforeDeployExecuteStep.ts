@@ -11,6 +11,7 @@ import { InnerDeployContext } from "../IDeployContext";
 
 export class StopAppBeforeDeployExecuteStep extends AzureWizardExecuteStep<InnerDeployContext> {
 	public priority: number = 100;
+
 	public async execute(
 		context: InnerDeployContext,
 		progress: Progress<{ message?: string; increment?: number }>,
@@ -20,10 +21,13 @@ export class StopAppBeforeDeployExecuteStep extends AzureWizardExecuteStep<Inner
 		const client = await site.createClient(context);
 
 		const stoppingApp = l10n.t("Stopping app...");
+
 		progress.report({ message: stoppingApp });
+
 		ext.outputChannel.appendLog(stoppingApp, {
 			resourceName: site.fullName,
 		});
+
 		await client.stop();
 	}
 

@@ -14,5 +14,6 @@ export interface IDeleteSiteWizardContext
 	extends IActionContext,
 		ExecuteActivityContext {
 	site?: ParsedSite;
+
 	deletePlan?: boolean;
 }

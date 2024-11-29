@@ -19,14 +19,19 @@ export class RoleAssignmentExecuteStep<
 	T extends types.IResourceGroupWizardContext,
 > extends AzureWizardExecuteStep<T> {
 	public priority: number = 900;
+
 	private getScopeId: () => string | undefined;
+
 	private _roleDefinition: RoleDefinition;
+
 	public constructor(
 		getScopeId: () => string | undefined,
 		roleDefinition: RoleDefinition,
 	) {
 		super();
+
 		this.getScopeId = getScopeId;
+
 		this._roleDefinition = roleDefinition;
 	}
 
@@ -44,6 +49,7 @@ export class RoleAssignmentExecuteStep<
 				l10n.t("No scope was provided for the role assignment."),
 			);
 		}
+
 		const scopeSplitArr = scope.split("/");
 
 		const resourceName = scopeSplitArr[scopeSplitArr.length - 1] ?? "";
@@ -70,7 +76,9 @@ export class RoleAssignmentExecuteStep<
 			resourceName,
 			resourceType,
 		);
+
 		progress.report({ message: roleAssignmentCreated });
+
 		ext.outputChannel.appendLog(roleAssignmentCreated);
 	}
 

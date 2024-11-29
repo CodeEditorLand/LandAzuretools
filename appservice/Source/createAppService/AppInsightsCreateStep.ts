@@ -33,6 +33,7 @@ export class AppInsightsCreateStep extends AzureWizardExecuteStep<IAppServiceWiz
 		const verifyingAppInsightsAvailable: string = l10n.t(
 			"Verifying that Application Insights is available for this location...",
 		);
+
 		ext.outputChannel.appendLog(verifyingAppInsightsAvailable);
 
 		const resourceLocation: AzExtLocation =
@@ -58,6 +59,7 @@ export class AppInsightsCreateStep extends AzureWizardExecuteStep<IAppServiceWiz
 					rgName,
 					aiName,
 				);
+
 				ext.outputChannel.appendLog(
 					l10n.t(
 						'Using existing Application Insights resource "{0}".',
@@ -72,7 +74,9 @@ export class AppInsightsCreateStep extends AzureWizardExecuteStep<IAppServiceWiz
 						'Creating Application Insights resource "{0}"...',
 						aiName,
 					);
+
 					ext.outputChannel.appendLog(creatingNewAppInsights);
+
 					progress.report({ message: creatingNewAppInsights });
 
 					context.appInsightsComponent =
@@ -88,12 +92,14 @@ export class AppInsightsCreateStep extends AzureWizardExecuteStep<IAppServiceWiz
 						'Successfully created Application Insights resource "{0}".',
 						aiName,
 					);
+
 					ext.outputChannel.appendLog(createdNewAppInsights);
 				} else if (pError.errorType === "AuthorizationFailed") {
 					if (!context.advancedCreation) {
 						const appInsightsNotAuthorized: string = l10n.t(
 							"Skipping Application Insights resource because you do not have permission to create one in this subscription.",
 						);
+
 						ext.outputChannel.appendLog(appInsightsNotAuthorized);
 					} else {
 						await this.selectExistingPrompt(context);
@@ -106,6 +112,7 @@ export class AppInsightsCreateStep extends AzureWizardExecuteStep<IAppServiceWiz
 			const appInsightsNotAvailable: string = l10n.t(
 				"Skipping Application Insights resource because it isn't compatible with this location.",
 			);
+
 			ext.outputChannel.appendLog(appInsightsNotAvailable);
 		}
 	}
@@ -133,7 +140,9 @@ export class AppInsightsCreateStep extends AzureWizardExecuteStep<IAppServiceWiz
 
 		if (result === skipForNow) {
 			context.telemetry.properties.aiSkipForNow = "true";
+
 			context.appInsightsSkip = true;
+
 			context.telemetry.properties.forbiddenResponse = "SkipAppInsights";
 		} else {
 			context.telemetry.properties.forbiddenResponse =
@@ -142,6 +151,7 @@ export class AppInsightsCreateStep extends AzureWizardExecuteStep<IAppServiceWiz
 			const step: AppInsightsListStep = new AppInsightsListStep(
 				true /* suppressCreate */,
 			);
+
 			await step.prompt(context);
 		}
 	}

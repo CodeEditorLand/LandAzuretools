@@ -40,8 +40,10 @@ export function cacheIssueForCommand(issue: IReportableIssue): void {
 
 export function registerReportIssueCommand(commandId: string): void {
 	cachedIssues = [];
+
 	registerCommand(commandId, async (context: types.IActionContext) => {
 		context.errorHandling.suppressDisplay = true;
+
 		context.errorHandling.suppressReportIssue = true;
 
 		cachedIssues = nonNullValue(cachedIssues, "cachedIssues");
@@ -59,6 +61,7 @@ export function registerReportIssueCommand(commandId: string): void {
 					data: i,
 				};
 			});
+
 			picks.unshift({
 				label: vscode.l10n.t("$(keyboard) Manually enter error"),
 				data: undefined,
@@ -75,6 +78,7 @@ export function registerReportIssueCommand(commandId: string): void {
 					suppressPersistence: true,
 				})
 			).data;
+
 			await reportAnIssue(issue);
 		}
 	});

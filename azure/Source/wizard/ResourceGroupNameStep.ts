@@ -20,6 +20,7 @@ export class ResourceGroupNameStep<T extends types.IResourceGroupWizardContext>
 		const suggestedName: string | undefined = wizardContext.relatedNameTask
 			? await wizardContext.relatedNameTask
 			: undefined;
+
 		wizardContext.newResourceGroupName = (
 			await wizardContext.ui.showInputBox({
 				value: suggestedName,
@@ -30,6 +31,7 @@ export class ResourceGroupNameStep<T extends types.IResourceGroupWizardContext>
 					await this.validateResourceGroupName(wizardContext, value),
 			})
 		).trim();
+
 		wizardContext.valuesToMask.push(wizardContext.newResourceGroupName);
 	}
 

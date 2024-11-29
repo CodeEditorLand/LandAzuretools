@@ -55,6 +55,7 @@ export function getDefaultWebpackConfig(
 	const externalNodeModules: string[] = (
 		options.externalNodeModules || []
 	).concat(existingDefaultExtNodeModules);
+
 	log("debug", "External node modules:", externalNodeModules);
 
 	function log(messageVerbosity: MessageVerbosity, ...args: unknown[]): void {
@@ -134,6 +135,7 @@ export function getDefaultWebpackConfig(
                         // ... tell webpack that the call may be loading any of the package.json files from the 'node_modules/azure-arm*' folders
                         // so it will include those in the package to be available for lookup at runtime
                         context.request = path.resolve(options.projectRoot, 'node_modules');
+
                         context.regExp = /azure-arm.*package\.json/;
                     */
 
@@ -159,6 +161,7 @@ export function getDefaultWebpackConfig(
 		plugins.push(
 			new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
 		);
+
 		plugins.push(
 			new webpack.ProvidePlugin({
 				process: "process/browser",
@@ -190,6 +193,7 @@ export function getDefaultWebpackConfig(
 
 	const alias: { [index: string]: string | false | string[] } =
 		options.alias ?? {};
+
 	alias[nodeCryptoPath] = webCryptoPath;
 
 	const config: webpack.Configuration = {

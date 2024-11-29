@@ -24,6 +24,7 @@ export class TestOutputChannel implements LogOutputChannel {
 		options = options || {};
 
 		const date: Date = options.date || new Date();
+
 		this.appendLine(
 			`${date.toLocaleTimeString()}${options.resourceName ? " ".concat(options.resourceName) : ""}: ${value}`,
 		);
@@ -58,15 +59,19 @@ export class TestOutputChannel implements LogOutputChannel {
 	trace(message: string, ...args: unknown[]): void {
 		console.trace(message, args);
 	}
+
 	debug(message: string, ...args: unknown[]): void {
 		console.debug(message, args);
 	}
+
 	info(message: string, ...args: unknown[]): void {
 		console.info(message, args);
 	}
+
 	warn(message: string, ...args: unknown[]): void {
 		console.warn(message, args);
 	}
+
 	error(error: string | Error, ...args: unknown[]): void {
 		console.error(error, args);
 	}

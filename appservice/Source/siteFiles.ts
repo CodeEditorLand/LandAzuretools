@@ -20,13 +20,17 @@ import { ParsedSite } from "./SiteClient";
 
 export interface ISiteFile {
 	data: string;
+
 	etag: string;
 }
 
 export interface ISiteFileMetadata {
 	mime: string;
+
 	name: string;
+
 	path: string;
+
 	href: string;
 }
 
@@ -44,6 +48,7 @@ export function createSiteFilesUrl(
 
 		return `${site.id}/hostruntime/admin/vfs/home/${path}/?api-version=2022-03-01`;
 	}
+
 	return href ?? `${site.kuduUrl}/api/vfs/${path}`;
 }
 
@@ -68,6 +73,7 @@ export async function getFile(
 			throw error;
 		}
 	}
+
 	return {
 		data: <string>response.bodyAsText,
 		etag: <string>response.headers.get("etag"),
@@ -160,6 +166,7 @@ async function getFsResponse(
 							// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 							throw new retry.AbortError(error);
 						}
+
 						throw error;
 					}
 				},

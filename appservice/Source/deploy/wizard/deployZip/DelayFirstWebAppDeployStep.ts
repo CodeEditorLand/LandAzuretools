@@ -10,6 +10,7 @@ import { InnerDeployContext } from "../../IDeployContext";
 
 export class DelayFirstWebAppDeployStep extends AzureWizardExecuteStep<InnerDeployContext> {
 	public priority: number = 300;
+
 	public constructor() {
 		super();
 	}
@@ -36,6 +37,7 @@ export class DelayFirstWebAppDeployStep extends AzureWizardExecuteStep<InnerDepl
 				) {
 					resolve();
 				}
+
 				if (!context.site.isLinux) {
 					resolve();
 				}

@@ -57,5 +57,6 @@ export function registerGitHubExtensionVariables(
 	}
 
 	ext = extVars;
+
 	registerUIExtensionVariables(extVars);
 }

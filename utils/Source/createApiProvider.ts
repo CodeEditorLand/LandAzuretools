@@ -34,6 +34,7 @@ export function createApiProvider(
 			);
 		}
 	}
+
 	const extensionId: string = getPackageInfo().extensionId;
 
 	const apiFactories: AzureExtensionApiFactory[] = azExts.map(
@@ -85,16 +86,20 @@ function getApiInternal<T extends AzureExtensionApi>(
 			"getApi",
 			(context: IActionContext) => {
 				context.errorHandling.rethrow = true;
+
 				context.errorHandling.suppressDisplay = true;
+
 				context.telemetry.properties.isActivationEvent = "true";
 
 				context.telemetry.properties.apiVersionRange = apiVersionRange;
+
 				context.telemetry.properties.callingExtensionId =
 					options?.extensionId;
 
 				const apiVersions: string[] = azExts.map(
 					(a: AzureExtensionApi) => a.apiVersion,
 				);
+
 				context.telemetry.properties.apiVersions =
 					apiVersions.join(", ");
 
@@ -132,6 +137,7 @@ function getApiInternal<T extends AzureExtensionApi>(
 							extensionId,
 							minApiVersion,
 						);
+
 						code = "NoLongerSupported";
 					} else {
 						// This case is somewhat likely - so keep the error message simple and just tell user to update their extenion
@@ -139,6 +145,7 @@ function getApiInternal<T extends AzureExtensionApi>(
 							'Extension dependency with id "{0}" must be updated.',
 							extensionId,
 						);
+
 						code = "NotYetSupported";
 					}
 

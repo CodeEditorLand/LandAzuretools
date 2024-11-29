@@ -123,6 +123,7 @@ export class TargetServiceListStep extends AzureWizardPromptStep<ICreateLinkerCo
 			placeHolder,
 			enableGrouping: true,
 		});
+
 		context.targetServiceType = context.targetService.data;
 	}
 
@@ -157,6 +158,7 @@ export class TargetServiceListStep extends AzureWizardPromptStep<ICreateLinkerCo
 			case TargetServiceTypeName.KeyVault:
 				promptSteps.push(new KeyVaultListStep());
 		}
+
 		return { promptSteps };
 	}
 }

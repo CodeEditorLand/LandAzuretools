@@ -15,15 +15,21 @@ import { CollapsibleStateTracker } from "./CollapsibleStateTracker";
 
 export interface IAzExtParentTreeItemInternal extends AzExtParentTreeItem {
 	_isAzExtParentTreeItem: boolean;
+
 	parent: IAzExtParentTreeItemInternal | undefined;
+
 	treeDataProvider: IAzExtTreeDataProviderInternal;
+
 	removeChildFromCache(node: AzExtTreeItem): void;
+
 	loadMoreChildren(context: types.IActionContext): Promise<void>;
 }
 
 export interface IAzExtTreeDataProviderInternal
 	extends types.AzExtTreeDataProvider {
 	_onTreeItemCreateEmitter: EventEmitter<AzExtTreeItem>;
+
 	refreshUIOnly(treeItem: AzExtTreeItem | undefined): void;
+
 	readonly collapsibleStateTracker: CollapsibleStateTracker | undefined;
 }

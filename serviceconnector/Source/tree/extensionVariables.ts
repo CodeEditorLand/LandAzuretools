@@ -57,5 +57,6 @@ export function registerServiceConnectorExtensionVariables(
 	}
 
 	ext = extVars;
+
 	registerUIExtensionVariables(extVars);
 }

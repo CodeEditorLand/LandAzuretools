@@ -41,7 +41,9 @@ export abstract class AzExtTreeFileSystem<
 
 	private readonly _emitter: EventEmitter<FileChangeEvent[]> =
 		new EventEmitter<FileChangeEvent[]>();
+
 	private readonly _bufferedEvents: FileChangeEvent[] = [];
+
 	private _fireSoonHandle?: NodeJS.Timer;
 
 	public get onDidChangeFile(): Event<FileChangeEvent[]> {
@@ -53,17 +55,20 @@ export abstract class AzExtTreeFileSystem<
 		item: TItem,
 		originalUri: Uri,
 	): Promise<FileStat>;
+
 	public abstract readFileImpl(
 		context: types.IActionContext,
 		item: TItem,
 		originalUri: Uri,
 	): Promise<Uint8Array>;
+
 	public abstract writeFileImpl(
 		context: types.IActionContext,
 		item: TItem,
 		content: Uint8Array,
 		originalUri: Uri,
 	): Promise<void>;
+
 	public abstract getFilePath(item: TItem): string;
 
 	public async showTextDocument(
@@ -71,7 +76,9 @@ export abstract class AzExtTreeFileSystem<
 		options?: TextDocumentShowOptions,
 	): Promise<void> {
 		const uri = this.getUriFromItem(item);
+
 		this.itemCache.set(item.id, item);
+
 		await window.showTextDocument(uri, options);
 	}
 
@@ -102,7 +109,9 @@ export abstract class AzExtTreeFileSystem<
 				"readFile",
 				async (context) => {
 					context.errorHandling.rethrow = true;
+
 					context.errorHandling.suppressDisplay = true;
+
 					context.telemetry.eventVersion = 2;
 
 					const item: TItem = await this.lookup(context, uri);
@@ -118,7 +127,9 @@ export abstract class AzExtTreeFileSystem<
 			"writeFile",
 			async (context) => {
 				const item: TItem = await this.lookup(context, uri);
+
 				await this.writeFileImpl(context, item, content, uri);
+
 				await item.refresh?.(context);
 			},
 		);
@@ -160,6 +171,7 @@ export abstract class AzExtTreeFileSystem<
 
 		this._fireSoonHandle = setTimeout(() => {
 			this._emitter.fire(this._bufferedEvents);
+
 			this._bufferedEvents.length = 0; // clear buffer
 		}, 5);
 	}
@@ -193,7 +205,9 @@ export abstract class AzExtTreeFileSystem<
 
 		if (!item) {
 			context.telemetry.suppressAll = true;
+
 			context.errorHandling.rethrow = true;
+
 			context.errorHandling.suppressDisplay = true;
 
 			throw FileSystemError.FileNotFound(uri);

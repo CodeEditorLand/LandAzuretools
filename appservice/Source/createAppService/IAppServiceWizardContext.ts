@@ -123,10 +123,14 @@ export interface IAppServiceWizardContext
 
 export type CustomLocation = {
 	name: string;
+
 	id: string;
+
 	kubeEnvironment: {
 		name: string;
+
 		id: string;
+
 		location: string;
 	};
 };

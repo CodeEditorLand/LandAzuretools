@@ -23,8 +23,11 @@ import { DeploymentTreeItem } from "./DeploymentTreeItem";
 
 interface DeploymentsTreeItemOptions {
 	site: ParsedSite;
+
 	siteConfig: SiteConfig;
+
 	sourceControl: SiteSourceControl;
+
 	contextValuesToAdd?: string[];
 }
 
@@ -33,14 +36,21 @@ interface DeploymentsTreeItemOptions {
  */
 export class DeploymentsTreeItem extends AzExtParentTreeItem {
 	public static contextValueConnected: string = "deploymentsConnected";
+
 	public static contextValueUnconnected: string = "deploymentsUnconnected";
+
 	public readonly label: string = l10n.t("Deployments");
+
 	public readonly childTypeLabel: string = l10n.t("Deployment");
+
 	public readonly site: ParsedSite;
+
 	public suppressMaskLabel: boolean = true;
+
 	public readonly contextValuesToAdd: string[];
 
 	private _scmType?: string;
+
 	private _repoUrl?: string;
 
 	public constructor(
@@ -48,9 +58,13 @@ export class DeploymentsTreeItem extends AzExtParentTreeItem {
 		options: DeploymentsTreeItemOptions,
 	) {
 		super(parent);
+
 		this.site = options.site;
+
 		this._scmType = options.siteConfig.scmType;
+
 		this._repoUrl = options.sourceControl.repoUrl;
+
 		this.contextValuesToAdd = options?.contextValuesToAdd || [];
 	}
 
@@ -126,6 +140,7 @@ export class DeploymentsTreeItem extends AzExtParentTreeItem {
 				}),
 			);
 		}
+
 		return children;
 	}
 
@@ -149,7 +164,9 @@ export class DeploymentsTreeItem extends AzExtParentTreeItem {
 
 		const sourceControl: SiteSourceControl =
 			await client.getSourceControl();
+
 		this._scmType = siteConfig.scmType;
+
 		this._repoUrl = sourceControl.repoUrl;
 	}
 }

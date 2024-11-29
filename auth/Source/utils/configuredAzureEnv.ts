@@ -125,6 +125,7 @@ export async function setConfiguredAzureEnv(
 			CloudEnvironmentSettingValue.Custom,
 			target,
 		);
+
 		await authProviderConfig.update(
 			CustomEnvironmentSettingName,
 			cloud,

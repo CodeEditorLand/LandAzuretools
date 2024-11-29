@@ -14,6 +14,7 @@ import { shouldExecuteTask } from "../runDeployTask";
 
 export class PostDeployTaskExecuteStep extends AzureWizardExecuteStep<InnerDeployContext> {
 	public priority: number = 300;
+
 	public constructor(readonly config: SiteConfig) {
 		super();
 	}
@@ -27,6 +28,7 @@ export class PostDeployTaskExecuteStep extends AzureWizardExecuteStep<InnerDeplo
 		const taskName: string | undefined = workspace
 			.getConfiguration(ext.prefix, Uri.file(context.fsPath))
 			.get(settingKey);
+
 		context.telemetry.properties.hasPostDeployTask = String(!!taskName);
 
 		if (
@@ -42,6 +44,7 @@ export class PostDeployTaskExecuteStep extends AzureWizardExecuteStep<InnerDeplo
 				context.fsPath,
 				taskName,
 			);
+
 			context.telemetry.properties.foundPostDeployTask = String(!!task);
 
 			if (task) {
@@ -52,7 +55,9 @@ export class PostDeployTaskExecuteStep extends AzureWizardExecuteStep<InnerDeplo
 					settingKey,
 					taskName,
 				);
+
 				progress.report({ message: startedTask });
+
 				ext.outputChannel.appendLog(startedTask, {
 					resourceName: context.site.fullName,
 				});
@@ -62,7 +67,9 @@ export class PostDeployTaskExecuteStep extends AzureWizardExecuteStep<InnerDeplo
 					settingKey,
 					taskName,
 				);
+
 				progress.report({ message: failedToFindTask });
+
 				ext.outputChannel.appendLog(failedToFindTask, {
 					resourceName: context.site.fullName,
 				});

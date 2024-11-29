@@ -15,12 +15,15 @@ import { FolderTreeItem } from "./FolderTreeItem";
 
 interface SiteFilesTreeItemOptions {
 	site: ParsedSite;
+
 	isReadOnly: boolean;
+
 	contextValuesToAdd?: string[];
 }
 
 export class SiteFilesTreeItem extends FolderTreeItem {
 	public static contextValue: string = "siteFiles";
+
 	public suppressMaskLabel: boolean = true;
 
 	public readonly contextValuesToAdd: string[];
@@ -37,6 +40,7 @@ export class SiteFilesTreeItem extends FolderTreeItem {
 			url: createSiteFilesUrl(options.site, "site/wwwroot/"),
 			isReadOnly: options.isReadOnly,
 		});
+
 		this.contextValuesToAdd = options.contextValuesToAdd || [];
 	}
 

@@ -17,6 +17,7 @@ export abstract class GenericQuickPickStep<
 	public readonly supportsDuplicateSteps = true;
 
 	protected readonly promptOptions: types.IAzureQuickPickOptions;
+
 	protected abstract readonly pickFilter: PickFilter<vscode.TreeItem>;
 
 	public constructor(
@@ -25,6 +26,7 @@ export abstract class GenericQuickPickStep<
 		promptOptions?: types.IAzureQuickPickOptions,
 	) {
 		super();
+
 		this.promptOptions = {
 			noPicksMessage: vscode.l10n.t("No matching resources found."),
 			...promptOptions,
@@ -33,6 +35,7 @@ export abstract class GenericQuickPickStep<
 
 	public async prompt(wizardContext: TContext): Promise<void> {
 		const pick = await this.promptInternal(wizardContext);
+
 		wizardContext.pickedNodes.push(pick);
 	}
 

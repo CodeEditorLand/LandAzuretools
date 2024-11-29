@@ -25,9 +25,13 @@ export class AzExtUserInputWithInputQueue
 	implements AzExtUserInputWithInputQueueType
 {
 	private _context: IInternalActionContext;
+
 	private _inputsQueue: AzureUserInputQueue;
+
 	private _onDidFinishPromptEmitter: vscode.EventEmitter<PromptResult>;
+
 	private _realAzureUserInput: IAzureUserInput;
+
 	private _isPrompting: boolean;
 
 	constructor(
@@ -35,13 +39,17 @@ export class AzExtUserInputWithInputQueue
 		returnValueQueue: AzureUserInputQueue,
 	) {
 		this._context = context;
+
 		this._onDidFinishPromptEmitter =
 			new vscode.EventEmitter<PromptResult>();
+
 		this._realAzureUserInput = new AzExtUserInput(
 			context,
 			this._onDidFinishPromptEmitter,
 		);
+
 		this._inputsQueue = returnValueQueue;
+
 		this._isPrompting = false;
 	}
 
@@ -69,6 +77,7 @@ export class AzExtUserInputWithInputQueue
 		) {
 			throw new UserCancelledError();
 		}
+
 		this._isPrompting = true;
 
 		let result: TPick;
@@ -95,7 +104,9 @@ export class AzExtUserInputWithInputQueue
 					`Could not find item with label "${nextItemInQueue.label}" in quick pick items`,
 				);
 			}
+
 			result = matchingItem;
+
 			this._onDidFinishPromptEmitter.fire({ value: result });
 		}
 
@@ -117,6 +128,7 @@ export class AzExtUserInputWithInputQueue
 		) {
 			throw new UserCancelledError();
 		}
+
 		this._isPrompting = true;
 
 		let result: string;
@@ -130,6 +142,7 @@ export class AzExtUserInputWithInputQueue
 			result = await this._realAzureUserInput.showInputBox(options);
 		} else {
 			result = nextItemInQueue;
+
 			this._onDidFinishPromptEmitter.fire({
 				value: result,
 				matchesDefault: result === options.value,
@@ -156,6 +169,7 @@ export class AzExtUserInputWithInputQueue
 		) {
 			throw new UserCancelledError();
 		}
+
 		this._isPrompting = true;
 
 		let result: vscode.Uri[];
@@ -169,6 +183,7 @@ export class AzExtUserInputWithInputQueue
 			result = await this._realAzureUserInput.showOpenDialog(options);
 		} else {
 			result = nextItemInQueue;
+
 			this._onDidFinishPromptEmitter.fire({ value: result });
 		}
 
@@ -192,6 +207,7 @@ export class AzExtUserInputWithInputQueue
 		) {
 			throw new UserCancelledError();
 		}
+
 		this._isPrompting = true;
 
 		let result: vscode.WorkspaceFolder;
@@ -206,6 +222,7 @@ export class AzExtUserInputWithInputQueue
 				await this._realAzureUserInput.showWorkspaceFolderPick(options);
 		} else {
 			result = nextItemInQueue;
+
 			this._onDidFinishPromptEmitter.fire({ value: result });
 		}
 
@@ -218,6 +235,7 @@ export class AzExtUserInputWithInputQueue
 		message: string,
 		...items: T[]
 	): Promise<T>;
+
 	public async showWarningMessage<T extends vscode.MessageItem>(
 		message: string,
 		options: IAzureMessageOptions,
@@ -239,6 +257,7 @@ export class AzExtUserInputWithInputQueue
 		) {
 			stepName = (<Partial<IAzureMessageOptions>>firstArg).stepName;
 		}
+
 		addStepTelemetry(this._context, stepName, "warningMessage", message);
 
 		if (
@@ -246,6 +265,7 @@ export class AzExtUserInputWithInputQueue
 		) {
 			throw new UserCancelledError();
 		}
+
 		this._isPrompting = true;
 
 		let result: T;
@@ -263,6 +283,7 @@ export class AzExtUserInputWithInputQueue
 			);
 		} else {
 			result = nextItemInQueue;
+
 			this._onDidFinishPromptEmitter.fire({ value: result });
 		}
 

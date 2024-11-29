@@ -32,6 +32,7 @@ export class SiteOSStep extends AzureWizardPromptStep<IAppServiceWizardContext> 
 				placeHolder: vscode.l10n.t("Select an OS."),
 			})
 		).data;
+
 		await setLocationsTask(context);
 	}
 

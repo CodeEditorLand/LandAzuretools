@@ -24,6 +24,7 @@ import {
 
 export class ServiceConnectorGroupItem implements TreeElementBase {
 	id: string = `${this.item.id}/ServiceConnector`;
+
 	subscription: ISubscriptionContext;
 
 	constructor(public readonly item: LinkerItem) {

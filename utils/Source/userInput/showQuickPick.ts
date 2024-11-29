@@ -35,6 +35,7 @@ export async function showQuickPick<
 
 	try {
 		const quickPick: QuickPick<TPick> = createQuickPick(context, options);
+
 		disposables.push(quickPick);
 
 		const recentlyUsedKey: string | undefined =
@@ -73,6 +74,7 @@ export async function showQuickPick<
 							await openUrl(
 								nonNullProp(options, "learnMoreLink"),
 							);
+
 							context.telemetry.properties.learnMoreStep =
 								context.telemetry.properties.lastStep;
 						}
@@ -84,7 +86,9 @@ export async function showQuickPick<
 
 				// Show progress bar while loading quick picks
 				quickPick.busy = true;
+
 				quickPick.enabled = false;
+
 				quickPick.show();
 
 				try {
@@ -106,8 +110,11 @@ export async function showQuickPick<
 							options.isPickSelected!(p),
 						);
 					}
+
 					quickPick.placeholder = options.placeHolder;
+
 					quickPick.busy = false;
+
 					quickPick.enabled = true;
 				} catch (err) {
 					reject(err);
@@ -121,6 +128,7 @@ export async function showQuickPick<
 			!result.suppressPersistence
 		) {
 			const recentlyUsedValue = await getRecentlyUsedValue(result);
+
 			await ext.context.globalState.update(
 				recentlyUsedKey,
 				recentlyUsedValue,
@@ -150,9 +158,11 @@ export function createQuickPick<
 
 		if (!wizard.hideStepCount && wizard.title) {
 			quickPick.step = wizard.currentStep;
+
 			quickPick.totalSteps = wizard.totalSteps;
 		}
 	}
+
 	const buttons: QuickInputButton[] = [];
 
 	if (wizard?.showBackButton) {
@@ -177,9 +187,13 @@ export function createQuickPick<
 
 	// Copy settings that are common between options and quickPick
 	quickPick.placeholder = options.loadingPlaceHolder || options.placeHolder;
+
 	quickPick.ignoreFocusOut = !!options.ignoreFocusOut;
+
 	quickPick.matchOnDescription = !!options.matchOnDescription;
+
 	quickPick.matchOnDetail = !!options.matchOnDetail;
+
 	quickPick.canSelectMany = !!options.canPickMany;
 
 	return quickPick;
@@ -195,8 +209,10 @@ async function getRecentlyUsedKey(
 	if (unhashedKey && !options.canPickMany) {
 		const hashKey =
 			await randomUtils.getPseudononymousStringHash(unhashedKey);
+
 		recentlyUsedKey = `showQuickPick.${hashKey}`;
 	}
+
 	return recentlyUsedKey;
 }
 
@@ -211,6 +227,7 @@ export async function createQuickPickItems<
 	globalState: Memento | undefined = undefined,
 ): Promise<TPick[]> {
 	picks = await picks;
+
 	globalState ??= ext.context.globalState;
 
 	picks = await bumpHighPriorityAndRecentlyUsed(
@@ -230,6 +247,7 @@ export async function createQuickPickItems<
 				},
 			}));
 		}
+
 		return picks;
 	} else if (!options.enableGrouping) {
 		return picks;
@@ -251,6 +269,7 @@ export async function createQuickPickItems<
 				groups.push({ name: groupName, picks: [pick] });
 			}
 		}
+
 		return getGroupedPicks(groups);
 	}
 }
@@ -346,12 +365,14 @@ function getGroupedPicks<TPick extends types.IAzureQuickPickItem<unknown>>(
 					kind: QuickPickItemKind.Separator,
 					data: group,
 				});
+
 				picks.push(...group.picks);
 			}
 		}
 	} else {
 		picks = picks.concat(...groups.map((g) => g.picks));
 	}
+
 	return <TPick[]>picks;
 }
 
@@ -361,7 +382,9 @@ function shouldDisplayGroups(groups: QuickPickGroup[]): boolean {
 
 type QuickPickGroup = {
 	name?: string;
+
 	isCollapsed?: boolean;
+
 	picks: types.IAzureQuickPickItem<unknown>[];
 };
 

@@ -9,9 +9,13 @@ import { ext } from "./extensionVariables";
 
 interface IPackageInfo {
 	extensionName: string;
+
 	extensionVersion: string;
+
 	aiKey: string;
+
 	extensionId: string;
+
 	bugsUrl: string | undefined;
 }
 
@@ -44,12 +48,15 @@ export function getPackageInfo(ctx?: ExtensionContext): IPackageInfo {
 		if (!aiKey) {
 			throw new Error("Extension's package.json is missing aiKey");
 		}
+
 		if (!extensionName) {
 			throw new Error("Extension's package.json is missing name");
 		}
+
 		if (!publisher) {
 			throw new Error("Extension's package.json is missing publisher");
 		}
+
 		if (!extensionVersion) {
 			throw new Error("Extension's package.json is missing version");
 		}
@@ -70,9 +77,13 @@ export function getPackageInfo(ctx?: ExtensionContext): IPackageInfo {
 
 interface IPackageJson {
 	version?: string;
+
 	name?: string;
+
 	publisher?: string;
+
 	aiKey?: string;
+
 	bugs?:
 		| string
 		| {

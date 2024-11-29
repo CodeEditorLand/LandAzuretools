@@ -14,6 +14,7 @@ import { AzExtTreeItem } from "./AzExtTreeItem";
 
 export class CollapsibleStateTracker implements Disposable {
 	private readonly disposables: Disposable[] = [];
+
 	private readonly collapsibleStateCache = new Map<
 		string,
 		TreeItemCollapsibleState | undefined
@@ -38,6 +39,7 @@ export class CollapsibleStateTracker implements Disposable {
 					evt.element.effectiveId,
 					TreeItemCollapsibleState.Expanded,
 				);
+
 				this.onDidExpandOrRefreshExpandedEmitter.fire(evt.element);
 			}),
 		);

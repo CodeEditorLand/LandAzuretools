@@ -17,10 +17,12 @@ export namespace uiUtils {
 		const all: T[] = [];
 
 		let list: IPartialList<T> = await first;
+
 		all.push(...list);
 
 		while (list.nextLink) {
 			list = await client.listNext(list.nextLink);
+
 			all.push(...list);
 		}
 

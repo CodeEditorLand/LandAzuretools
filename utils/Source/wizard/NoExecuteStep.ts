@@ -13,6 +13,7 @@ export class NoExecuteStep<
 	public priority: number = 200;
 
 	private _key: string = "NoExecute";
+
 	public async execute(_wizardContext: T): Promise<void> {
 		throw new UserCancelledError(this._key);
 	}

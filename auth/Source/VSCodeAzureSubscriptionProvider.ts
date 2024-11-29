@@ -35,10 +35,13 @@ export class VSCodeAzureSubscriptionProvider
 	implements AzureSubscriptionProvider
 {
 	private readonly onDidSignInEmitter = new vscode.EventEmitter<void>();
+
 	private lastSignInEventFired: number = 0;
+
 	private suppressSignInEvents: boolean = false;
 
 	private readonly onDidSignOutEmitter = new vscode.EventEmitter<void>();
+
 	private lastSignOutEventFired: number = 0;
 
 	public constructor() {
@@ -55,6 +58,7 @@ export class VSCodeAzureSubscriptionProvider
 						Date.now() > this.lastSignInEventFired + EventDebounce
 					) {
 						this.lastSignInEventFired = Date.now();
+
 						this.onDidSignInEmitter.fire();
 					}
 				} else if (
@@ -62,6 +66,7 @@ export class VSCodeAzureSubscriptionProvider
 					this.lastSignOutEventFired + EventDebounce
 				) {
 					this.lastSignOutEventFired = Date.now();
+
 					this.onDidSignOutEmitter.fire();
 				}
 			},
@@ -69,7 +74,9 @@ export class VSCodeAzureSubscriptionProvider
 
 		super(() => {
 			this.onDidSignInEmitter.dispose();
+
 			this.onDidSignOutEmitter.dispose();
+
 			disposable.dispose();
 		});
 	}
@@ -126,6 +133,7 @@ export class VSCodeAzureSubscriptionProvider
 		filter: boolean = true,
 	): Promise<AzureSubscription[]> {
 		const tenantIds = await this.getTenantFilters();
+
 		const shouldFilterTenants = filter && !!tenantIds.length; // If the list is empty it is treated as "no filter"
 
 		const allSubscriptions: AzureSubscription[] = [];
@@ -137,6 +145,7 @@ export class VSCodeAzureSubscriptionProvider
 			const accounts = await vscode.authentication.getAccounts(
 				getConfiguredAuthProviderId(),
 			);
+
 			for (const account of accounts) {
 				for (const tenant of await this.getTenants(account)) {
 					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -168,9 +177,11 @@ export class VSCodeAzureSubscriptionProvider
 		// It's possible that by listing subscriptions in all tenants and the "home" tenant there could be duplicate subscriptions
 		// Thus, we remove duplicate subscriptions. However, if multiple accounts have the same subscription, we keep them.
 		const subscriptionMap = new Map<string, AzureSubscription>();
+
 		allSubscriptions.forEach((sub) =>
 			subscriptionMap.set(`${sub.account.id}/${sub.subscriptionId}`, sub),
 		);
+
 		const uniqueSubscriptions = Array.from(subscriptionMap.values());
 
 		const sortSubscriptions = (
@@ -179,6 +190,7 @@ export class VSCodeAzureSubscriptionProvider
 			subscriptions.sort((a, b) => a.name.localeCompare(b.name));
 
 		const subscriptionIds = await this.getSubscriptionFilters();
+
 		if (filter && !!subscriptionIds.length) {
 			// If the list is empty it is treated as "no filter"
 			return sortSubscriptions(
@@ -211,6 +223,7 @@ export class VSCodeAzureSubscriptionProvider
 			const accounts = await vscode.authentication.getAccounts(
 				getConfiguredAuthProviderId(),
 			);
+
 			if (accounts.length === 0) {
 				return false;
 			}
@@ -227,6 +240,7 @@ export class VSCodeAzureSubscriptionProvider
 			silent: true,
 			account,
 		});
+
 		return !!session;
 	}
 
@@ -248,6 +262,7 @@ export class VSCodeAzureSubscriptionProvider
 			clearSessionPreference: !account,
 			account,
 		});
+
 		return !!session;
 	}
 
@@ -285,6 +300,7 @@ export class VSCodeAzureSubscriptionProvider
 	 */
 	protected async getTenantFilters(): Promise<TenantId[]> {
 		const config = vscode.workspace.getConfiguration("azureResourceGroups");
+
 		const fullSubscriptionIds = config.get<string[]>(
 			"selectedSubscriptions",
 			[],
@@ -304,10 +320,12 @@ export class VSCodeAzureSubscriptionProvider
 	 */
 	protected async getSubscriptionFilters(): Promise<SubscriptionId[]> {
 		const config = vscode.workspace.getConfiguration("azureResourceGroups");
+
 		const fullSubscriptionIds = config.get<string[]>(
 			"selectedSubscriptions",
 			[],
 		);
+
 		return fullSubscriptionIds.map((id) => id.split("/")[1]);
 	}
 
@@ -331,6 +349,7 @@ export class VSCodeAzureSubscriptionProvider
 
 		const { client, credential, authentication } =
 			await this.getSubscriptionClient(account, tenantId, undefined);
+
 		const environment = getConfiguredAzureEnv();
 
 		const subscriptions: AzureSubscription[] = [];
@@ -367,7 +386,9 @@ export class VSCodeAzureSubscriptionProvider
 		scopes?: string[],
 	): Promise<{
 		client: SubscriptionClient;
+
 		credential: TokenCredential;
+
 		authentication: AzureAuthentication;
 	}> {
 		const armSubs = await import("@azure/arm-resources-subscriptions");
@@ -392,6 +413,7 @@ export class VSCodeAzureSubscriptionProvider
 		};
 
 		const configuredAzureEnv = getConfiguredAzureEnv();
+
 		const endpoint = configuredAzureEnv.resourceManagerEndpointUrl;
 
 		return {

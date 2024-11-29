@@ -27,8 +27,11 @@ export type gitHubOrgData = { login: string; repos_url: string };
 
 export type gitHubRepoData = {
 	name: string;
+
 	repos_url: string;
+
 	url: string;
+
 	html_url: string;
 };
 
@@ -36,8 +39,11 @@ export type gitHubBranchData = { name: string };
 
 export type gitHubLink = {
 	prev?: string;
+
 	next?: string;
+
 	last?: string;
+
 	first?: string;
 };
 
@@ -86,6 +92,7 @@ export async function connectToGitHub(
 			repoName,
 			site.fullName,
 		);
+
 		await vscode.window.withProgress(
 			{
 				location: vscode.ProgressLocation.Notification,
@@ -93,9 +100,13 @@ export async function connectToGitHub(
 			},
 			async (): Promise<void> => {
 				ext.outputChannel.appendLog(connectingToGithub);
+
 				await verifyNoRunFromPackageSetting(context, site);
+
 				await client.updateSourceControl(siteSourceControl);
+
 				void vscode.window.showInformationMessage(connectedToGithub);
+
 				ext.outputChannel.appendLog(connectedToGithub);
 			},
 		);

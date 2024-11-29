@@ -14,6 +14,7 @@ import { waitForDeploymentToComplete } from "../../waitForDeploymentToComplete";
 
 export class WaitForDeploymentToCompleteStep extends AzureWizardExecuteStep<InnerDeployContext> {
 	public priority: number = 210;
+
 	public async execute(
 		context: InnerDeployContext,
 		progress: Progress<{ message?: string; increment?: number }>,

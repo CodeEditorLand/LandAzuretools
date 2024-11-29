@@ -38,6 +38,7 @@ export class DeleteLastServicePlanStep extends AzureWizardPromptStep<IDeleteSite
 				DialogResponses.yes,
 				DialogResponses.no,
 			);
+
 			context.deletePlan = input === DialogResponses.yes;
 		}
 	}

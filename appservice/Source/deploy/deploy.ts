@@ -40,6 +40,8 @@ export async function deploy(
 			executeSteps,
 			title,
 		});
+
 	innerContext.activityTitle = l10n.t('Deploy to App "{0}"', site.fullName);
+
 	await wizard.execute();
 }

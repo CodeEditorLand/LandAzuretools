@@ -20,6 +20,7 @@ import { FolderTreeItem } from "./FolderTreeItem";
 
 interface LogFilesTreeItemOptions {
 	site: ParsedSite;
+
 	contextValuesToAdd?: string[];
 }
 
@@ -28,7 +29,9 @@ interface LogFilesTreeItemOptions {
  */
 export class LogFilesTreeItem extends FolderTreeItem {
 	public static contextValue: string = "logFiles";
+
 	public suppressMaskLabel: boolean = true;
+
 	public readonly contextValuesToAdd: string[];
 
 	protected readonly _isRoot: boolean = true;
@@ -61,7 +64,9 @@ export class LogFilesTreeItem extends FolderTreeItem {
 		} catch (error) {
 			// We want to show the log stream tree item in all cases, so handle errors here
 			const message: string = parseError(error).message;
+
 			context.telemetry.properties.logFilesError = message;
+
 			children = [
 				new GenericTreeItem(this, {
 					label: l10n.t("Error: {0}", message),
@@ -77,9 +82,11 @@ export class LogFilesTreeItem extends FolderTreeItem {
 				iconPath: new ThemeIcon("play"),
 				label: l10n.t("Connect to Log Stream..."),
 			});
+
 			ti.commandArgs = [this.parent]; // should be the slot tree item
 			children.push(ti);
 		}
+
 		return children;
 	}
 }

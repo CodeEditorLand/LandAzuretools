@@ -22,10 +22,12 @@ export class VerifyProvidersStep<T extends ISubscriptionActionContext>
 	implements types.VerifyProvidersStep<T>
 {
 	public priority: number = 90;
+
 	private _providers: string[];
 
 	public constructor(providers: string[]) {
 		super();
+
 		this._providers = providers;
 	}
 
@@ -37,6 +39,7 @@ export class VerifyProvidersStep<T extends ISubscriptionActionContext>
 
 		const client: ResourceManagementClient =
 			await createResourcesClient(context);
+
 		await Promise.all(
 			this._providers.map(async (providerName) => {
 				try {
@@ -55,6 +58,7 @@ export class VerifyProvidersStep<T extends ISubscriptionActionContext>
 
 						do {
 							await delay(2 * 1000);
+
 							provider = await client.providers.get(providerName);
 						} while (
 							provider.registrationState?.toLowerCase() ===
@@ -81,6 +85,7 @@ export class VerifyProvidersStep<T extends ISubscriptionActionContext>
 					 */
 					context.telemetry.properties.providerError =
 						maskedErrorMessage;
+
 					context.telemetry.properties.providerErrorV2 =
 						maskedErrorMessage;
 				}

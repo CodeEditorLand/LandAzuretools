@@ -25,6 +25,7 @@ export class StorageAccountCreateStep<
 
 	public constructor(defaults: types.INewStorageAccountDefaults) {
 		super();
+
 		this._defaults = defaults;
 	}
 
@@ -48,11 +49,14 @@ export class StorageAccountCreateStep<
 			newLocation,
 			newSkuName,
 		);
+
 		ext.outputChannel.appendLog(creatingStorageAccount);
+
 		progress.report({ message: creatingStorageAccount });
 
 		const storageClient: StorageManagementClient =
 			await createStorageClient(wizardContext);
+
 		wizardContext.storageAccount =
 			await storageClient.storageAccounts.beginCreateAndWait(
 				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -71,6 +75,7 @@ export class StorageAccountCreateStep<
 			'Successfully created storage account "{0}".',
 			newName,
 		);
+
 		ext.outputChannel.appendLog(createdStorageAccount);
 	}
 

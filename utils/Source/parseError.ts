@@ -27,12 +27,16 @@ export function parseError(error: any): IParsedError {
 		}
 
 		stack = getCallstack(error);
+
 		errorType = getCode(error, errorType);
 
 		// See https://github.com/Microsoft/vscode-azureappservice/issues/419 for an example error that requires these 'unpack's
 		error = unpackErrorFromField(error, "value");
+
 		error = unpackErrorFromField(error, "_value");
+
 		error = unpackErrorFromField(error, "error");
+
 		error = unpackErrorFromField(error, "error");
 
 		if (Array.isArray(error.errors) && error.errors.length) {
@@ -40,6 +44,7 @@ export function parseError(error: any): IParsedError {
 		}
 
 		errorType = getCode(error, errorType);
+
 		message = getMessage(error, message);
 
 		if (
@@ -48,9 +53,11 @@ export function parseError(error: any): IParsedError {
 			/error.*deserializing.*response.*body/i.test(message)
 		) {
 			error = unpackErrorFromField(error, "response");
+
 			error = unpackErrorFromField(error, "body");
 
 			errorType = getCode(error, errorType);
+
 			message = getMessage(error, message);
 		}
 
@@ -64,6 +71,7 @@ export function parseError(error: any): IParsedError {
 		}
 
 		errorType = getCode(parsedMessage, errorType);
+
 		message = getMessage(parsedMessage, message);
 
 		message ||= convertCodeToError(errorType) || JSON.stringify(error);
@@ -78,6 +86,7 @@ export function parseError(error: any): IParsedError {
 		error.toString().trim() !== ""
 	) {
 		errorType = typeof error;
+
 		message = error.toString();
 	}
 
@@ -86,6 +95,7 @@ export function parseError(error: any): IParsedError {
 	[message, errorType] = parseIfFileSystemError(message, errorType);
 
 	errorType ||= typeof error;
+
 	message ||= vscode.l10n.t("Unknown Error");
 
 	message = parseIfHtml(message);
@@ -284,6 +294,7 @@ function getCallstack(error: { stack?: unknown }): string | undefined {
 				} while (moduleMatch);
 
 				parts.push(fileMatch[0]);
+
 				result += parts.join("/");
 			}
 
@@ -307,7 +318,9 @@ function parseIfFileSystemError(
 
 	if (match) {
 		message = match[1];
+
 		errorType = match[2];
 	}
+
 	return [message, errorType];
 }

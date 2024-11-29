@@ -15,6 +15,7 @@ import { IAppServiceWizardContext } from "./IAppServiceWizardContext";
 
 interface AppServiceWizardContext extends IAppServiceWizardContext {
 	_location: AzExtLocation;
+
 	zoneRedundant: boolean;
 }
 
@@ -102,6 +103,7 @@ export class AppServicePlanRedundancyStep extends AzureWizardPromptStep<IAppServ
 				newPlanSku,
 			);
 		}
+
 		return false;
 	}
 }

@@ -76,6 +76,7 @@ export class StorageAccountListStep<
 	implements types.StorageAccountListStep<T>
 {
 	private readonly _newAccountDefaults: types.INewStorageAccountDefaults;
+
 	private readonly _filters: types.IStorageAccountFilters;
 
 	public constructor(
@@ -83,7 +84,9 @@ export class StorageAccountListStep<
 		filters?: types.IStorageAccountFilters,
 	) {
 		super();
+
 		this._newAccountDefaults = newAccountDefaults;
+
 		this._filters = filters || {};
 	}
 
@@ -120,6 +123,7 @@ export class StorageAccountListStep<
 		const result: StorageAccount | undefined = (
 			await wizardContext.ui.showQuickPick(picksTask, quickPickOptions)
 		).data;
+
 		wizardContext.storageAccount = result;
 
 		if (wizardContext.storageAccount) {
@@ -139,6 +143,7 @@ export class StorageAccountListStep<
 				new StorageAccountNameStep(),
 				new ResourceGroupListStep(),
 			];
+
 			LocationListStep.addStep(wizardContext, promptSteps);
 
 			return {

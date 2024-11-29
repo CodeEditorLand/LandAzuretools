@@ -26,20 +26,28 @@ export abstract class AzExtParentTreeItem
 {
 	//#region Properties implemented by base class
 	public childTypeLabel?: string;
+
 	public autoSelectInTreeItemPicker?: boolean;
+
 	public supportsAdvancedCreation?: boolean;
+
 	public createNewLabel?: string;
 	//#endregion
 
 	public readonly initialCollapsibleState:
 		| TreeItemCollapsibleState
 		| undefined = TreeItemCollapsibleState.Collapsed;
+
 	public readonly _isAzExtParentTreeItem: boolean = true;
 
 	private _cachedChildren: AzExtTreeItem[] = [];
+
 	private _creatingTreeItems: AzExtTreeItem[] = [];
+
 	private _clearCache: boolean = true;
+
 	private _loadMoreChildrenTask: Promise<void> | undefined;
+
 	private _initChildrenTask: Promise<void> | undefined;
 
 	public async getCachedChildren(
@@ -66,10 +74,13 @@ export abstract class AzExtParentTreeItem
 		clearCache: boolean,
 		context: types.IActionContext,
 	): Promise<AzExtTreeItem[]>;
+
 	public abstract hasMoreChildrenImpl(): boolean;
+
 	public createChildImpl?(
 		context: types.ICreateChildImplContext,
 	): Promise<AzExtTreeItem>;
+
 	public pickTreeItemImpl?(
 		expectedContextValues: (string | RegExp)[],
 		context: types.IActionContext,
@@ -99,13 +110,16 @@ export abstract class AzExtParentTreeItem
 								contextValue: `azureextensionui.creating${label}`,
 								iconPath: new ThemeIcon("loading~spin"),
 							});
+
 							this._creatingTreeItems.push(creatingTreeItem);
+
 							this.treeDataProvider.refreshUIOnly(this);
 						},
 					}),
 				);
 
 				this.addChildToCache(newTreeItem);
+
 				this.treeDataProvider._onTreeItemCreateEmitter.fire(
 					newTreeItem,
 				);
@@ -117,6 +131,7 @@ export abstract class AzExtParentTreeItem
 						this._creatingTreeItems.indexOf(creatingTreeItem),
 						1,
 					);
+
 					this.treeDataProvider.refreshUIOnly(this);
 				}
 			}
@@ -214,7 +229,9 @@ export abstract class AzExtParentTreeItem
 					break;
 				}
 			}
+
 			this._cachedChildren.splice(index, 0, childToAdd);
+
 			this.treeDataProvider.refreshUIOnly(this);
 		}
 	}
@@ -224,6 +241,7 @@ export abstract class AzExtParentTreeItem
 
 		if (index !== -1) {
 			this._cachedChildren.splice(index, 1);
+
 			this.treeDataProvider.refreshUIOnly(this);
 		}
 	}
@@ -248,6 +266,7 @@ export abstract class AzExtParentTreeItem
 		context: types.ILoadingTreeContext,
 	): Promise<AzExtTreeItem[]> {
 		context.loadingMessage ||= l10n.t('Loading "{0}"...', this.label);
+
 		await runWithLoadingNotification(context, async (cancellationToken) => {
 			do {
 				if (cancellationToken.isCancellationRequested) {
@@ -275,7 +294,9 @@ export abstract class AzExtParentTreeItem
 		const treeItems: AzExtTreeItem[] = [];
 
 		let lastUnknownItemError: unknown;
+
 		sourceArray ||= [];
+
 		await Promise.all(
 			sourceArray.map(async (source: TSource) => {
 				try {
@@ -285,9 +306,13 @@ export abstract class AzExtParentTreeItem
 					if (item) {
 						// Verify at least the following properties can be accessed without an error
 						item.contextValue;
+
 						item.description;
+
 						item.label;
+
 						item.iconPath;
+
 						item.id;
 
 						treeItems.push(item);
@@ -319,6 +344,7 @@ export abstract class AzExtParentTreeItem
 		if (!isNullOrUndefined(lastUnknownItemError)) {
 			// Display a generic error if there are any unknown items. Only the last error will be displayed
 			const label: string = l10n.t("Some items could not be displayed");
+
 			treeItems.push(
 				new InvalidTreeItem(this, lastUnknownItemError, {
 					label,
@@ -342,6 +368,7 @@ export abstract class AzExtParentTreeItem
 						(<AzExtParentTreeItem>child).clearCache();
 					}
 				}
+
 				this._cachedChildren = [];
 			} else if (!this.hasMoreChildrenImpl()) {
 				// No-op since all children are already loaded
@@ -356,6 +383,7 @@ export abstract class AzExtParentTreeItem
 
 			const newTreeItems: AzExtTreeItem[] =
 				await this.loadMoreChildrenImpl(this._clearCache, context);
+
 			this._cachedChildren = this._cachedChildren
 				.concat(newTreeItems)
 				.sort((ti1, ti2) => this.compareChildrenImpl(ti1, ti2));
@@ -370,6 +398,7 @@ export abstract class AzExtParentTreeItem
 			Partial<types.ICreateChildImplContext>,
 	): Promise<types.IAzureQuickPickItem<GetTreeItemFunction>[]> {
 		let children: AzExtTreeItem[] = await this.getCachedChildren(context);
+
 		children = children.filter((ti: AzExtTreeItem) =>
 			ti.includeInTreePicker(expectedContextValues),
 		);
@@ -397,10 +426,12 @@ export abstract class AzExtParentTreeItem
 							} else {
 								const commandArgs: unknown[] =
 									ti.commandArgs || [ti];
+
 								await commands.executeCommand(
 									ti.commandId,
 									...commandArgs,
 								);
+
 								await this.refresh(context);
 
 								return this;
@@ -480,7 +511,9 @@ export class InvalidTreeItem
 	implements types.InvalidTreeItem
 {
 	public readonly contextValue: string;
+
 	public readonly label: string;
+
 	public readonly data?: unknown;
 
 	private _error: unknown;
@@ -491,10 +524,15 @@ export class InvalidTreeItem
 		options: types.IInvalidTreeItemOptions,
 	) {
 		super(parent);
+
 		this.label = options.label;
+
 		this._error = error;
+
 		this.contextValue = options.contextValue;
+
 		this.data = options.data;
+
 		this.description =
 			options.description !== undefined
 				? options.description
@@ -529,6 +567,7 @@ class AutoSelectError extends Error {
 
 	constructor(data: GetTreeItemFunction) {
 		super();
+
 		this.data = data;
 	}
 }
@@ -538,6 +577,7 @@ class CanPickManyError extends Error {
 
 	constructor(picks: types.IAzureQuickPickItem<GetTreeItemFunction>[]) {
 		super();
+
 		this.picks = picks;
 	}
 }

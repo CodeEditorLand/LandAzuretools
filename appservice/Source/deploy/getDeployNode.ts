@@ -38,6 +38,7 @@ export async function getDeployNode<T extends AzExtTreeItem>(
 
 	if (isAzExtTreeItem(arg1)) {
 		node = arg1;
+
 		context.appSource = AppSource.tree;
 	} else if (typeof arg2 === "string" && arg2) {
 		node = await tree.findTreeItem(arg2, context);
@@ -47,6 +48,7 @@ export async function getDeployNode<T extends AzExtTreeItem>(
 				vscode.l10n.t('Failed to find app matching id "{0}".', arg2),
 			);
 		}
+
 		context.appSource = AppSource.api;
 	} else {
 		const defaultAppId: string | undefined = getWorkspaceSetting(
@@ -74,11 +76,13 @@ export async function getDeployNode<T extends AzExtTreeItem>(
 
 		if (!node) {
 			node = await pickNode();
+
 			context.appSource = AppSource.nodePicker;
 		}
 	}
 
 	context.telemetry.properties.appSource = context.appSource;
+
 	context.telemetry.properties.isNewApp = String(!!context.isNewApp);
 
 	return <T>node;

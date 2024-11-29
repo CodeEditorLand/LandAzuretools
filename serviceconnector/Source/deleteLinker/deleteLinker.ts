@@ -65,5 +65,6 @@ export async function deleteLinker(
 	);
 
 	await wizard.prompt();
+
 	await wizard.execute();
 }

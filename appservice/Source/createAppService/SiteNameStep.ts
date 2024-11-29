@@ -45,6 +45,7 @@ export class SiteNameStep extends AzureNameStep<SiteNameStepWizardContext> {
 		siteFor?: "functionApp" | "containerizedFunctionApp" | undefined,
 	) {
 		super();
+
 		this._siteFor = siteFor;
 	}
 
@@ -65,6 +66,7 @@ export class SiteNameStep extends AzureNameStep<SiteNameStepWizardContext> {
 			} else {
 				namePlaceholder = vscode.l10n.t("web app name");
 			}
+
 			placeHolder = `<${namePlaceholder}>.azurewebsites.net`;
 		}
 
@@ -118,6 +120,7 @@ export class SiteNameStep extends AzureNameStep<SiteNameStepWizardContext> {
 		};
 
 		context.newSiteName = (await context.ui.showInputBox(options)).trim();
+
 		context.valuesToMask.push(context.newSiteName);
 
 		const namingRules: IAzureNamingRules[] = [resourceGroupNamingRules];
@@ -129,6 +132,7 @@ export class SiteNameStep extends AzureNameStep<SiteNameStepWizardContext> {
 		}
 
 		namingRules.push(appInsightsNamingRules);
+
 		context.relatedNameTask = this.generateRelatedName(
 			context,
 			context.newSiteName,

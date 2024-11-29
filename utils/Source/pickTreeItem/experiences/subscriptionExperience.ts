@@ -19,6 +19,7 @@ export async function subscriptionExperience(
 	options?: { selectBySubscriptionId?: string; showLoadingPrompt?: boolean },
 ): Promise<AzureSubscription> {
 	const wizardContext = { ...context } as PickSubscriptionWizardContext;
+
 	wizardContext.pickedNodes = [];
 
 	const wizard = new AzureWizard(wizardContext, {

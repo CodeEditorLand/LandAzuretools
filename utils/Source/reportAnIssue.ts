@@ -17,8 +17,11 @@ export const maxUrlLength: number = 2000;
 
 export interface IReportableIssue {
 	callbackId: string;
+
 	error: types.IParsedError;
+
 	issueProperties: { [key: string]: string | undefined };
+
 	time: number;
 }
 
@@ -29,6 +32,7 @@ export async function reportAnIssue(
 	issue: IReportableIssue | undefined,
 ): Promise<void> {
 	const link: string = await getReportAnIssueLink(issue);
+
 	await openUrl(link);
 }
 
@@ -75,6 +79,7 @@ Language: ${vscode.env.language}`;
 	); // Don't localize call stack
 	for (const propName of Object.getOwnPropertyNames(details)) {
 		const value: string | undefined = details[propName];
+
 		body += createBodyDetail(propName, String(value));
 	}
 

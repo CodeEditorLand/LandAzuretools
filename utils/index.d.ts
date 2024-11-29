@@ -24,6 +24,7 @@ export declare interface RunWithTemporaryDescriptionOptions {
  */
 export declare class AzExtTreeDataProvider implements TreeDataProvider<AzExtTreeItem>, Disposable {
     public onDidChangeTreeData: Event<AzExtTreeItem | undefined>;
+
     public onTreeItemCreate: Event<AzExtTreeItem>;
 
     /**
@@ -74,6 +75,7 @@ export declare class AzExtTreeDataProvider implements TreeDataProvider<AzExtTree
      * @param startingTreeItem An optional parameter to start the picker from somewhere other than the root of the tree
      */
     public showTreeItemPicker<T extends AzExtTreeItem>(expectedContextValues: string | RegExp | (string | RegExp)[], context: ITreeItemPickerContext & { canPickMany: true }, startingTreeItem?: AzExtTreeItem): Promise<T[]>;
+
     public showTreeItemPicker<T extends AzExtTreeItem>(expectedContextValues: string | RegExp | (string | RegExp)[], context: ITreeItemPickerContext, startingTreeItem?: AzExtTreeItem): Promise<T>;
 
     /**
@@ -176,13 +178,21 @@ export interface AzExtServiceClientCredentialsT2 {
  */
 export interface ISubscriptionContext {
     credentials: AzExtServiceClientCredentials;
+
     createCredentialsForScopes: (scopes: string[]) => Promise<AzExtServiceClientCredentials>;
+
     subscriptionDisplayName: string;
+
     subscriptionId: string;
+
     subscriptionPath: string;
+
     tenantId: string;
+
     userId: string;
+
     environment: Environment;
+
     isCustomCloud: boolean;
 }
 
@@ -198,7 +208,9 @@ export interface SealedAzExtTreeItem {
      * This is used for AzureTreeDataProvider.findTreeItem and openInPortal
      */
     readonly fullId: string;
+
     readonly parent?: AzExtParentTreeItem;
+
     readonly treeDataProvider: AzExtTreeDataProvider;
 
     /**
@@ -238,6 +250,7 @@ export interface SealedAzExtTreeItem {
      * Displays a 'Loading...' icon and temporarily changes the item's description while `callback` is being run
      */
     runWithTemporaryDescription(context: IActionContext, description: string, callback: () => Promise<void>): Promise<void>;
+
     runWithTemporaryDescription(context: IActionContext, options: RunWithTemporaryDescriptionOptions, callback: () => Promise<void>): Promise<void>;
 }
 
@@ -249,6 +262,7 @@ export interface SealedAzExtTreeItem {
 export interface AbstractAzExtTreeItem {
 
     id?: string;
+
     label: string;
 
     /**
@@ -257,7 +271,9 @@ export interface AbstractAzExtTreeItem {
     description?: string;
 
     iconPath?: TreeItemIconPath;
+
     commandId?: string;
+
     tooltip?: string;
 
     initialCollapsibleState?: TreeItemCollapsibleState;
@@ -266,6 +282,7 @@ export interface AbstractAzExtTreeItem {
      * The arguments to pass in when executing `commandId`. If not specified, this tree item will be used.
      */
     commandArgs?: unknown[];
+
     contextValue: string;
 
     /**
@@ -355,6 +372,7 @@ export declare abstract class AzExtTreeItem implements IAzExtTreeItem {
     */
     public set id(id: string | undefined)
     public get id(): string | undefined;
+
     public abstract label: string;
 
     /**
@@ -364,12 +382,15 @@ export declare abstract class AzExtTreeItem implements IAzExtTreeItem {
     public get description(): string | undefined;
 
     public set iconPath(ip: TreeItemIconPath | undefined);
+
     public get iconPath(): TreeItemIconPath | undefined;
 
     public set commandId(id: string | undefined);
+
     public get commandId(): string | undefined;
 
     public set tooltip(tt: string | undefined);
+
     public get tooltip(): string | undefined;
 
     public get collapsibleState(): TreeItemCollapsibleState | undefined;
@@ -378,6 +399,7 @@ export declare abstract class AzExtTreeItem implements IAzExtTreeItem {
      * The arguments to pass in when executing `commandId`. If not specified, this tree item will be used.
      */
     public commandArgs?: unknown[];
+
     public abstract contextValue: string;
     //#endregion
 
@@ -386,7 +408,9 @@ export declare abstract class AzExtTreeItem implements IAzExtTreeItem {
      * This is used for AzureTreeDataProvider.findTreeItem and openInPortal
      */
     public readonly fullId: string;
+
     public readonly parent?: AzExtParentTreeItem;
+
     public readonly treeDataProvider: AzExtTreeDataProvider;
 
     /**
@@ -443,6 +467,7 @@ export declare abstract class AzExtTreeItem implements IAzExtTreeItem {
      * Displays a 'Loading...' icon and temporarily changes the item's description while `callback` is being run
      */
     public runWithTemporaryDescription(context: IActionContext, description: string, callback: () => Promise<void>): Promise<void>;
+
     public runWithTemporaryDescription(context: IActionContext, options: RunWithTemporaryDescriptionOptions, callback: () => Promise<void>): Promise<void>;
 
     /**
@@ -457,13 +482,19 @@ export declare function isAzExtParentTreeItem(maybeParentTreeItem: unknown): may
 
 export interface GenericParentTreeItemOptions {
     childTypeLabel?: string;
+
     contextValue: string;
+
     iconPath?: TreeItemIconPath;
+
     initialCollapsibleState?: TreeItemCollapsibleState;
+
     label: string;
+
     suppressMaskLabel?: boolean;
 
     compareChildrenImpl?(item1: AzExtTreeItem, item2: AzExtTreeItem): number;
+
     loadMoreChildrenImpl?(clearCache: boolean, context: IActionContext): Promise<AzExtTreeItem[]>;
 }
 
@@ -472,8 +503,11 @@ export interface GenericParentTreeItemOptions {
  */
 export declare class GenericParentTreeItem extends AzExtParentTreeItem {
     public childTypeLabel?: string;
+
     public contextValue: string;
+
     public label: string;
+
     public suppressMaskLabel?: boolean;
 
     public readonly initialCollapsibleState: TreeItemCollapsibleState;
@@ -481,16 +515,23 @@ export declare class GenericParentTreeItem extends AzExtParentTreeItem {
     constructor(parent: AzExtParentTreeItem | undefined, options: GenericParentTreeItemOptions);
 
     public compareChildrenImpl(item1: AzExtTreeItem, item2: AzExtTreeItem): number;
+
     public hasMoreChildrenImpl(): boolean;
+
     public loadMoreChildrenImpl(clearCache: boolean, context: IActionContext): Promise<AzExtTreeItem[]>;
 }
 
 export interface IGenericTreeItemOptions {
     id?: string;
+
     label: string;
+
     description?: string;
+
     iconPath?: TreeItemIconPath;
+
     commandId?: string;
+
     contextValue: string;
 
     /**
@@ -506,6 +547,7 @@ export interface IGenericTreeItemOptions {
  */
 export declare class GenericTreeItem extends AzExtTreeItem {
     public label: string;
+
     public contextValue: string;
 
     constructor(parent: AzExtParentTreeItem | undefined, options: IGenericTreeItemOptions);
@@ -513,6 +555,7 @@ export declare class GenericTreeItem extends AzExtTreeItem {
 
 export interface IInvalidTreeItemOptions {
     label: string;
+
     contextValue: string;
 
     /**
@@ -528,13 +571,17 @@ export interface IInvalidTreeItemOptions {
 
 export declare class InvalidTreeItem extends AzExtParentTreeItem {
     public contextValue: string;
+
     public label: string;
+
     public get iconPath(): TreeItemIconPath;
+
     public readonly data?: unknown;
 
     constructor(parent: AzExtParentTreeItem, error: unknown, options: IInvalidTreeItemOptions);
 
     public loadMoreChildrenImpl(): Promise<AzExtTreeItem[]>;
+
     public hasMoreChildrenImpl(): boolean;
 }
 
@@ -816,8 +863,11 @@ export interface TelemetryProperties {
      * This is used to more accurately track usage, since activation events generally shouldn't 'count' as usage
      */
     isActivationEvent?: 'true' | 'false';
+
     result?: 'Succeeded' | 'Failed' | 'Canceled';
+
     error?: string;
+
     errorMessage?: string;
 
     /**
@@ -880,9 +930,13 @@ export declare function parseError(error: any): IParsedError;
 
 export interface IParsedError {
     errorType: string;
+
     message: string;
+
     stack?: string;
+
     stepName?: string;
+
     isUserCancelledError: boolean;
 }
 
@@ -1117,13 +1171,21 @@ export type AzureUserInputQueue = (QuickPickItem | string | MessageItem | Uri[] 
  */
 export declare class AzExtUserInputWithInputQueue implements IAzureUserInput {
     constructor(context: IActionContext, returnValueQueue: AzureUserInputQueue);
+
     onDidFinishPrompt: Event<PromptResult>;
+
     showQuickPick<T extends QuickPickItem>(items: T[] | Thenable<T[]>, options: IAzureQuickPickOptions & { canPickMany: true; }): Promise<T[]>;
+
     showQuickPick<T extends QuickPickItem>(items: T[] | Thenable<T[]>, options: IAzureQuickPickOptions): Promise<T>;
+
     showInputBox(options: AzExtInputBoxOptions): Promise<string>;
+
     showWarningMessage<T extends MessageItem>(message: string, ...items: T[]): Promise<T>;
+
     showWarningMessage<T extends MessageItem>(message: string, options: IAzureMessageOptions, ...items: T[]): Promise<T>;
+
     showOpenDialog(options: AzExtOpenDialogOptions): Promise<Uri[]>;
+
     showWorkspaceFolderPick(options: AzExtWorkspaceFolderPickOptions): Promise<WorkspaceFolder>;
 }
 
@@ -1179,21 +1241,31 @@ export type ActivityTask<R> = (progress: Progress<{ message?: string, increment?
 
 export declare abstract class ActivityBase<R> implements Activity {
     public readonly onStart: Event<OnStartActivityData>;
+
     public readonly onProgress: Event<OnProgressActivityData>;
+
     public readonly onSuccess: Event<OnSuccessActivityData>;
+
     public readonly onError: Event<OnErrorActivityData>;
 
     public readonly task: ActivityTask<R>;
+
     public readonly id: string;
+
     public readonly cancellationTokenSource: CancellationTokenSource;
 
     abstract initialState(): ActivityTreeItemOptions;
+
     abstract successState(): ActivityTreeItemOptions;
+
     abstract progressState(): ActivityTreeItemOptions;
+
     abstract errorState(error: IParsedError): ActivityTreeItemOptions;
 
     public constructor(task: ActivityTask<R>);
+
     public report(progress: { message?: string; increment?: number }): void;
+
     public run(): Promise<void>;
 }
 
@@ -1208,16 +1280,23 @@ export declare class AzureWizard<T extends IActionContext & Partial<ExecuteActiv
     public constructor(wizardContext: T, options: IWizardOptions<T>);
 
     public prompt(): Promise<void>;
+
     public execute(): Promise<void>;
 }
 
 export class ExecuteActivity<C extends ExecuteActivityContext = ExecuteActivityContext> extends ActivityBase<void> {
     protected readonly context: C;
+
     public constructor(context: C, task: ActivityTask<void>);
+
     public initialState(): ActivityTreeItemOptions;
+
     public successState(): ActivityTreeItemOptions;
+
     public progressState(): ActivityTreeItemOptions;
+
     public errorState(error: IParsedError): ActivityTreeItemOptions;
+
     protected get label(): string;
 }
 
@@ -1369,6 +1448,7 @@ export type ISubscriptionActionContext = ISubscriptionContext & IActionContext;
 
 export interface IAzureNamingRules {
     minLength: number;
+
     maxLength: number;
 
     /**
@@ -1464,6 +1544,7 @@ export declare function createExperimentationService(ctx: ExtensionContext, targ
  */
 export interface UIExtensionVariables {
     context: ExtensionContext;
+
     outputChannel: IAzExtOutputChannel;
 
     /**
@@ -1563,7 +1644,9 @@ export declare function openReadOnlyJson(node: { label: string, fullId: string }
 
 export declare class ReadOnlyContent {
     public uri: Uri;
+
     public append(content: string): Promise<void>;
+
     public clear(): void;
 }
 
@@ -1636,6 +1719,7 @@ export interface AzExtTreeFileSystemItem {
      * Warning: the identifier cannot contain plus sign '+'. No matter if it's exactly '+' or if it's URL encoded "%2B".
      */
     id: string;
+
     refresh?(context: IActionContext): Promise<void>;
 }
 
@@ -1702,8 +1786,11 @@ export declare abstract class AzExtTreeFileSystem<TItem extends AzExtTreeFileSys
 
     //#region vscode.FileSystemProvider methods
     public watch(): Disposable;
+
     public stat(uri: Uri): Promise<FileStat>;
+
     public readFile(uri: Uri): Promise<Uint8Array>;
+
     public writeFile(uri: Uri, content: Uint8Array): Promise<void>;
 
     /**
@@ -1829,6 +1916,7 @@ export declare function findFreePort(startPort?: number, maxAttempts?: number, t
 
 export declare interface IConfirmInputOptions {
     prompt?: string;
+
     isPassword?: boolean;
 }
 
@@ -1839,7 +1927,9 @@ export declare interface IConfirmInputOptions {
  */
 export declare class ConfirmPreviousInputStep extends AzureWizardPromptStep<IActionContext> {
     public constructor(key: string, options?: IConfirmInputOptions);
+
     public prompt(wizardContext: IActionContext): Promise<void>;
+
     public shouldPrompt(wizardContext: IActionContext): boolean;
 }
 
@@ -1849,7 +1939,9 @@ export declare class ConfirmPreviousInputStep extends AzureWizardPromptStep<IAct
  */
 export declare class DeleteConfirmationStep extends AzureWizardPromptStep<IActionContext> {
     public constructor(message: string);
+
     public prompt(wizardContext: IActionContext): Promise<void>;
+
     public shouldPrompt(wizardContext: IActionContext): boolean;
 }
 
@@ -1928,6 +2020,7 @@ export declare function contextValueExperience<TPick extends unknown>(context: I
 
 interface CompatibilityPickResourceExperienceOptions {
     resourceTypes?: AzExtResourceType | AzExtResourceType[];
+
     childItemFilter?: ContextValueFilter
 }
 
@@ -1975,6 +2068,7 @@ export declare interface PickSubscriptionWizardContext extends QuickPickWizardCo
 
 export declare interface AzureResourceQuickPickWizardContext extends QuickPickWizardContext, PickSubscriptionWizardContext {
     resource?: AzureResource;
+
     resourceGroup?: string;
 }
 
@@ -2002,6 +2096,7 @@ export declare namespace apiUtils {
          */
         getApi<T extends AzureExtensionApi>(apiVersionRange: string, options?: GetApiOptions): T;
     }
+
     export class ExtensionNotFoundError extends Error {
         constructor(extensionId: string);
     }
@@ -2060,7 +2155,9 @@ export declare abstract class GenericQuickPickStep<TContext extends QuickPickWiz
     );
 
     prompt(wizardContext: TContext): Promise<void>;
+
     undo(wizardContext: TContext): void;
+
     shouldPrompt(wizardContext: TContext): boolean;
 }
 
@@ -2108,6 +2205,7 @@ export declare class QuickPickAzureSubscriptionStep extends GenericQuickPickStep
 
 export declare interface GroupQuickPickOptions extends SkipIfOneQuickPickOptions {
     groupType?: AzExtResourceType[];
+
     skipIfOne?: true;
 }
 
@@ -2122,6 +2220,7 @@ export declare class QuickPickGroupStep extends GenericQuickPickStep<AzureResour
 
 export declare interface AzureResourceQuickPickOptions extends GenericQuickPickOptions {
     resourceTypes?: AzExtResourceType[];
+
     childItemFilter?: ContextValueFilter;
 }
 
@@ -2257,6 +2356,7 @@ export declare namespace validationUtils {
      */
     export interface RangeConstraints {
         lowerLimitIncl?: number;
+
         upperLimitIncl?: number;
     }
 
@@ -2350,13 +2450,19 @@ export type AgentInputBoxOptions<T extends AzExtInputBoxOptions = AzExtInputBoxO
  */
 export interface IAzureAgentInput {
     readonly onDidFinishPrompt: Event<PromptResult>;
+
     showQuickPick<ItemsBaseT extends QuickPickItem, OptionsBaseT extends IAzureQuickPickOptions>(items: AgentQuickPickItem<ItemsBaseT>[] | Promise<AgentQuickPickItem<ItemsBaseT>[]>, options: AgentQuickPickOptions<OptionsBaseT> & { canPickMany: true }): Promise<AgentQuickPickItem<ItemsBaseT>[]>;
+
     showQuickPick<ItemsBaseT extends QuickPickItem, OptionsBaseT extends IAzureQuickPickOptions>(items: AgentQuickPickItem<ItemsBaseT>[] | Promise<AgentQuickPickItem<ItemsBaseT>[]>, options: AgentQuickPickOptions<OptionsBaseT>): Promise<AgentQuickPickItem<ItemsBaseT>>;
+
     showInputBox<OptionsBaseT extends IAzureQuickPickOptions>(options: AgentInputBoxOptions<OptionsBaseT>): Promise<string>;
 
     showWarningMessage<T extends MessageItem>(message: string, ...items: T[]): Promise<T>;
+
     showWarningMessage<T extends MessageItem>(message: string, options: IAzureMessageOptions, ...items: T[]): Promise<T>;
+
     showOpenDialog(options: AzExtOpenDialogOptions): Promise<Uri[]>;
+
     showWorkspaceFolderPick(options: AzExtWorkspaceFolderPickOptions): Promise<WorkspaceFolder>;
 }
 

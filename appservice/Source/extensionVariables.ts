@@ -66,7 +66,10 @@ export function registerAppServiceExtensionVariables(
 	}
 
 	ext = extVars;
+
 	registerUIExtensionVariables(extVars);
+
 	registerAzureUtilsExtensionVariables(extVars);
+
 	registerGitHubExtensionVariables(extVars);
 }

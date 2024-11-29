@@ -38,6 +38,7 @@ export class ResourceGroupListStep<T extends types.IResourceGroupWizardContext>
 
 	public constructor(suppressCreate?: boolean) {
 		super();
+
 		this._suppressCreate = suppressCreate;
 	}
 
@@ -47,6 +48,7 @@ export class ResourceGroupListStep<T extends types.IResourceGroupWizardContext>
 		if (wizardContext.resourceGroupsTask === undefined) {
 			const client: ResourceManagementClient =
 				await createResourcesClient(wizardContext);
+
 			wizardContext.resourceGroupsTask = uiUtils.listAllIterator(
 				client.resourceGroups.list(),
 			);
@@ -74,6 +76,7 @@ export class ResourceGroupListStep<T extends types.IResourceGroupWizardContext>
 			placeHolder: "Select a resource group for new resources.",
 			id: `ResourceGroupListStep/${wizardContext.subscriptionId}`,
 		};
+
 		wizardContext.resourceGroup = (
 			await wizardContext.ui.showQuickPick(
 				this.getQuickPicks(wizardContext),
@@ -99,6 +102,7 @@ export class ResourceGroupListStep<T extends types.IResourceGroupWizardContext>
 			const promptSteps: AzureWizardPromptStep<T>[] = [
 				new ResourceGroupNameStep(),
 			];
+
 			LocationListStep.addStep(wizardContext, promptSteps);
 
 			return {

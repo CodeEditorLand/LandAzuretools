@@ -53,11 +53,14 @@ export class UserAssignedIdentityCreateStep<
 			newName,
 			newLocation,
 		);
+
 		ext.outputChannel.appendLog(creatingUserAssignedIdentity);
+
 		progress.report({ message: creatingUserAssignedIdentity });
 
 		const msiClient: ManagedServiceIdentityClient =
 			await createManagedServiceIdentityClient(wizardContext);
+
 		wizardContext.managedIdentity =
 			await msiClient.userAssignedIdentities.createOrUpdate(
 				rgName,
@@ -71,6 +74,7 @@ export class UserAssignedIdentityCreateStep<
 			'Successfully created user assigned identity "{0}".',
 			newName,
 		);
+
 		ext.outputChannel.appendLog(createdUserAssignedIdentity);
 	}
 

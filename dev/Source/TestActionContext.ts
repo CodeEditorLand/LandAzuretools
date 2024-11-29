@@ -30,7 +30,9 @@ export async function runWithTestActionContext(
 		await callback(context);
 	} finally {
 		const end: number = Date.now();
+
 		context.telemetry.measurements.duration = (end - start) / 1000;
+
 		console.log(
 			`** TELEMETRY(${callbackId}) properties=${JSON.stringify(context.telemetry.properties)}, measurements=${JSON.stringify(context.telemetry.measurements)}`,
 		);

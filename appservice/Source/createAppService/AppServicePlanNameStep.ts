@@ -33,6 +33,7 @@ export class AppServicePlanNameStep extends AzureWizardPromptStep<IAppServiceWiz
 					await this.validatePlanName(context, value),
 			})
 		).trim();
+
 		context.valuesToMask.push(context.newPlanName);
 	}
 

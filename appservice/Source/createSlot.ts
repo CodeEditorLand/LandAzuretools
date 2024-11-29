@@ -75,6 +75,7 @@ export async function createSlot(
 	context.showCreatingTreeItem(slotName);
 
 	const creatingSlot: string = l10n.t('Creating slot "{0}"...', slotName);
+
 	ext.outputChannel.appendLog(creatingSlot);
 
 	return await window.withProgress(
@@ -203,8 +204,10 @@ async function parseAppSettings(
 			if (site.isFunctionApp && key === "WEBSITE_CONTENTSHARE") {
 				value = getNewFileShareName(site.fullName);
 			}
+
 			appSettingPairs.push({ name: key, value });
 		}
 	}
+
 	return appSettingPairs;
 }

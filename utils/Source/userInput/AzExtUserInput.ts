@@ -19,8 +19,11 @@ import { showWorkspaceFolderPick } from "./showWorkspaceFolderPick";
 
 export class AzExtUserInput implements types.IAzureUserInput {
 	public wizard?: IInternalAzureWizard;
+
 	private _onDidFinishPromptEmitter: EventEmitter<types.PromptResult>;
+
 	private _context: IInternalActionContext;
+
 	private _isPrompting: boolean = false;
 
 	public constructor(
@@ -28,6 +31,7 @@ export class AzExtUserInput implements types.IAzureUserInput {
 		onDidFinishPromptEmitter?: EventEmitter<types.PromptResult>,
 	) {
 		this._context = context;
+
 		this._onDidFinishPromptEmitter =
 			onDidFinishPromptEmitter || new EventEmitter<types.PromptResult>();
 	}
@@ -58,10 +62,12 @@ export class AzExtUserInput implements types.IAzureUserInput {
 		) {
 			throw new UserCancelledError();
 		}
+
 		try {
 			this._isPrompting = true;
 
 			const result = await showQuickPick(this._context, picks, options);
+
 			this._onDidFinishPromptEmitter.fire({ value: result });
 
 			return result;
@@ -85,10 +91,12 @@ export class AzExtUserInput implements types.IAzureUserInput {
 		) {
 			throw new UserCancelledError();
 		}
+
 		try {
 			this._isPrompting = true;
 
 			const result = await showInputBox(this._context, options);
+
 			this._onDidFinishPromptEmitter.fire({
 				value: result,
 				matchesDefault: result === options.value,
@@ -115,10 +123,12 @@ export class AzExtUserInput implements types.IAzureUserInput {
 		) {
 			throw new UserCancelledError();
 		}
+
 		try {
 			this._isPrompting = true;
 
 			const result = await showOpenDialog(options);
+
 			this._onDidFinishPromptEmitter.fire({ value: result });
 
 			return result;
@@ -142,10 +152,12 @@ export class AzExtUserInput implements types.IAzureUserInput {
 		) {
 			throw new UserCancelledError();
 		}
+
 		try {
 			this._isPrompting = true;
 
 			const result = await showWorkspaceFolderPick(options);
+
 			this._onDidFinishPromptEmitter.fire({ value: result });
 
 			return result;
@@ -158,6 +170,7 @@ export class AzExtUserInput implements types.IAzureUserInput {
 		message: string,
 		...items: T[]
 	): Promise<T>;
+
 	public async showWarningMessage<T extends MessageItem>(
 		message: string,
 		options: types.IAzureMessageOptions,
@@ -187,6 +200,7 @@ export class AzExtUserInput implements types.IAzureUserInput {
 		) {
 			throw new UserCancelledError();
 		}
+
 		try {
 			this._isPrompting = true;
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
@@ -195,6 +209,7 @@ export class AzExtUserInput implements types.IAzureUserInput {
 				message,
 				...args,
 			);
+
 			this._onDidFinishPromptEmitter.fire({ value: result });
 
 			return result;

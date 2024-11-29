@@ -24,6 +24,7 @@ export class UserAssignedIdentityListStep<
 
 	public constructor(suppressCreate?: boolean) {
 		super();
+
 		this._suppressCreate = suppressCreate;
 	}
 
@@ -32,6 +33,7 @@ export class UserAssignedIdentityListStep<
 			placeHolder: "Select a user assigned identity.",
 			id: `UserAssignedIdentityListStep`,
 		};
+
 		wizardContext.managedIdentity = (
 			await wizardContext.ui.showQuickPick(
 				this.getQuickPicks(wizardContext),

@@ -37,6 +37,7 @@ export class AppServicePlanListStep extends AzureWizardPromptStep<IAppServiceWiz
 
 	public constructor(suppressCreate?: boolean) {
 		super();
+
 		this._suppressCreate = suppressCreate;
 	}
 
@@ -46,6 +47,7 @@ export class AppServicePlanListStep extends AzureWizardPromptStep<IAppServiceWiz
 		if (context.plansTask === undefined) {
 			const client: WebSiteManagementClient =
 				await createWebSiteClient(context);
+
 			context.plansTask = uiUtils.listAllIterator(
 				client.appServicePlans.list(),
 			);
@@ -89,6 +91,7 @@ export class AppServicePlanListStep extends AzureWizardPromptStep<IAppServiceWiz
 						),
 			id: `AppServicePlanListStep/${context.subscriptionId}`,
 		};
+
 		context.plan = (
 			await context.ui.showQuickPick(this.getQuickPicks(context), options)
 		).data;
@@ -111,6 +114,7 @@ export class AppServicePlanListStep extends AzureWizardPromptStep<IAppServiceWiz
 					new AppServicePlanRedundancyStep(),
 					new ResourceGroupListStep(),
 				];
+
 			LocationListStep.addStep(context, promptSteps);
 
 			return {
@@ -189,6 +193,7 @@ export class AppServicePlanListStep extends AzureWizardPromptStep<IAppServiceWiz
 						nonNullProp(plan, "resourceGroup"),
 						nonNullProp(plan, "name"),
 					);
+
 				isPlanLinux = !!epPlan?.reserved;
 			}
 

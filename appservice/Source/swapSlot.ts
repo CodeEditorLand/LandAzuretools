@@ -69,12 +69,14 @@ export async function swapSlot(
 		targetSlotLabel,
 		sourceSlot.fullName,
 	);
+
 	ext.outputChannel.appendLog(swappingSlots);
 
 	const client: WebSiteManagementClient = await createWebSiteClient([
 		context,
 		sourceSlot.subscription,
 	]);
+
 	await window.withProgress(
 		{ location: ProgressLocation.Notification, title: swappingSlots },
 		async () => {
@@ -95,7 +97,9 @@ export async function swapSlot(
 					{ targetSlot: targetSlot.slotName!, preserveVnet: true },
 				);
 			}
+
 			void window.showInformationMessage(successfullySwapped);
+
 			ext.outputChannel.appendLog(successfullySwapped);
 		},
 	);

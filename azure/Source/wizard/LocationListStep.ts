@@ -63,6 +63,7 @@ export class LocationListStep<
 	): void {
 		if (!wizardContext._alreadyHasLocationStep) {
 			promptSteps.push(new this(options));
+
 			wizardContext._alreadyHasLocationStep = true;
 		}
 	}
@@ -88,6 +89,7 @@ export class LocationListStep<
 				"resourceGroups",
 			);
 		}
+
 		return [
 			wizardContext._allLocationsTask,
 			wizardContext._providerLocationsMap,
@@ -99,9 +101,11 @@ export class LocationListStep<
 		name: string,
 	): Promise<void> {
 		const [allLocationsTask] = this.getInternalVariables(wizardContext);
+
 		wizardContext._location = (await allLocationsTask).find((l) =>
 			LocationListStep.locationMatchesName(l, name),
 		);
+
 		wizardContext.telemetry.properties.locationType =
 			wizardContext._location?.type;
 	}
@@ -113,6 +117,7 @@ export class LocationListStep<
 	): void {
 		const [, providerLocationsMap] =
 			this.getInternalVariables(wizardContext);
+
 		providerLocationsMap.set(provider.toLowerCase(), task);
 	}
 
@@ -134,6 +139,7 @@ export class LocationListStep<
 
 	public static getExtendedLocation(location: types.AzExtLocation): {
 		location: string;
+
 		extendedLocation?: ExtendedLocation;
 	} {
 		let locationName: string = location.name;
@@ -143,8 +149,10 @@ export class LocationListStep<
 		if (location.type === "EdgeZone") {
 			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			locationName = location.metadata!.homeLocation!;
+
 			extendedLocation = <ExtendedLocation>location;
 		}
+
 		return {
 			location: locationName,
 			extendedLocation,
@@ -194,8 +202,10 @@ export class LocationListStep<
 					),
 					"homeLocation",
 				);
+
 				wizardContext.telemetry.properties.relatedLocationSource =
 					"home";
+
 				ext.outputChannel.appendLog(
 					vscode.l10n.t(
 						'WARNING: Resource does not support extended location "{0}". Using "{1}" instead.',
@@ -203,6 +213,7 @@ export class LocationListStep<
 						homeLocation.displayName,
 					),
 				);
+
 				location = homeLocation;
 			}
 		}
@@ -223,6 +234,7 @@ export class LocationListStep<
 						LocationListStep.locationMatchesName(loc, name),
 					);
 				}
+
 				function useProviderName(
 					loc: types.AzExtLocation,
 				): types.AzExtLocation {
@@ -270,6 +282,7 @@ export class LocationListStep<
 					if (pairedLocation) {
 						wizardContext.telemetry.properties.relatedLocationSource =
 							"paired";
+
 						warnAboutRelatedLocation(pairedLocation);
 
 						return useProviderName(pairedLocation);
@@ -289,6 +302,7 @@ export class LocationListStep<
 					) {
 						wizardContext.telemetry.properties.relatedLocationSource =
 							"nonStage";
+
 						warnAboutRelatedLocation(nonStageLocation);
 
 						return useProviderName(nonStageLocation);
@@ -353,12 +367,14 @@ export class LocationListStep<
 			},
 			...this.options,
 		};
+
 		wizardContext._location = (
 			await wizardContext.ui.showQuickPick(
 				this.getQuickPicks(wizardContext),
 				options,
 			)
 		).data;
+
 		wizardContext.telemetry.properties.locationType =
 			wizardContext._location.type;
 	}
@@ -372,6 +388,7 @@ export class LocationListStep<
 	): Promise<AgentQuickPickItem<IAzureQuickPickItem<types.AzExtLocation>>[]> {
 		let locations: types.AzExtLocation[] =
 			await LocationListStep.getLocations(wizardContext);
+
 		locations = locations.sort(compareLocation);
 
 		return locations.map((l) => {
@@ -426,6 +443,7 @@ async function getProviderLocations(
 	if (!resourceTypeData) {
 		throw new ProviderResourceTypeNotFoundError(providerData, resourceType);
 	}
+
 	return nonNullProp(resourceTypeData, "locations");
 }
 

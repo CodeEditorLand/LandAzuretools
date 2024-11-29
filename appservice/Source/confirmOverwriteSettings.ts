@@ -35,6 +35,7 @@ export async function confirmOverwriteSettings(
 
 		if (destinationSettings[destKey] === undefined) {
 			addedKeys.push(destKey);
+
 			destinationSettings[destKey] = sourceSettings[srcKey];
 		} else if (destinationSettings[destKey] === sourceSettings[srcKey]) {
 			matchingKeys.push(destKey);
@@ -64,17 +65,20 @@ export async function confirmOverwriteSettings(
 					overwriteSetting = true;
 				} else if (result === yesToAll) {
 					overwriteSetting = true;
+
 					suppressPrompt = true;
 				} else if (result === DialogResponses.no) {
 					overwriteSetting = false;
 				} else if (result === noToAll) {
 					overwriteSetting = false;
+
 					suppressPrompt = true;
 				}
 			}
 
 			if (overwriteSetting) {
 				updatedKeys.push(destKey);
+
 				destinationSettings[destKey] = sourceSettings[srcKey];
 			} else {
 				userIgnoredKeys.push(destKey);
@@ -84,11 +88,13 @@ export async function confirmOverwriteSettings(
 
 	if (addedKeys.length > 0) {
 		ext.outputChannel.appendLog(l10n.t("Added the following settings:"));
+
 		addedKeys.forEach(logKey);
 	}
 
 	if (updatedKeys.length > 0) {
 		ext.outputChannel.appendLog(l10n.t("Updated the following settings:"));
+
 		updatedKeys.forEach(logKey);
 	}
 
@@ -98,6 +104,7 @@ export async function confirmOverwriteSettings(
 				"Ignored the following settings that were already the same:",
 			),
 		);
+
 		matchingKeys.forEach(logKey);
 	}
 
@@ -105,6 +112,7 @@ export async function confirmOverwriteSettings(
 		ext.outputChannel.appendLog(
 			l10n.t("Ignored the following settings based on user input:"),
 		);
+
 		userIgnoredKeys.forEach(logKey);
 	}
 

@@ -156,14 +156,18 @@ export interface PickAppResourceOptions extends IAzureQuickPickOptions {
  */
 export interface AppResource {
 	readonly id: string;
+
 	readonly name: string;
 	/**
 	 * This is a custom property that unambiguously describes the type of an Azure resource for the purposes of the Azure extensions.
 	 * This accounts for the fact that some Azure resource have overlapping type and kind values.
 	 */
 	readonly azExtResourceType?: AzExtResourceType;
+
 	readonly type: string;
+
 	readonly kind?: string;
+
 	readonly location?: string;
 	/** Resource tags */
 	readonly tags?: {
@@ -177,14 +181,19 @@ export interface AppResource {
  */
 export interface GroupNodeConfiguration {
 	readonly label: string;
+
 	readonly id: string;
+
 	readonly description?: string;
+
 	readonly icon?: vscode.ThemeIcon;
+
 	readonly iconPath?:
 		| string
 		| vscode.Uri
 		| { light: string | vscode.Uri; dark: string | vscode.Uri }
 		| vscode.ThemeIcon;
+
 	readonly contextValuesToAdd?: string[];
 }
 
@@ -193,6 +202,7 @@ export interface GroupNodeConfiguration {
  */
 export interface GroupingConfig {
 	readonly resourceGroup: GroupNodeConfiguration;
+
 	readonly resourceType: GroupNodeConfiguration;
 	[label: string]: GroupNodeConfiguration; // Don't need to support right off the bat but we can put it in the interface
 }

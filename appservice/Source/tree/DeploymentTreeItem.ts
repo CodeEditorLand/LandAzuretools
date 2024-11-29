@@ -36,10 +36,15 @@ enum DeployStatus {
  */
 export class DeploymentTreeItem extends AzExtTreeItem {
 	public static contextValue: RegExp = new RegExp("deployment/.*");
+
 	public label: string;
+
 	public receivedTime: Date;
+
 	public parent: DeploymentsTreeItem;
+
 	private _deployResult: KuduModels.DeployResult;
+
 	private _scmType?: string;
 
 	constructor(
@@ -48,11 +53,15 @@ export class DeploymentTreeItem extends AzExtTreeItem {
 		scmType: string | undefined,
 	) {
 		super(parent);
+
 		this._scmType = scmType;
+
 		this._deployResult = deployResult;
+
 		this.receivedTime = nonNullProp(deployResult, "receivedTime");
 
 		const message: string = this.getDeploymentMessage(deployResult);
+
 		this.label = `${this.id.substring(0, 7)} - ${message}`;
 	}
 
@@ -109,6 +118,7 @@ export class DeploymentTreeItem extends AzExtTreeItem {
 				l10n.t("Redeploy is not supported for non-git deployments."),
 			);
 		}
+
 		const redeploying: string = l10n.t(
 			'Redeploying commit "{0}" to "{1}". Check [output window](command:{2}) for status.',
 			this.id,
@@ -121,6 +131,7 @@ export class DeploymentTreeItem extends AzExtTreeItem {
 			this.id,
 			this.parent.site.fullName,
 		);
+
 		await window.withProgress(
 			{ location: ProgressLocation.Notification, title: redeploying },
 			async (): Promise<void> => {
@@ -134,6 +145,7 @@ export class DeploymentTreeItem extends AzExtTreeItem {
 				);
 
 				const kuduClient = await this.parent.site.createClient(context);
+
 				void kuduClient.deploy(context, this.id);
 
 				// eslint-disable-next-line @typescript-eslint/no-misused-promises
@@ -149,10 +161,12 @@ export class DeploymentTreeItem extends AzExtTreeItem {
 						this.parent.site,
 						{ expectedId: this.id },
 					);
+
 					await this.parent.refresh(
 						context,
 					); /* refresh entire node because active statuses has changed */
 					void window.showInformationMessage(redeployed);
+
 					ext.outputChannel.appendLog(redeployed);
 				} finally {
 					clearInterval(refreshingInteveral);
@@ -165,6 +179,7 @@ export class DeploymentTreeItem extends AzExtTreeItem {
 		const kuduClient = await this.parent.site.createClient(context);
 
 		let logEntries: KuduModels.LogEntry[] = [];
+
 		await retryKuduCall(context, "getLogEntry", async () => {
 			await ignore404Error(context, async () => {
 				logEntries = await kuduClient.getLogEntry(context, this.id);
@@ -177,6 +192,7 @@ export class DeploymentTreeItem extends AzExtTreeItem {
 			data += this.formatLogEntry(logEntry);
 
 			let detailedLogEntries: KuduModels.LogEntry[] = [];
+
 			await retryKuduCall(context, "getLogEntryDetails", async () => {
 				await ignore404Error(context, async () => {
 					if (logEntry.detailsUrl && logEntry.id) {
@@ -204,6 +220,7 @@ export class DeploymentTreeItem extends AzExtTreeItem {
 			l10n.t("Retrieving logs..."),
 			async () => {
 				const logData: string = await this.getDeploymentLogs(context);
+
 				await openReadOnlyContent(this, logData, ".log");
 			},
 		);
@@ -217,6 +234,7 @@ export class DeploymentTreeItem extends AzExtTreeItem {
 
 		if (sourceControl.repoUrl) {
 			const gitHubCommitUrl: string = `${sourceControl.repoUrl}/commit/${this._deployResult.id}`;
+
 			await openUrl(gitHubCommitUrl);
 
 			return;
@@ -233,6 +251,7 @@ export class DeploymentTreeItem extends AzExtTreeItem {
 
 	public async refreshImpl(context: IActionContext): Promise<void> {
 		const kuduClient = await this.parent.site.createClient(context);
+
 		this._deployResult = await kuduClient.getDeployResult(context, this.id);
 	}
 
@@ -260,6 +279,7 @@ export class DeploymentTreeItem extends AzExtTreeItem {
 		} catch {
 			// Ignore and assume message was not in JSON format
 		}
+
 		const firstLine: string = this.getFirstLine(message);
 		/* truncate long messages and add "..." */
 		return firstLine.length > 50

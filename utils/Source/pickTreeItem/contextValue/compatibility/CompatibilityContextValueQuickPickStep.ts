@@ -101,6 +101,7 @@ export class CompatibilityContextValueQuickPickStep<
 				}
 			}
 		}
+
 		return false;
 	}
 

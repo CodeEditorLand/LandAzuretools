@@ -22,10 +22,15 @@ import { FolderTreeItem } from "./FolderTreeItem";
  */
 export class FileTreeItem extends AzExtTreeItem {
 	public static contextValue: string = "file";
+
 	public readonly label: string;
+
 	public readonly url: string;
+
 	public readonly isReadOnly: boolean;
+
 	public readonly site: ParsedSite;
+
 	public readonly parent: FolderTreeItem;
 
 	constructor(
@@ -36,9 +41,13 @@ export class FileTreeItem extends AzExtTreeItem {
 		isReadOnly: boolean,
 	) {
 		super(parent);
+
 		this.site = site;
+
 		this.label = label;
+
 		this.url = url;
+
 		this.isReadOnly = isReadOnly;
 	}
 
@@ -67,6 +76,7 @@ export class FileTreeItem extends AzExtTreeItem {
 					this.site,
 					this.url,
 				);
+
 				await openReadOnlyContent(this, file.data, "");
 			},
 		);

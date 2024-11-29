@@ -38,6 +38,7 @@ export async function gulp_installVSCodeExtension(
 	if (await fse.pathExists(extensionsPath)) {
 		existingExtensions = await fse.readdir(extensionsPath);
 	}
+
 	if (!existingExtensions.some((e: string) => e.includes(extensionId))) {
 		console.log(`"Installing" test extension with id "${extensionId}".`);
 
@@ -66,7 +67,9 @@ export async function gulp_installVSCodeExtension(
 			main: "./extension",
 			contributes: {},
 		};
+
 		await fse.ensureFile(packageJsonPath);
+
 		await fse.writeJSON(packageJsonPath, packageJson);
 
 		const extensionJsPath: string = path.join(
@@ -75,7 +78,9 @@ export async function gulp_installVSCodeExtension(
 		);
 
 		const extensionJs: string = `exports.activate = function activate() { };exports.deactivate = function deactivate() { };`;
+
 		await fse.ensureFile(extensionJsPath);
+
 		await fse.writeFile(extensionJsPath, extensionJs);
 	} else {
 		console.log(`Extension with id "${extensionId}" already installed.`);

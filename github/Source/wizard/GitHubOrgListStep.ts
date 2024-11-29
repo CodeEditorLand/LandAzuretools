@@ -23,6 +23,7 @@ import { getOrgs, Orgs } from "../wrappers/getOrgs";
 export class GitHubOrgListStep extends AzureWizardPromptStep<GitHubContext> {
 	public async prompt(context: GitHubContext): Promise<void> {
 		const placeHolder: string = l10n.t("Select an organization");
+
 		context.gitHubOrg = (
 			await context.ui.showQuickPick(this.getPicks(context), {
 				placeHolder,

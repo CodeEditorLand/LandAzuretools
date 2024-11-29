@@ -20,9 +20,13 @@ export async function runWithZipStream(
 	context: IActionContext,
 	options: {
 		fsPath: string;
+
 		site: ParsedSite;
+
 		pathFileMap?: Map<string, string>;
+
 		progress?: vscode.Progress<{ message?: string; increment?: number }>;
+
 		callback: (
 			zipStream: Readable,
 		) => Promise<AzExtPipelineResponse | void>;
@@ -35,9 +39,11 @@ export async function runWithZipStream(
 			"Zip package size: {0}",
 			prettybytes(size),
 		);
+
 		ext.outputChannel.appendLog(zipFileSize, {
 			resourceName: site.fullName,
 		});
+
 		options.progress?.report({ message: zipFileSize });
 	}
 
@@ -49,6 +55,7 @@ export async function runWithZipStream(
 
 	if (getFileExtension(fsPath) === "zip") {
 		context.telemetry.properties.alreadyZipped = "true";
+
 		zipStream = fse.createReadStream(fsPath);
 
 		// don't wait
@@ -57,9 +64,11 @@ export async function runWithZipStream(
 		});
 	} else {
 		const creatingZip = vscode.l10n.t("Creating zip package...");
+
 		ext.outputChannel.appendLog(creatingZip, {
 			resourceName: site.fullName,
 		});
+
 		options.progress?.report({ message: creatingZip });
 
 		const zipFile: yazl.ZipFile = new yazl.ZipFile();
@@ -71,13 +80,17 @@ export async function runWithZipStream(
 		const zipByteCounter = new PassThrough();
 
 		const outputStream = new PassThrough();
+
 		zipFile.outputStream.pipe(zipByteCounter);
+
 		zipFile.outputStream.pipe(outputStream);
+
 		zipByteCounter.on("data", (chunk) => {
 			if (typeof chunk === "string" || Buffer.isBuffer(chunk)) {
 				sizeOfZipFile += chunk.length;
 			}
 		});
+
 		zipByteCounter.on("finish", () => {
 			onFileSize(sizeOfZipFile);
 		});
@@ -109,6 +122,7 @@ export async function runWithZipStream(
 				ext.outputChannel.appendLog(path.join(fsPath, file), {
 					resourceName: site.fullName,
 				});
+
 				zipFile.addFile(
 					path.join(fsPath, file),
 					getPathFromMap(file, pathFileMap),
@@ -122,6 +136,7 @@ export async function runWithZipStream(
 		}
 
 		zipFile.end();
+
 		zipStream = outputStream;
 	}
 
@@ -192,9 +207,11 @@ export async function getFilesFromGlob(
 			).map((uri) => uri.fsPath);
 			// only leave in files that are in both lists
 			files = files.filter((uri) => filesIgnored.includes(uri.fsPath));
+
 			ext.outputChannel.appendLine(`\"${pattern}\"`);
 		}
 	}
+
 	return files.map((f) => path.relative(folderPath, f.fsPath));
 }
 
@@ -212,6 +229,7 @@ export async function getFilesFromGitignore(
 	if (await AzExtFsExtra.pathExists(gitignorePath)) {
 		const funcIgnoreContents: string =
 			await AzExtFsExtra.readFile(gitignorePath);
+
 		ignore = funcIgnoreContents
 			.split("\n")
 			.map((l) => l.trim())

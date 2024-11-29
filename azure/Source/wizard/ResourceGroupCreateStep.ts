@@ -56,6 +56,7 @@ export class ResourceGroupCreateStep<
 				ext.outputChannel.appendLog(
 					l10n.t('Using existing resource group "{0}".', newName),
 				);
+
 				wizardContext.resourceGroup =
 					await resourceClient.resourceGroups.get(newName);
 			} else {
@@ -64,13 +65,17 @@ export class ResourceGroupCreateStep<
 					newName,
 					newLocationName,
 				);
+
 				ext.outputChannel.appendLog(creatingMessage);
+
 				progress.report({ message: creatingMessage });
+
 				wizardContext.resourceGroup =
 					await resourceClient.resourceGroups.createOrUpdate(
 						newName,
 						{ location: newLocationName },
 					);
+
 				ext.outputChannel.appendLog(
 					l10n.t(
 						'Successfully created resource group "{0}".',
@@ -97,6 +102,7 @@ export class ResourceGroupCreateStep<
 						/^learn/i.test(rgs[0].name)
 					) {
 						wizardContext.resourceGroup = rgs[0];
+
 						wizardContext.telemetry.properties.forbiddenResponse =
 							"SelectLearnRg";
 						// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -120,6 +126,7 @@ export class ResourceGroupCreateStep<
 				const selectExisting: MessageItem = {
 					title: l10n.t("Select Existing"),
 				};
+
 				await wizardContext.ui.showWarningMessage(
 					message,
 					{ modal: true, stepName: "RgNoPermissions" },
@@ -131,6 +138,7 @@ export class ResourceGroupCreateStep<
 
 				const step: ResourceGroupListStep<T> =
 					new ResourceGroupListStep(true /* suppressCreate */);
+
 				await step.prompt(wizardContext);
 			}
 		}

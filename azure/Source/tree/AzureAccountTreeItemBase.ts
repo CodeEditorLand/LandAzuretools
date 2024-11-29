@@ -77,16 +77,24 @@ export abstract class AzureAccountTreeItemBase
 	implements types.AzureAccountTreeItemBase
 {
 	public static contextValue: string = "azureextensionui.azureAccount";
+
 	public readonly contextValue: string =
 		AzureAccountTreeItemBase.contextValue;
+
 	public readonly label: string = "Azure";
+
 	public childTypeLabel: string = l10n.t("subscription");
+
 	public autoSelectInTreeItemPicker: boolean = true;
+
 	public disposables: Disposable[] = [];
+
 	public suppressMaskLabel: boolean = true;
 
 	private _azureAccountTask: Promise<AzureAccountResult>;
+
 	private _subscriptionTreeItems: SubscriptionTreeItemBase[] | undefined;
+
 	private _testAccount: AzureAccountExtensionApi | undefined;
 
 	constructor(
@@ -94,7 +102,9 @@ export abstract class AzureAccountTreeItemBase
 		testAccount?: AzureAccountExtensionApi,
 	) {
 		super(parent);
+
 		this._testAccount = testAccount;
+
 		this._azureAccountTask = this.loadAzureAccount(testAccount);
 	}
 
@@ -125,6 +135,7 @@ export abstract class AzureAccountTreeItemBase
 		if (typeof azureAccount === "string") {
 			// Refresh the AzureAccount, to handle Azure account extension installation after the previous refresh
 			this._azureAccountTask = this.loadAzureAccount(this._testAccount);
+
 			azureAccount = await this._azureAccountTask;
 		}
 
@@ -148,6 +159,7 @@ export abstract class AzureAccountTreeItemBase
 				includeInTreeItemPicker: true,
 				iconPath,
 			});
+
 			result.commandArgs = [azureAccountExtensionId];
 
 			return [result];
@@ -159,6 +171,7 @@ export abstract class AzureAccountTreeItemBase
 			._subscriptionTreeItems
 			? this._subscriptionTreeItems
 			: [];
+
 		this._subscriptionTreeItems = [];
 
 		const contextValue: string = "azureCommand";
@@ -336,13 +349,16 @@ export abstract class AzureAccountTreeItemBase
 						context,
 						me,
 					);
+
 					Object.assign(context, ti.subscription);
 				}
+
 				public shouldPrompt(): boolean {
 					return !(<ISubscriptionActionContext>context)
 						.subscriptionId;
 				}
 			}
+
 			return new SubscriptionPromptStep();
 		}
 	}
@@ -421,15 +437,19 @@ export abstract class AzureAccountTreeItemBase
 				azureAccount.onFiltersChanged,
 				async (context) => {
 					context.errorHandling.suppressDisplay = true;
+
 					context.telemetry.suppressIfSuccessful = true;
+
 					await this.refresh(context);
 				},
 			);
+
 			registerEvent(
 				"azureAccount.onStatusChanged",
 				azureAccount.onStatusChanged,
 				async (context: IActionContext, status: AzureLoginStatus) => {
 					context.errorHandling.suppressDisplay = true;
+
 					context.telemetry.suppressIfSuccessful = true;
 					// Ignore status change to 'LoggedIn' and wait for the 'onFiltersChanged' event to fire instead
 					// (so that the tree stays in 'Loading...' state until the filters are actually ready)
@@ -438,6 +458,7 @@ export abstract class AzureAccountTreeItemBase
 					}
 				},
 			);
+
 			await commands.executeCommand(
 				"setContext",
 				"isAzureAccountInstalled",
@@ -462,11 +483,13 @@ export abstract class AzureAccountTreeItemBase
 
 			if (azureAccount === "notInstalled") {
 				stepName = "requiresAzureAccount";
+
 				message = l10n.t(
 					"This functionality requires installing the Azure Account extension.",
 				);
 			} else {
 				stepName = "requiresUpdateToAzureAccount";
+
 				message = l10n.t(
 					'This functionality requires updating the Azure Account extension to at least version "{0}".',
 					minAccountExtensionVersion,

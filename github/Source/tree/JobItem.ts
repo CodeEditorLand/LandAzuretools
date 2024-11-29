@@ -24,6 +24,7 @@ export class JobItem implements TreeElementBase {
 	) {}
 
 	id: string = `${this.parentResourceId}/jobs/${this.job.id}`;
+
 	label: string = this.job.name || this.id;
 
 	viewProperties: ViewPropertiesModel = {

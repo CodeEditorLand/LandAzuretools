@@ -19,6 +19,7 @@ import { getTreeId } from "./treeUtils";
 
 export class ServiceConnectorTreeItem extends AzExtTreeItem {
 	public readonly linker: LinkerResource;
+
 	public readonly item: AzExtTreeItem;
 
 	constructor(
@@ -27,7 +28,9 @@ export class ServiceConnectorTreeItem extends AzExtTreeItem {
 		private readonly contextValuesToAdd: string[],
 	) {
 		super(parent);
+
 		this.linker = linker;
+
 		this.item = parent;
 	}
 

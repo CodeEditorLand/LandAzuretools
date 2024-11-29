@@ -31,6 +31,7 @@ export function setupAzureLogger(
 
 	return new vscode.Disposable(() => {
 		AzureLogger.destroy();
+
 		disposable.dispose();
 	});
 }

@@ -68,18 +68,27 @@ interface AppSettingsTreeItemOptions {
 	supportsSlots?: boolean;
 
 	settingsToHide?: string[];
+
 	contextValuesToAdd?: string[];
 }
 
 export class AppSettingsTreeItem extends AzExtParentTreeItem {
 	public static contextValue: string = "applicationSettings";
+
 	public readonly label: string = "Application Settings";
+
 	public readonly childTypeLabel: string = "App Setting";
+
 	public readonly clientProvider: AppSettingsClientProvider;
+
 	public readonly supportsSlots: boolean;
+
 	public suppressMaskLabel: boolean = true;
+
 	private _settings: StringDictionary | undefined;
+
 	private readonly _settingsToHide: string[] | undefined;
+
 	public readonly contextValuesToAdd: string[];
 
 	constructor(
@@ -89,9 +98,13 @@ export class AppSettingsTreeItem extends AzExtParentTreeItem {
 		options?: AppSettingsTreeItemOptions,
 	) {
 		super(parent);
+
 		this.clientProvider = clientProvider;
+
 		this.supportsSlots = options?.supportsSlots ?? true;
+
 		this._settingsToHide = options?.settingsToHide;
+
 		this.contextValuesToAdd = options?.contextValuesToAdd || [];
 	}
 
@@ -109,6 +122,7 @@ export class AppSettingsTreeItem extends AzExtParentTreeItem {
 	public get iconPath(): TreeItemIconPath {
 		return new ThemeIcon("settings");
 	}
+
 	public hasMoreChildrenImpl(): boolean {
 		return false;
 	}
@@ -118,12 +132,14 @@ export class AppSettingsTreeItem extends AzExtParentTreeItem {
 		context: IActionContext,
 	): Promise<AzExtTreeItem[]> {
 		const client = await this.clientProvider.createClient(context);
+
 		this._settings = await client.listApplicationSettings();
 
 		const treeItems: AppSettingTreeItem[] = [];
 
 		const properties: { [name: string]: string } =
 			this._settings.properties || {};
+
 		await Promise.all(
 			Object.keys(properties).map(async (key: string) => {
 				const appSettingTreeItem: AppSettingTreeItem =
@@ -159,10 +175,12 @@ export class AppSettingsTreeItem extends AzExtParentTreeItem {
 			if (oldKey !== newKey) {
 				delete settings.properties[oldKey];
 			}
+
 			settings.properties[newKey] = value;
 		}
 
 		const client = await this.clientProvider.createClient(context);
+
 		this._settings = await client.updateApplicationSettings(settings);
 	}
 
@@ -181,6 +199,7 @@ export class AppSettingsTreeItem extends AzExtParentTreeItem {
 		}
 
 		const client = await this.clientProvider.createClient(context);
+
 		this._settings = await client.updateApplicationSettings(settings);
 	}
 

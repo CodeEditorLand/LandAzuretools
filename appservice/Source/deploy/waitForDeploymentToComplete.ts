@@ -22,9 +22,13 @@ import { InnerDeployContext } from "./IDeployContext";
 
 type DeploymentOptions = {
 	expectedId?: string;
+
 	token?: CancellationToken;
+
 	pollingInterval?: number;
+
 	locationUrl?: string;
+
 	progress?: Progress<{ message?: string; increment?: number }>;
 };
 
@@ -99,6 +103,7 @@ export async function waitForDeploymentToComplete(
 		const deploymentId: string = deployment.id;
 
 		let logEntries: KuduModels.LogEntry[] = [];
+
 		await retryKuduCall(context, "getLogEntry", async () => {
 			await ignore404Error(context, async () => {
 				logEntries = (
@@ -122,11 +127,14 @@ export async function waitForDeploymentToComplete(
 				newEntry.logTime > lastLogTime
 			) {
 				fullLog = fullLog.concat(newEntry.message);
+
 				options.progress?.report({ message: newEntry.message });
+
 				ext.outputChannel.appendLog(newEntry.message, {
 					date: newEntry.logTime,
 					resourceName: site.fullName,
 				});
+
 				lastLogTimeForThisPoll = newEntry.logTime;
 
 				if (/error/i.test(newEntry.message)) {
@@ -143,6 +151,7 @@ export async function waitForDeploymentToComplete(
 								deploymentId,
 								newEntry.id,
 							);
+
 						logEntries.push(...cleanDetails(details));
 					}
 				});
@@ -162,9 +171,11 @@ export async function waitForDeploymentToComplete(
 				);
 
 				const messageWithoutName: string = l10n.t("Deployment failed.");
+
 				ext.outputChannel.appendLog(messageWithoutName, {
 					resourceName: site.fullName,
 				});
+
 				context.errorHandling.suppressDisplay = true;
 				// Hopefully the last line is enough to give us an idea why deployments are failing without excessively tracking everything
 				context.telemetry.properties.deployErrorLastLine =
@@ -241,9 +252,11 @@ export async function waitForDeploymentToComplete(
 					deployment = latestDeployment;
 				} else if (latestDeployment.id === expectedId) {
 					deployment = latestDeployment;
+
 					permanentId = latestDeployment.id;
 				} else if (!latestDeployment.status) {
 					// it is possible that the Kudu instance gets recycled in which case, the response of calling latest would be an empty {}
+
 					throw new Error(
 						l10n.t("Failed to retrieve deployment status."),
 					);
@@ -264,6 +277,7 @@ export async function waitForDeploymentToComplete(
 					return await kuduClient.getDeployResults(context);
 				},
 			);
+
 			deployment = deployments
 				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 				.filter(
@@ -302,6 +316,7 @@ export async function waitForDeploymentToComplete(
 					throw error;
 				}
 			}
+
 			if (deployment && deployment.startTime) {
 				// Make note of the startTime because that is when kudu has began the deployment process,
 				// so that we can use that to find the deployment going forward
@@ -334,6 +349,7 @@ function cleanDetails(entries: KuduModels.LogEntry[]): KuduModels.LogEntry[] {
 			result.push(entry);
 		}
 	}
+
 	return result.reverse();
 }
 

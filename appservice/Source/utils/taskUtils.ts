@@ -67,6 +67,7 @@ export namespace taskUtils {
 		tasks?: Task[],
 	): Promise<Task | undefined> {
 		tasks = tasks || (await codeTasks.fetchTasks());
+
 		taskName = taskName.toLowerCase();
 
 		return tasks.find((t) => {

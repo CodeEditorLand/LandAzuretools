@@ -39,8 +39,11 @@ enum AppState {
 
 interface ITunnelStatus {
 	port: number;
+
 	canReachPort: boolean;
+
 	state: AppState;
+
 	msg: string;
 }
 
@@ -54,10 +57,15 @@ class RetryableTunnelStatusError extends Error {}
  */
 export class TunnelProxy {
 	private _port: number;
+
 	private _site: ParsedSite;
+
 	private _server: Server;
+
 	private _openSockets: ws.WebSocket[];
+
 	private _isSsh: boolean;
+
 	private _credentials: AzExtServiceClientCredentials;
 
 	constructor(
@@ -67,10 +75,15 @@ export class TunnelProxy {
 		isSsh: boolean = false,
 	) {
 		this._port = port;
+
 		this._site = site;
+
 		this._server = createServer();
+
 		this._openSockets = [];
+
 		this._isSsh = isSsh;
+
 		this._credentials = credentials;
 	}
 
@@ -84,6 +97,7 @@ export class TunnelProxy {
 			const bearerToken = (
 				(await this._credentials.getToken()) as { token: string }
 			).token;
+
 			await this.setupTunnelServer(bearerToken, token);
 		} catch (error) {
 			this.dispose();
@@ -96,7 +110,9 @@ export class TunnelProxy {
 		this._openSockets.forEach((tunnelSocket: ws.WebSocket) => {
 			tunnelSocket.close();
 		});
+
 		this._server.close();
+
 		this._server.unref();
 	}
 
@@ -120,6 +136,7 @@ export class TunnelProxy {
 					url: this._site.defaultHostUrl,
 				}),
 			);
+
 			statusCode = response.status;
 		} catch (error) {
 			if (error instanceof RestError) {
@@ -128,6 +145,7 @@ export class TunnelProxy {
 				throw error;
 			}
 		}
+
 		ext.outputChannel.appendLog(
 			`[Tunnel] Ping responded with status code: ${statusCode}`,
 		);
@@ -138,6 +156,7 @@ export class TunnelProxy {
 			context,
 			undefined,
 		);
+
 		client.pipeline.addPolicy(
 			bearerTokenAuthenticationPolicy({
 				scopes: [],
@@ -154,12 +173,15 @@ export class TunnelProxy {
 					url: `https://${this._site.kuduHostName}/AppServiceTunnel/Tunnel.ashx?GetStatus&GetStatusAPIVer=2`,
 				}),
 			);
+
 			ext.outputChannel.appendLog(
 				`[Tunnel] Checking status, body: ${response.bodyAsText}`,
 			);
+
 			tunnelStatus = <ITunnelStatus>response.parsedBody;
 		} catch (error) {
 			const parsedError: IParsedError = parseError(error);
+
 			ext.outputChannel.appendLog(
 				`[Tunnel] Checking status, error: ${parsedError.message}`,
 			);
@@ -234,6 +256,7 @@ export class TunnelProxy {
 
 			await delay(pollingIntervalMs);
 		}
+
 		throw new Error(
 			l10n.t("Unable to establish connection to application: Timed out"),
 		);
@@ -248,6 +271,7 @@ export class TunnelProxy {
 				const listener: Disposable = token.onCancellationRequested(
 					() => {
 						reject(new UserCancelledError("setupTunnelServer"));
+
 						listener.dispose();
 					},
 				);
@@ -265,6 +289,7 @@ export class TunnelProxy {
 							},
 						},
 					);
+
 					this._openSockets.push(tunnelSocket);
 
 					tunnelSocket.on("open", () => {
@@ -277,6 +302,7 @@ export class TunnelProxy {
 
 						if (index >= 0) {
 							this._openSockets.splice(index, 1);
+
 							ext.outputChannel.appendLog(
 								`[Proxy Server] client closed, connection count: ${this._openSockets.length}`,
 							);
@@ -285,7 +311,9 @@ export class TunnelProxy {
 
 					// Tie up the input/output streams
 					const duplexStream = ws.createWebSocketStream(tunnelSocket);
+
 					duplexStream.pipe(socket);
+
 					socket.pipe(duplexStream);
 
 					ext.outputChannel.appendLog(
@@ -297,6 +325,7 @@ export class TunnelProxy {
 					ext.outputChannel.appendLog(
 						"[Proxy Server] start listening",
 					);
+
 					resolve();
 				});
 
@@ -304,7 +333,9 @@ export class TunnelProxy {
 					ext.outputChannel.appendLog(
 						`[Proxy Server] server error: ${err}`,
 					);
+
 					this.dispose();
+
 					reject(err);
 				});
 

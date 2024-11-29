@@ -38,6 +38,7 @@ export async function rejectOnTimeout<T>(
 	return await new Promise<T>(async (resolve, reject): Promise<void> => {
 		let timer: NodeJS.Timer | undefined = setTimeout(() => {
 			timer = undefined;
+
 			reject(
 				new TimeoutError(
 					callerTimeOutMessage ||
@@ -52,11 +53,15 @@ export async function rejectOnTimeout<T>(
 
 		try {
 			value = await action();
+
 			clearTimeout(timer);
+
 			resolve(value);
 		} catch (err) {
 			error = err;
+
 			clearTimeout(timer);
+
 			reject(error);
 		}
 	});

@@ -18,6 +18,7 @@ export class DeployWarExecuteStep extends DeployZipBaseExecuteStep {
 		}
 
 		const kuduClient = await context.site.createClient(context);
+
 		await kuduClient.warPushDeploy(
 			context,
 			() => fs.createReadStream(context.fsPath),

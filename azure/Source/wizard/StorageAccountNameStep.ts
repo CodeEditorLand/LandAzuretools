@@ -29,6 +29,7 @@ export class StorageAccountNameStep<
 		const suggestedName: string | undefined = wizardContext.relatedNameTask
 			? await wizardContext.relatedNameTask
 			: undefined;
+
 		wizardContext.newStorageAccountName = (
 			await wizardContext.ui.showInputBox({
 				value: suggestedName,
@@ -47,6 +48,7 @@ export class StorageAccountNameStep<
 				resourceGroupNamingRules,
 			);
 		}
+
 		wizardContext.valuesToMask.push(wizardContext.newStorageAccountName);
 	}
 

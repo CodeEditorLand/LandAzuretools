@@ -17,6 +17,7 @@ function getExtValuesToMask(): string[] {
 	if (!_extValuesToMask) {
 		_extValuesToMask = [];
 	}
+
 	return _extValuesToMask;
 }
 
@@ -72,6 +73,7 @@ export function addValuesToMaskFromAzureId(
 
 	if (parts[1] === "subscriptions" && parts[3] === "resourcegroups") {
 		context.valuesToMask.push(parts[2]);
+
 		context.valuesToMask.push(parts[4]);
 
 		if (
@@ -132,14 +134,17 @@ export function maskUserInfo(
 
 	if (!lessAggressive) {
 		data = data.replace(/\S+@\S+/gi, getRedactedLabel("email"));
+
 		data = data.replace(/\b[0-9a-f\-\:\.]{4,}\b/gi, getRedactedLabel("id")); // should cover guids, ip addresses, etc.
 	}
 
 	data = data.replace(/[a-z]+:\/\/\S*/gi, getRedactedLabel("url"));
+
 	data = data.replace(
 		/\S+(?<!(?<!\-)\basp)\.(com|org|net)\S*/gi,
 		getRedactedLabel("url"),
 	);
+
 	data = data.replace(
 		/\S*(key|token|sig|password|passwd|pwd)[="':\s]+\S*/gi,
 		getRedactedLabel("key"),
@@ -171,6 +176,7 @@ export function maskValue(
 			data = data.replace(new RegExp(escape(v), "gi"), "---");
 		}
 	}
+
 	return data;
 }
 

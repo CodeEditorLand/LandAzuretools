@@ -22,7 +22,9 @@ import { JobItem } from "./JobItem";
 
 export class ActionItem implements TreeElementBase {
 	static readonly contextValueSuffix: string = "ActionItem";
+
 	static readonly completedContextValue: string = "actionState:completed";
+
 	static readonly inProgressContextValue: string = "actionState:inProgress";
 
 	constructor(
@@ -32,6 +34,7 @@ export class ActionItem implements TreeElementBase {
 	) {}
 
 	id: string = `${this.parentResourceId}/${this.actionWorkflowRuns.id}`;
+
 	label: string =
 		this.actionWorkflowRuns.head_commit?.message ||
 		this.actionWorkflowRuns.head_sha;

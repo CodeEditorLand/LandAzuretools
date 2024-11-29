@@ -25,6 +25,7 @@ export async function syncTriggersPostDeploy(
 	const retries: number = 5;
 
 	const client = await site.createClient(context);
+
 	await retry(
 		async (currentAttempt: number) => {
 			const message: string =
@@ -35,9 +36,11 @@ export async function syncTriggersPostDeploy(
 							currentAttempt,
 							retries + 1,
 						);
+
 			ext.outputChannel.appendLog(message, {
 				resourceName: site.fullName,
 			});
+
 			await client.syncFunctionTriggers();
 		},
 		{ retries, minTimeout: 5 * 1000 },

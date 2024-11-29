@@ -12,23 +12,41 @@
  */
 export interface DeployResult {
 	id?: string;
+
 	status?: number;
+
 	statusText?: string;
+
 	authorEmail?: string;
+
 	author?: string;
+
 	deployer?: string;
+
 	message?: string;
+
 	progress?: string;
+
 	receivedTime?: Date;
+
 	startTime?: Date;
+
 	endTime?: Date;
+
 	lastSuccessEndTime?: Date;
+
 	complete?: boolean;
+
 	active?: boolean;
+
 	isTemp?: boolean;
+
 	isReadonly?: boolean;
+
 	url?: string;
+
 	logUrl?: string;
+
 	siteName?: string;
 }
 
@@ -37,9 +55,13 @@ export interface DeployResult {
  */
 export interface LogEntry {
 	logTime?: Date;
+
 	id?: string;
+
 	message?: string;
+
 	type?: number;
+
 	detailsUrl?: string;
 }
 
@@ -49,10 +71,15 @@ export interface LogEntry {
 export interface PushDeploymentZipPushDeployOptionalParams
 	extends /*msRest.*/ RequestOptionsBase {
 	isAsync?: boolean;
+
 	author?: string;
+
 	authorEmail?: string;
+
 	deployer?: string;
+
 	message?: string;
+
 	trackDeploymentId?: boolean;
 }
 
@@ -62,9 +89,13 @@ export interface PushDeploymentZipPushDeployOptionalParams
 export interface PushDeploymentWarPushDeployOptionalParams
 	extends /*msRest.*/ RequestOptionsBase {
 	isAsync?: boolean;
+
 	author?: string;
+
 	authorEmail?: string;
+
 	deployer?: string;
+
 	message?: string;
 }
 
@@ -78,13 +109,17 @@ export interface PushDeploymentWarPushDeployOptionalParams
  */
 export interface AbortSignalLike {
 	readonly aborted: boolean;
+
 	dispatchEvent: (event: Event) => boolean;
+
 	onabort: ((this: AbortSignalLike, ev: Event) => any) | null;
+
 	addEventListener: (
 		type: "abort",
 		listener: (this: AbortSignalLike, ev: Event) => any,
 		options?: any,
 	) => void;
+
 	removeEventListener: (
 		type: "abort",
 		listener: (this: AbortSignalLike, ev: Event) => any,

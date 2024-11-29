@@ -37,6 +37,7 @@ export async function selectWorkspaceFile(
 	if (fileExtensions) {
 		filters.Artifacts = fileExtensions;
 	}
+
 	return await selectWorkspaceItem(context, placeHolder, {
 		canSelectFiles: true,
 		canSelectFolders: false,
@@ -73,6 +74,7 @@ export async function selectWorkspaceItem(
 			description: "",
 			data: undefined,
 		});
+
 		folder = (await context.ui.showQuickPick(folderPicks, { placeHolder }))
 			.data;
 	}

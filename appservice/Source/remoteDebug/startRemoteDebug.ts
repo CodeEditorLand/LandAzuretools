@@ -27,8 +27,11 @@ export enum RemoteDebugLanguage {
 
 interface StartRemoteDebuggingOptions {
 	credentials: AzExtGenericCredentials;
+
 	site: ParsedSite;
+
 	siteConfig: SiteConfigResource;
+
 	language: RemoteDebugLanguage;
 }
 
@@ -73,6 +76,7 @@ async function startRemoteDebugInternal(
 			const confirmEnableMessage: string = vscode.l10n.t(
 				"The configuration will be updated to enable remote debugging. Would you like to continue? This will restart the app.",
 			);
+
 			await setRemoteDebug(
 				context,
 				true,
@@ -96,11 +100,14 @@ async function startRemoteDebugInternal(
 				options.site,
 				options.credentials,
 			);
+
 			await callWithTelemetryAndErrorHandling(
 				"appService.remoteDebugStartProxy",
 				async (startContext: IActionContext) => {
 					startContext.errorHandling.suppressDisplay = true;
+
 					startContext.errorHandling.rethrow = true;
+
 					await tunnelProxy.startProxy(context, token);
 				},
 			);
@@ -115,7 +122,9 @@ async function startRemoteDebugInternal(
 				"appService.remoteDebugAttach",
 				async (attachContext: IActionContext) => {
 					attachContext.errorHandling.suppressDisplay = true;
+
 					attachContext.errorHandling.rethrow = true;
+
 					await vscode.debug.startDebugging(undefined, debugConfig);
 				},
 			);
@@ -131,11 +140,13 @@ async function startRemoteDebugInternal(
 							if (tunnelProxy !== undefined) {
 								tunnelProxy.dispose();
 							}
+
 							terminateDebugListener.dispose();
 
 							const confirmDisableMessage: string = vscode.l10n.t(
 								"Remaining in debugging mode may cause performance issues. Would you like to disable debugging? This will restart the app.",
 							);
+
 							await vscode.window.withProgress(
 								{
 									location:
@@ -206,6 +217,7 @@ async function getDebugPath(): Promise<string> {
 			const root = await vscode.window.showWorkspaceFolderPick();
 
 			if (root) return root.uri.fsPath;
+
 			else
 				throw new Error(
 					vscode.l10n.t(
@@ -237,6 +249,7 @@ async function getNodeDebugConfiguration(
 		address: host,
 		port: portNumber,
 	};
+
 	config.localRoot = await getDebugPath();
 
 	return config;

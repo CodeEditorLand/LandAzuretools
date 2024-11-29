@@ -36,6 +36,7 @@ export abstract class AzureNameStep<
 		)) {
 			// Ensure the regExp uses the 'g' flag to replace _all_ invalid characters
 			invalidCharsRegExp = new RegExp(invalidCharsRegExp, "g");
+
 			preferredName = preferredName.replace(invalidCharsRegExp, "");
 		}
 
@@ -64,6 +65,7 @@ export abstract class AzureNameStep<
 			if (await this.isRelatedNameAvailable(wizardContext, newName)) {
 				return newName;
 			}
+
 			count += 1;
 		}
 

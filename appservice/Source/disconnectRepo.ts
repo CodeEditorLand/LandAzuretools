@@ -29,10 +29,12 @@ export async function disconnectRepo(
 		'Disconnect from "{0}"? This will not affect your app\'s active deployment. You may reconnect a repository at any time.',
 		sourceControl.repoUrl!,
 	);
+
 	await context.ui.showWarningMessage(
 		disconnect,
 		{ modal: true, stepName: "disconnectRepo" },
 		disconnectButton,
 	);
+
 	await editScmType(context, site, subscriptionContext, ScmType.None);
 }

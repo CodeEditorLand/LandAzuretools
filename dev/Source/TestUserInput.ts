@@ -21,13 +21,16 @@ class GoBackError extends Error {
 
 export class TestUserInput implements types.TestUserInput {
 	private readonly _onDidFinishPromptEmitter: vscodeTypes.EventEmitter<types.PromptResult>;
+
 	private readonly _vscode: typeof vscodeTypes;
+
 	private _inputs: (string | RegExp | TestInput)[] = [];
 
 	readonly isTesting: boolean = true;
 
 	constructor(vscode: typeof vscodeTypes) {
 		this._vscode = vscode;
+
 		this._onDidFinishPromptEmitter =
 			new this._vscode.EventEmitter<types.PromptResult>();
 	}
@@ -47,6 +50,7 @@ export class TestUserInput implements types.TestUserInput {
 		this.setInputs(inputs);
 
 		const result: T = await callback();
+
 		this.validateAllInputsUsed();
 
 		return result;
@@ -117,6 +121,7 @@ export class TestUserInput implements types.TestUserInput {
 						const picksString = resolvedItems
 							.map((i) => `"${i.label}"`)
 							.join(", ");
+
 						const lastItem =
 							resolvedItems[resolvedItems.length - 1];
 
@@ -124,7 +129,9 @@ export class TestUserInput implements types.TestUserInput {
 							console.log(
 								`Loading more items for quick pick with placeholder "${options.placeHolder}"...`,
 							);
+
 							result = lastItem;
+
 							this._inputs.unshift(input);
 						} else {
 							throw new Error(
@@ -181,6 +188,7 @@ export class TestUserInput implements types.TestUserInput {
 					}
 				}
 			}
+
 			result = input;
 		} else {
 			throw new Error(`Unexpected input '${input}' for showInputBox.`);
@@ -198,6 +206,7 @@ export class TestUserInput implements types.TestUserInput {
 		message: string,
 		...items: T[]
 	): Promise<T>;
+
 	public showWarningMessage<T extends vscodeTypes.MessageItem>(
 		message: string,
 		options: vscodeTypes.MessageOptions,
@@ -300,6 +309,7 @@ export class TestUserInput implements types.TestUserInput {
 					`Did not find workspace folder with name matching '${input}'.`,
 				);
 			}
+
 			result = workspaceFolder;
 		} else {
 			throw new Error(
@@ -320,11 +330,13 @@ export async function runWithInputs<T>(
 	callback: () => Promise<T>,
 ): Promise<T> {
 	const testUserInput = await TestUserInput.create();
+
 	testUserInput.setInputs(inputs);
 
 	const disposable = registerOnActionStartHandler((context) => {
 		if (context.callbackId === callbackId) {
 			context.ui = testUserInput;
+
 			disposable.dispose();
 		}
 	});

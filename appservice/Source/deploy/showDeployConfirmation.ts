@@ -47,12 +47,14 @@ export async function showDeployConfirmation(
 			".vscode",
 			"settings.json",
 		);
+
 		await updateWorkspaceSetting(
 			context.defaultAppSetting,
 			"",
 			context.workspaceFolder.uri.fsPath,
 			ext.prefix,
 		);
+
 		await window.showTextDocument(Uri.file(settingsPath));
 
 		// If resetDefault button was clicked we ask what and where to deploy again

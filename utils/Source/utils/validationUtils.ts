@@ -8,6 +8,7 @@ import * as vscode from "vscode";
 export namespace validationUtils {
 	export interface RangeConstraints {
 		lowerLimitIncl?: number;
+
 		upperLimitIncl?: number;
 	}
 

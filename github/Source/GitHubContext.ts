@@ -13,7 +13,9 @@ export interface GitHubContext extends IActionContext {
 
 	// Repository
 	gitHubRepository?: string;
+
 	gitHubRepositoryOwner?: string;
+
 	gitHubRepositoryUrl?: string;
 
 	// Branch

@@ -37,6 +37,7 @@ export class AppInsightsListStep extends AzureWizardPromptStep<IAppServiceWizard
 
 	public constructor(suppressCreate?: boolean) {
 		super();
+
 		this._suppressCreate = suppressCreate;
 	}
 
@@ -46,6 +47,7 @@ export class AppInsightsListStep extends AzureWizardPromptStep<IAppServiceWizard
 		if (context.appInsightsTask === undefined) {
 			const client: ApplicationInsightsManagementClient =
 				await createAppInsightsClient(context);
+
 			context.appInsightsTask = uiUtils.listAllIterator(
 				client.components.list(),
 			);
@@ -67,11 +69,13 @@ export class AppInsightsListStep extends AzureWizardPromptStep<IAppServiceWizard
 			this.getQuickPicks(context),
 			options,
 		);
+
 		context.appInsightsComponent = input.data;
 
 		// as create new and skipForNow both have undefined as the data type, check the label
 		if (input.label === skipForNowLabel) {
 			context.telemetry.properties.aiSkipForNow = "true";
+
 			context.appInsightsSkip = true;
 		} else {
 			context.telemetry.properties.newAI = String(
@@ -94,6 +98,7 @@ export class AppInsightsListStep extends AzureWizardPromptStep<IAppServiceWizard
 		} else if (!context.appInsightsSkip) {
 			const promptSteps: AzureWizardPromptStep<IAppServiceWizardContext>[] =
 				[new AppInsightsNameStep()];
+
 			LocationListStep.addStep(context, promptSteps);
 
 			return {

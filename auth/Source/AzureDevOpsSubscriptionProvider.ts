@@ -91,7 +91,9 @@ export class AzureDevOpsSubscriptionProvider
 		}
 
 		this._SERVICE_CONNECTION_ID = serviceConnectionId;
+
 		this._DOMAIN = domain;
+
 		this._CLIENT_ID = clientId;
 	}
 
@@ -102,8 +104,10 @@ export class AzureDevOpsSubscriptionProvider
 		for (const tenant of await this.getTenants()) {
 			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			const tenantId = tenant.tenantId!;
+
 			results.push(...(await this.getSubscriptionsForTenant(tenantId)));
 		}
+
 		const sortSubscriptions = (
 			subscriptions: AzureSubscription[],
 		): AzureSubscription[] =>
@@ -188,7 +192,9 @@ export class AzureDevOpsSubscriptionProvider
 		scopes?: string[],
 	): Promise<{
 		client: SubscriptionClient;
+
 		credential: TokenCredential;
+
 		authentication: AzureAuthentication;
 	}> {
 		const armSubs = await import("@azure/arm-resources-subscriptions");
@@ -232,6 +238,7 @@ export class AzureDevOpsSubscriptionProvider
 			/*empty*/
 		});
 	};
+
 	public onDidSignOut: Event<void> = () => {
 		return new Disposable(() => {
 			/*empty*/
@@ -343,5 +350,6 @@ async function requestOidcToken(
 			`Successfully got OIDC token with status ${response.status}`,
 		);
 	}
+
 	return (JSON.parse(body) as { oidcToken: string }).oidcToken;
 }

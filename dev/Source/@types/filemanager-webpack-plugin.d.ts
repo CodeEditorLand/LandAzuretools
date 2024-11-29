@@ -16,9 +16,11 @@ declare module "filemanager-webpack-plugin" {
 		interface FileEvents {
 			copy?: {
 				source: string;
+
 				destination: string;
 			}[];
 		}
+
 		interface Options {
 			/**
 			 * Commands to execute before Webpack begins the bundling process

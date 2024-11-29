@@ -15,6 +15,7 @@ export function addTreeItemValuesToMask(
 	treeItemSource: string,
 ): void {
 	addValuesToMaskFromAzureId(context, treeItem.fullId);
+
 	context.telemetry.properties.treeItemSource = treeItemSource;
 
 	let tiToMask: types.AzExtTreeItem | undefined = treeItem;
@@ -23,7 +24,9 @@ export function addTreeItemValuesToMask(
 		if (!tiToMask.suppressMaskLabel) {
 			context.valuesToMask.push(tiToMask.label);
 		}
+
 		context.valuesToMask.push(...tiToMask.valuesToMask);
+
 		tiToMask = tiToMask.parent;
 	}
 }

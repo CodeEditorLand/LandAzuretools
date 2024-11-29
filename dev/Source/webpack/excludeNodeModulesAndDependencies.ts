@@ -11,6 +11,7 @@ type DependencyEntry = {
 	dependencies?: {
 		[moduleName: string]: DependencyEntry;
 	};
+
 	requires?: {
 		[moduleName: string]: string;
 	};
@@ -56,10 +57,12 @@ export function excludeNodeModulesAndDependencies(
 
 	// Tell webpack to not place our modules into bundles
 	webpackConfig.externals = webpackConfig.externals || {};
+
 	log(
 		"Excluded node modules (external node modules plus dependencies)",
 		externalModulesClosure,
 	);
+
 	Object.assign(webpackConfig.externals, excludeEntries);
 
 	/**
@@ -71,9 +74,11 @@ export function excludeNodeModulesAndDependencies(
 	 * We'll just create our own simple plugin leveraging "fs-extra" to copy the files
 	 */
 	webpackConfig.plugins = webpackConfig.plugins || [];
+
 	webpackConfig.plugins.push({
 		apply: (compiler) => {
 			const pluginName = "AzCodeCopyWorkaround";
+
 			compiler.hooks.afterEmit.tapPromise(pluginName, async () => {
 				await Promise.all(
 					copyEntries.map(async (ce) => {
@@ -81,6 +86,7 @@ export function excludeNodeModulesAndDependencies(
 
 						if (await fse.pathExists(ce.source)) {
 							log(`${pluginName}: Copying "${entryName}"...`);
+
 							await fse.copy(ce.source, ce.destination);
 						} else {
 							log(

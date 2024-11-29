@@ -38,6 +38,7 @@ export class CustomLocationListStep<
 
 		if ("kubeEnvironment" in result) {
 			context.telemetry.properties.pickedCustomLoc = "true";
+
 			context.customLocation = result;
 			// For any resources other than the app, we still need a non-custom location, so we'll use the kubeEnvironment's location
 			await LocationListStep.setLocation(
@@ -46,6 +47,7 @@ export class CustomLocationListStep<
 			);
 			// Plan has very little effect when a custom location is used, so default this info instead of prompting
 			context.newPlanName = await context.relatedNameTask;
+
 			context.newPlanSku = {
 				name: "K1",
 				tier: "Kubernetes",
@@ -53,9 +55,11 @@ export class CustomLocationListStep<
 				family: "K",
 				capacity: 1,
 			};
+
 			context.useConsumptionPlan = false;
 		} else {
 			context.telemetry.properties.pickedCustomLoc = "false";
+
 			await LocationListStep.setLocation(context, result.name);
 		}
 	}
@@ -83,9 +87,11 @@ export class CustomLocationListStep<
 				const customLocationFlattened = Object.values(
 					customLocations,
 				).sort((a, b) => a.name.localeCompare(b.name));
+
 				context.telemetry.properties.hasCustomLoc = String(
 					customLocationFlattened.length > 0,
 				);
+
 				picks.unshift(
 					...customLocationFlattened.map((cl) => {
 						return {
@@ -101,6 +107,7 @@ export class CustomLocationListStep<
 				// ignore error and display non-custom locations
 			}
 		}
+
 		return picks;
 	}
 }

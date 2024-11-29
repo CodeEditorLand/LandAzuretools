@@ -68,10 +68,14 @@ export async function deployToStorageAccount(
 
 	const appSettings: StringDictionary =
 		await client.listApplicationSettings();
+
 	appSettings.properties = appSettings.properties || {};
+
 	delete appSettings.properties.WEBSITE_RUN_FROM_ZIP; // delete old app setting name if it exists
 	appSettings.properties.WEBSITE_RUN_FROM_PACKAGE = blobUrl;
+
 	await client.updateApplicationSettings(appSettings);
+
 	ext.outputChannel.appendLog(vscode.l10n.t("Deployment successful."), {
 		resourceName: site.fullName,
 	});
@@ -109,6 +113,7 @@ async function createBlobServiceClient(
 				if (!connectionString.endsWith(separator)) {
 					connectionString += separator;
 				}
+
 				connectionString += `${endpointSuffix}=${AzureCloudStorageEndpointSuffix}${separator}`;
 
 				return BlobServiceClient.fromConnectionString(connectionString);
@@ -153,6 +158,7 @@ async function createBlobFromZip(
 				vscode.l10n.t("Uploading zip package to storage container..."),
 				{ resourceName: site.fullName },
 			);
+
 			await blobClient.uploadStream(zipStream);
 		},
 	});
@@ -164,6 +170,7 @@ async function createBlobFromZip(
 
 	if (blobService.credential instanceof StorageSharedKeyCredential) {
 		const url: URL = new URL(blobClient.url);
+
 		url.search = generateBlobSASQueryParameters(
 			{
 				containerName,

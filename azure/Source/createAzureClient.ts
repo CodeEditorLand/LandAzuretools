@@ -128,6 +128,7 @@ export async function createGenericClient(
 
 	if (clientInfo && "credentials" in clientInfo) {
 		credentials = clientInfo.credentials;
+
 		endpoint = clientInfo.environment.resourceManagerEndpointUrl;
 	} else {
 		credentials = clientInfo;
@@ -136,6 +137,7 @@ export async function createGenericClient(
 	const retryOptions: RetryPolicyOptions | undefined = options?.noRetryPolicy
 		? { maxRetries: 0 }
 		: undefined;
+
 	endpoint = options?.endpoint ?? endpoint;
 
 	const client = new ServiceClient({
@@ -167,11 +169,13 @@ function addAzExtPipeline(
 	// ServiceClient adds a default retry policy, so we need to remove it and add ours
 	if (options?.retryOptions) {
 		pipeline.removePolicy(defaultRetryPolicy());
+
 		pipeline.addPolicy(defaultRetryPolicy(options?.retryOptions));
 	}
 
 	// ServiceClient adds a default userAgent policy and you can't have duplicate policies, so we need to remove it and add ours
 	pipeline.removePolicy(userAgentPolicy());
+
 	pipeline.addPolicy(
 		userAgentPolicy({ userAgentPrefix: appendExtensionUserAgent() }),
 	);
@@ -184,6 +188,7 @@ function addAzExtPipeline(
 			phase: "Serialize",
 		});
 	}
+
 	if (endpoint) {
 		pipeline.addPolicy(new AddEndpointPolicy(endpoint), {
 			phase: "Serialize",
@@ -194,6 +199,7 @@ function addAzExtPipeline(
 	pipeline.addPolicy(new MissingContentTypePolicy(), {
 		phase: "Deserialize",
 	});
+
 	pipeline.addPolicy(new RemoveBOMPolicy(), {
 		phase: "Deserialize",
 		beforePolicies: [MissingContentTypePolicy.Name],
@@ -237,6 +243,7 @@ export class CorrelationIdPolicy implements PipelinePolicy {
 
 		const id: string = (this.context.telemetry.properties[headerName] ||=
 			uuidv4());
+
 		request.headers.set(headerName, id);
 
 		return await next(request);
@@ -261,6 +268,7 @@ class RemoveBOMPolicy implements PipelinePolicy {
 		if (contentType && /json/i.test(contentType) && response.bodyAsText) {
 			response.bodyAsText = removeBom(response.bodyAsText);
 		}
+
 		return response;
 	}
 }
@@ -273,6 +281,7 @@ const contentTypeName: string = "Content-Type";
  */
 class MissingContentTypePolicy implements PipelinePolicy {
 	public static readonly Name = "MissingContentTypePolicy";
+
 	public readonly name = MissingContentTypePolicy.Name;
 
 	public async sendRequest(
@@ -284,6 +293,7 @@ class MissingContentTypePolicy implements PipelinePolicy {
 		if (!response.headers.get(contentTypeName) && response.bodyAsText) {
 			try {
 				parseJson(response.bodyAsText);
+
 				response.headers.set(contentTypeName, "application/json");
 			} catch {
 				response.headers.set(
@@ -292,6 +302,7 @@ class MissingContentTypePolicy implements PipelinePolicy {
 				);
 			}
 		}
+
 		return response;
 	}
 }
@@ -370,6 +381,7 @@ class StatusCodePolicy implements PipelinePolicy {
  */
 class BasicAuthenticationCredentialsPolicy implements PipelinePolicy {
 	public static readonly Name = "BasicAuthenticationCredentialsPolicy";
+
 	public readonly name = BasicAuthenticationCredentialsPolicy.Name;
 
 	public constructor(
@@ -388,6 +400,7 @@ class BasicAuthenticationCredentialsPolicy implements PipelinePolicy {
 		const encodedCredentials = `${DEFAULT_AUTHORIZATION_SCHEME} ${Buffer.from(credentials).toString("base64")}`;
 
 		if (!request.headers) request.headers = createHttpHeaders();
+
 		request.headers.set("authorization", encodedCredentials);
 
 		return await next(request);
@@ -396,6 +409,7 @@ class BasicAuthenticationCredentialsPolicy implements PipelinePolicy {
 
 class AllowInsecureConnectionPolicy implements PipelinePolicy {
 	public static readonly Name = "AllowInsecureConnectionPolicy";
+
 	public readonly name = AllowInsecureConnectionPolicy.Name;
 
 	public async sendRequest(

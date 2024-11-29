@@ -21,8 +21,11 @@ export interface DatabaseJsonResponse {
 
 export interface DatabaseAccountJsonResponse {
 	id: string;
+
 	name: string;
+
 	kind: string;
+
 	properties: {
 		EnabledApiTypes: string;
 	};
@@ -38,6 +41,7 @@ export class CosmosDBAccountListStep extends AzureWizardPromptStep<ICreateLinker
 			accounts.value,
 			context.targetServiceType?.type,
 		);
+
 		context.databaseAccount = (
 			await context.ui.showQuickPick(this.getPicks(filteredAccounts), {
 				placeHolder,

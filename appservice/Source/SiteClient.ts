@@ -58,11 +58,13 @@ import { convertQueryParamsValuesToString } from "./utils/kuduUtils";
 
 export class ParsedSite implements AppSettingsClientProvider {
 	public readonly id: string;
+
 	public readonly isSlot: boolean;
 	/**
 	 * The main site name (does not include the slot name)
 	 */
 	public readonly siteName: string;
+
 	public readonly slotName?: string;
 	/**
 	 * Combination of the site name and slot name (if applicable), separated by a hyphen
@@ -70,22 +72,35 @@ export class ParsedSite implements AppSettingsClientProvider {
 	public readonly fullName: string;
 
 	public readonly resourceGroup: string;
+
 	public readonly location: string;
+
 	public readonly serverFarmId: string;
+
 	public readonly kind: string;
+
 	public readonly initialState?: string;
+
 	public readonly isFunctionApp: boolean;
+
 	public readonly isWorkflowApp: boolean;
+
 	public readonly isKubernetesApp: boolean;
+
 	public readonly isLinux: boolean;
 
 	public readonly planResourceGroup: string;
+
 	public readonly planName: string;
 
 	public readonly defaultHostName: string;
+
 	public readonly defaultHostUrl: string;
+
 	public readonly kuduHostName: string | undefined;
+
 	public readonly kuduUrl: string | undefined;
+
 	public readonly gitUrl: string | undefined;
 
 	public readonly subscription: ISubscriptionContext;
@@ -101,32 +116,45 @@ export class ParsedSite implements AppSettingsClientProvider {
 		).match(
 			/\/subscriptions\/(.*)\/resourceGroups\/(.*)\/providers\/Microsoft.Web\/serverfarms\/(.*)/,
 		);
+
 		matches = nonNullValue(matches, "Invalid serverFarmId.");
 
 		this.id = nonNullProp(site, "id");
 		[this.siteName, this.slotName] = nonNullProp(site, "name").split("/");
+
 		this.isSlot = !!this.slotName;
+
 		this.fullName =
 			this.siteName + (this.slotName ? `-${this.slotName}` : "");
 
 		this.resourceGroup = nonNullProp(site, "resourceGroup");
+
 		this.location = site.location;
+
 		this.serverFarmId = nonNullProp(site, "serverFarmId");
+
 		this.kind = nonNullProp(site, "kind");
+
 		this.initialState = site.state;
 
 		const kind: string = (site.kind || "").toLowerCase();
+
 		this.isFunctionApp = kind.includes(AppKind.functionapp);
+
 		this.isWorkflowApp = kind.includes(AppKind.workflowapp);
+
 		this.isKubernetesApp = kind.includes("kubernetes");
+
 		this.isLinux = kind.includes("linux");
 
 		/* eslint-disable @typescript-eslint/no-non-null-assertion */
 		this.planResourceGroup = matches![2];
+
 		this.planName = matches![3];
 		/* eslint-enable @typescript-eslint/no-non-null-assertion */
 
 		this.defaultHostName = nonNullProp(site, "defaultHostName");
+
 		this.defaultHostUrl = `https://${this.defaultHostName}`;
 
 		const kuduRepositoryUrl: HostNameSslState | undefined = nonNullProp(
@@ -138,7 +166,9 @@ export class ParsedSite implements AppSettingsClientProvider {
 
 		if (kuduRepositoryUrl) {
 			this.kuduHostName = kuduRepositoryUrl.name;
+
 			this.kuduUrl = `https://${this.kuduHostName}`;
+
 			this.gitUrl = `${this.kuduHostName}:443/${site.repositorySiteName}.git`;
 		}
 
@@ -157,9 +187,11 @@ export class ParsedSite implements AppSettingsClientProvider {
 				context,
 				this.subscription,
 			]);
+
 			client = new SiteClient(internalClient, this);
 
 			context._parsedSiteClients ||= {};
+
 			context._parsedSiteClients[this.id] = client;
 		}
 
@@ -173,11 +205,14 @@ export class ParsedSite implements AppSettingsClientProvider {
  */
 export class SiteClient implements IAppSettingsClient {
 	private _client: WebSiteManagementClient;
+
 	private _site: ParsedSite;
+
 	private _cachedSku: string | undefined;
 
 	constructor(internalClient: WebSiteManagementClient, site: ParsedSite) {
 		this._client = internalClient;
+
 		this._site = site;
 	}
 
@@ -427,8 +462,11 @@ export class SiteClient implements IAppSettingsClient {
 
 	public async deleteMethod(options?: {
 		deleteMetrics?: boolean;
+
 		deleteEmptyServerFarm?: boolean;
+
 		skipDnsRegistration?: boolean;
+
 		customHeaders?: { [headerName: string]: string };
 	}): Promise<void> {
 		this._site.slotName
@@ -728,6 +766,7 @@ export class SiteClient implements IAppSettingsClient {
 		// old kuduClient parsed recived_time: string as receivedTime: Date so we need to do the same
 		return results.map((r) => {
 			const dr = { ...r };
+
 			dr.receivedTime = new Date(r.received_time);
 
 			return dr;
@@ -779,12 +818,15 @@ export class SiteClient implements IAppSettingsClient {
 
 		const entries = response.parsedBody as (KuduModels.LogEntry & {
 			log_time: string;
+
 			details_url: string;
 		})[];
 		// old kuduClient parsed log_time: string as logTime: Date so we need to do the same
 		return entries.map((obj) => {
 			const le = { ...obj };
+
 			le.logTime = new Date(obj.log_time);
+
 			le.detailsUrl = obj.details_url;
 
 			return le;
@@ -814,12 +856,15 @@ export class SiteClient implements IAppSettingsClient {
 
 		const entries = response.parsedBody as (KuduModels.LogEntry & {
 			log_time: string;
+
 			details_url: string;
 		})[];
 
 		return entries.map((e) => {
 			const le = { ...e };
+
 			le.logTime = new Date(e.log_time);
+
 			le.detailsUrl = e.details_url;
 
 			return le;
@@ -886,10 +931,12 @@ export class SiteClient implements IAppSettingsClient {
 					url: `${this._site.id}?api-version=2016-08-01`,
 				}),
 			);
+
 			this._cachedSku = (<{ properties: { sku?: string } }>(
 				response.parsedBody
 			)).properties.sku;
 		}
+
 		return this._cachedSku;
 	}
 }
