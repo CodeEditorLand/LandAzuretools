@@ -1,13 +1,13 @@
 # Setting up workflow identity federation with Azure DevOps
 
-This guide describes how to set up your Azure DevOps (ADO) and Azure environment to leverage [workflow identity federation](HTTPS://learn.microsoft.com/entra/workload-id/workload-identity-federation), enabling you to use
+This guide describes how to set up your Azure DevOps (ADO) and Azure environment to leverage [workflow identity federation](https://learn.microsoft.com/entra/workload-id/workload-identity-federation), enabling you to use
 `AzureDevOpsSubscriptionProvider` provided in this section. See the [README](README.md#azure-devops-subscription-provider) for more details.
 
 ## 1. Create a new service principal
 
 Create a new service principal on which you will assign the necessary permissions. In this example, we use an app registration:
 
-1. Navigate to the [App Registrations](HTTPS://ms.portal.azure.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade) page on the Azure portal
+1. Navigate to the [App Registrations](https://ms.portal.azure.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade) page on the Azure portal
 2. Click on `New Registration`
 
     ![New Registration](guide-imgs/app_registration.jpg)
@@ -23,9 +23,9 @@ Create a new service principal on which you will assign the necessary permission
 
 Create a new ADO service connection under your organization's project. In this example, we create it under the DevDiv project:
 
- 1. Navigate to the [organization's (DevDiv) ADO page](HTTPS://devdiv.visualstudio.com/DevDiv)
+ 1. Navigate to the [organization's (DevDiv) ADO page](https://devdiv.visualstudio.com/DevDiv)
  2. Navigate to the settings page by clicking on the gear icon on the bottom left
- 3. Select the ["service connections"](HTTPS://devdiv.visualstudio.com/DevDiv/_settings/adminservices) blade from the panel on the left
+ 3. Select the ["service connections"](https://devdiv.visualstudio.com/DevDiv/_settings/adminservices) blade from the panel on the left
 
     ![Select service connection](guide-imgs/service_connection_1.jpg)
 
