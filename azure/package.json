@@ -8,9 +8,9 @@
 		"compile": "tsc -watch -p ./"
 	},
 	"dependencies": {
-		"@codeeditorland/arm-authorization": "9.0.0",
-		"@codeeditorland/arm-authorization-profile-2020-09-01-hybrid": "2.1.0",
-		"@codeeditorland/arm-msi": "2.1.0",
+		"@codeeditorland/arm-authorization": "0.0.1",
+		"@codeeditorland/arm-authorization-profile-2020-09-01-hybrid": "0.0.1",
+		"@codeeditorland/arm-msi": "0.0.1",
 		"semver": "7.6.3",
 		"uuid": "11.0.3"
 	},
