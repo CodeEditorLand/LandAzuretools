@@ -4,8 +4,8 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { TenantIdDescription } from "@azure/arm-resources-subscriptions";
-import * as vscode from 'vscode';
+import * as vscode from "vscode";
 
 export interface AzureTenant extends TenantIdDescription {
-    account: vscode.AuthenticationSessionAccountInformation;
+	account: vscode.AuthenticationSessionAccountInformation;
 }
