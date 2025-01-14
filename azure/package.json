@@ -11,13 +11,13 @@
 		"@codeeditorland/arm-authorization": "9.0.0",
 		"@codeeditorland/arm-authorization-profile-2020-09-01-hybrid": "2.1.0",
 		"@codeeditorland/arm-msi": "2.1.0",
-		"semver": "7.3.7",
-		"uuid": "9.0.0"
+		"semver": "7.6.3",
+		"uuid": "11.0.5"
 	},
 	"devDependencies": {
-		"@types/node": "16.0.0",
-		"@types/semver": "7.3.9",
-		"@types/uuid": "9.0.1",
-		"glob": "7.1.6"
+		"@types/node": "22.10.6",
+		"@types/semver": "7.5.8",
+		"@types/uuid": "10.0.0",
+		"glob": "11.0.1"
 	}
 }
