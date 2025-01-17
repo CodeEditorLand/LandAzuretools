@@ -9,7 +9,7 @@
 	},
 	"dependencies": {
 		"dayjs": "1.11.13",
-		"fs-extra": "11.2.0",
+		"fs-extra": "11.3.0",
 		"p-retry": "6.2.1",
 		"pretty-bytes": "6.1.1",
 		"simple-git": "3.27.0",
@@ -18,7 +18,7 @@
 	},
 	"devDependencies": {
 		"@types/fs-extra": "11.0.4",
-		"@types/node": "22.10.6",
+		"@types/node": "22.10.7",
 		"@types/p-retry": "3.0.1",
 		"@types/ws": "8.5.13",
 		"@types/yazl": "2.4.5",

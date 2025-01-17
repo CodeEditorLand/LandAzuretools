@@ -10,8 +10,8 @@
 	"dependencies": {},
 	"devDependencies": {
 		"@types/fs-extra": "11.0.4",
-		"@types/node": "22.10.6",
-		"fs-extra": "11.2.0",
+		"@types/node": "22.10.7",
+		"fs-extra": "11.3.0",
 		"globby": "14.0.2"
 	}
 }
